@@ -1,0 +1,8 @@
+{
+    "editor.tabSize": 2,
+    "typescript.preferences.quoteStyle": "single",
+    "[typescript]": {
+        "editor.formatOnSave": false,
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+    }
+}
