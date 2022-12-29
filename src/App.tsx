@@ -2,7 +2,7 @@ import React, { useRef } from 'react';
 import './App.css';
 import { pluginPostMessage } from './pluginApi';
 import { PluginMessageType } from './types';
-import Hue from './components/hue/Hue';
+import HuePicker from './components/HuePicker';
 
 function App() {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -17,7 +17,7 @@ function App() {
   return (
     <main>
       <section>
-        <Hue />
+        <HuePicker />
       </section>
       <section>
         <input id="input" type="number" min="0" ref={inputRef} />
