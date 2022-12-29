@@ -40,11 +40,11 @@ const HuePicker = () => {
 
   return (
     <div className="hue-container">
-      <PickerBall value={value} />
       <PickerCanvas
         createData={(width, height) => createHueSliderData(width, height, Direction.Horizontal)}
         onChange={onChange}
       />
+      <PickerBall value={value} />
     </div>
   );
 };

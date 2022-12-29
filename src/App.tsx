@@ -19,7 +19,7 @@ function App() {
       <section>
         <HuePicker />
       </section>
-      <section>
+      {/* <section>
         <input id="input" type="number" min="0" ref={inputRef} />
         <label htmlFor="input">Rectangle Count</label>
       </section>
@@ -27,7 +27,7 @@ function App() {
         <button className="brand" onClick={onCreate}>
           Create
         </button>
-      </footer>
+      </footer> */}
     </main>
   );
 }
