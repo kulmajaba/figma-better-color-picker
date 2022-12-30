@@ -9,6 +9,11 @@ export interface PluginMessageCreateRectangles {
 
 export type PluginMessage = PluginMessageCreateRectangles;
 
+export enum Direction {
+  Horizontal = 'HORIZONTAL',
+  Vertical = 'VERTICAL'
+}
+
 export enum HorizontalChangeDirection {
   LeftToRight = 'LEFT_TO_RIGHT',
   RightToLeft = 'RIGHT_TO_LEFT'
@@ -19,7 +24,17 @@ export enum VerticalChangeDirection {
   BottomToTop = 'BOTTOM_TO_TOP'
 }
 
+export enum ChangeDirections {
+  HorizontalAndVertical = 'HORIZONTAL_AND_VERTICAL',
+  Horizontal = 'HORIZONTAL',
+  Vertical = 'VERTICAL'
+}
+
 export interface XY {
   x: number;
   y: number;
 }
+
+export const XYZero: XY = { x: 0, y: 0 };
+
+export type XYChangeHandler = (val: XY) => void;

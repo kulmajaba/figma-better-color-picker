@@ -1,5 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { HorizontalChangeDirection, VerticalChangeDirection, XY } from '../types';
+import React, { MouseEventHandler, useEffect, useImperativeHandle, useRef, useState } from 'react';
 
 import './PickerCanvas.css';
 
@@ -8,21 +7,14 @@ interface Props {
   /**
    * Callback for value change, x and y values in range 0..1
    */
-  onChange?: (val: XY) => void;
-  horizontalChangeDirection?: HorizontalChangeDirection;
-  verticalChangeDirection?: VerticalChangeDirection;
+  onMouseDown?: MouseEventHandler<HTMLElement>;
 }
 
-const PickerCanvas: React.FC<Props> = ({
-  createData,
-  onChange,
-  horizontalChangeDirection = HorizontalChangeDirection.LeftToRight,
-  verticalChangeDirection = VerticalChangeDirection.TopToBottom
-}) => {
+const PickerCanvas = React.forwardRef<HTMLCanvasElement, Props>(({ createData, onMouseDown }, ref) => {
   const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 });
-  const [dragging, setDragging] = useState(false);
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  useImperativeHandle<HTMLCanvasElement | null, HTMLCanvasElement | null>(ref, () => canvasRef.current);
 
   const draw = (ctx: CanvasRenderingContext2D) => {
     const { width, height } = ctx.canvas;
@@ -44,50 +36,7 @@ const PickerCanvas: React.FC<Props> = ({
     }
   });
 
-  const handleChange = (e: React.MouseEvent<HTMLCanvasElement, MouseEvent>) => {
-    const boundingRect = e.currentTarget.getBoundingClientRect();
-    const x = e.clientX - boundingRect.left;
-    const y = e.clientY - boundingRect.top;
-    const { width, height } = e.currentTarget;
-    const scaledX =
-      horizontalChangeDirection === HorizontalChangeDirection.LeftToRight
-        ? Math.max(x / (width - 1), 0)
-        : 1 - Math.max(x / (width - 1), 0);
-    const scaledY =
-      verticalChangeDirection === VerticalChangeDirection.TopToBottom
-        ? Math.max(y / (height - 1), 0)
-        : 1 - Math.max(y / (height - 1), 0);
-    console.log(`Picker value change x: ${scaledX} (${x}), y: ${scaledY} (${y})`);
-    onChange && onChange({ x: scaledX, y: scaledY });
-  };
-
-  const onMouseDown = (e: React.MouseEvent<HTMLCanvasElement, MouseEvent>) => {
-    handleChange(e);
-    setDragging(true);
-  };
-
-  const onMouseUp = (e: React.MouseEvent<HTMLCanvasElement, MouseEvent>) => {
-    handleChange(e);
-    setDragging(false);
-  };
-
-  const onMouseMove = (e: React.MouseEvent<HTMLCanvasElement, MouseEvent>) => {
-    if (dragging && e.buttons === 0) {
-      setDragging(false);
-      return;
-    }
-    dragging && handleChange(e);
-  };
-
-  return (
-    <canvas
-      ref={canvasRef}
-      className="picker-canvas"
-      onMouseDown={onMouseDown}
-      onMouseUp={onMouseUp}
-      onMouseMove={onMouseMove}
-    />
-  );
-};
+  return <canvas ref={canvasRef} className="picker-canvas" id="hue-picker" onMouseDown={onMouseDown} />;
+});
 
 export default PickerCanvas;
