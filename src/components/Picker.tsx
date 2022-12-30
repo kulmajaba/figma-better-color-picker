@@ -54,7 +54,11 @@ const Picker: React.FC<Props> = ({
   return (
     <>
       <PickerCanvas ref={canvasRef} createData={createData} onMouseDown={onMouseDown} />
-      <PickerBall value={value} />
+      <PickerBall
+        value={value}
+        horizontalChangeDirection={horizontalChangeDirection}
+        verticalChangeDirection={verticalChangeDirection}
+      />
     </>
   );
 };

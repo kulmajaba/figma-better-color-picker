@@ -5,15 +5,11 @@ import './PickerBall.css';
 
 interface Props {
   value: { x: number; y: number };
-  horizontalChangeDirection?: HorizontalChangeDirection;
-  verticalChangeDirection?: VerticalChangeDirection;
+  horizontalChangeDirection: HorizontalChangeDirection;
+  verticalChangeDirection: VerticalChangeDirection;
 }
 
-const PickerBall: React.FC<Props> = ({
-  value,
-  horizontalChangeDirection = HorizontalChangeDirection.LeftToRight,
-  verticalChangeDirection = VerticalChangeDirection.TopToBottom
-}) => {
+const PickerBall: React.FC<Props> = ({ value, horizontalChangeDirection, verticalChangeDirection }) => {
   const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 });
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -25,11 +21,12 @@ const PickerBall: React.FC<Props> = ({
     const x =
       horizontalChangeDirection === HorizontalChangeDirection.LeftToRight
         ? Math.round(value.x * width)
-        : Math.round(value.x * (1 - width));
+        : Math.round((1 - value.x) * width);
     const y =
       verticalChangeDirection === VerticalChangeDirection.TopToBottom
         ? Math.round(value.y * height)
-        : Math.round(value.y * (1 - height));
+        : Math.round((1 - value.y) * height);
+    // console.log(`Ball coordinates x: ${x}, y: ${y}`);
 
     ctx.clearRect(0, 0, width, height);
     ctx.strokeStyle = '#ffffff';
