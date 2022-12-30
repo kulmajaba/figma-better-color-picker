@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import './App.css';
 import { pluginPostMessage } from './pluginApi';
-import { ChangeDirections, PluginMessageType, XY, XYZero } from './types';
+import { PluginMessageType, XY, XYZero } from './types';
 import HuePicker from './components/HuePicker';
 
 enum PickerType {
@@ -12,7 +12,7 @@ function App() {
   const [dragging, setDragging] = useState(false);
   const [mousePos, setMousePos] = useState<XY>(XYZero);
   const [activePicker, setActivePicker] = useState<PickerType | undefined>(undefined);
-  const [hue, setHue] = useState<XY>(XYZero);
+  const [hue, setHue] = useState(0);
 
   /* const onCreate = () => {
     const count = Number(inputRef.current?.value || 0);
@@ -46,7 +46,6 @@ function App() {
           globalValue={mousePos}
           value={hue}
           dragging={activePicker === PickerType.Hue}
-          activeDirections={ChangeDirections.Horizontal}
           onChange={(val) => setHue(val)}
           onMouseDown={(e) => onMouseDown(e, PickerType.Hue)}
         />

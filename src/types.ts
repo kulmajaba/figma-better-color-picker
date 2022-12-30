@@ -24,12 +24,6 @@ export enum VerticalChangeDirection {
   BottomToTop = 'BOTTOM_TO_TOP'
 }
 
-export enum ChangeDirections {
-  HorizontalAndVertical = 'HORIZONTAL_AND_VERTICAL',
-  Horizontal = 'HORIZONTAL',
-  Vertical = 'VERTICAL'
-}
-
 export interface XY {
   x: number;
   y: number;
@@ -38,3 +32,5 @@ export interface XY {
 export const XYZero: XY = { x: 0, y: 0 };
 
 export type XYChangeHandler = (val: XY) => void;
+
+export type ImageDataCreator = (width: number, height: number) => ImageData;
