@@ -36,6 +36,14 @@ const PickerCanvas = React.forwardRef<HTMLCanvasElement, Props>(({ createData, o
     }
   });
 
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (canvas) {
+      const context = canvas.getContext('2d');
+      context && draw(context);
+    }
+  }, [createData]);
+
   return <canvas ref={canvasRef} className="picker-canvas" id="hue-picker" onMouseDown={onMouseDown} />;
 });
 

@@ -1,18 +1,21 @@
 import React, { useState } from 'react';
 import './App.css';
 import { pluginPostMessage } from './pluginApi';
-import { PluginMessageType, XY, XYZero } from './types';
+import { PluginMessageType, XYZero } from './types';
 import HuePicker from './components/HuePicker';
+import SVPicker from './components/SVPicker';
 
 enum PickerType {
-  Hue = 'HUE'
+  Hue = 'HUE',
+  SV = 'SV'
 }
 
 function App() {
   const [dragging, setDragging] = useState(false);
-  const [mousePos, setMousePos] = useState<XY>(XYZero);
+  const [mousePos, setMousePos] = useState(XYZero);
   const [activePicker, setActivePicker] = useState<PickerType | undefined>(undefined);
   const [hue, setHue] = useState(0);
+  const [sv, setSv] = useState(XYZero);
 
   /* const onCreate = () => {
     const count = Number(inputRef.current?.value || 0);
@@ -42,6 +45,14 @@ function App() {
   return (
     <main onMouseUp={onMouseUp} onMouseMove={onMouseMove}>
       <section>
+        <SVPicker
+          globalValue={mousePos}
+          hue={hue}
+          value={sv}
+          dragging={activePicker === PickerType.SV}
+          onChange={(val) => setSv(val)}
+          onMouseDown={(e) => onMouseDown(e, PickerType.SV)}
+        />
         <HuePicker
           globalValue={mousePos}
           value={hue}
