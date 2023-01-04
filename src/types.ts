@@ -1,9 +1,5 @@
 export enum PluginMessageType {
-  ClientStorageGet = 'ClientStorageGet'
-}
-
-export enum ClientStorageKey {
-  SvData = 'SV_DATA'
+  EyeDropper = 'EyeDropper'
 }
 
 interface PluginMessageBase {
@@ -11,13 +7,20 @@ interface PluginMessageBase {
   fromFigma: boolean;
 }
 
-export interface PluginMessageGetLocal extends PluginMessageBase {
-  type: PluginMessageType.ClientStorageGet;
-  key: ClientStorageKey;
+export interface OpenEyeDropper extends PluginMessageBase {
+  type: PluginMessageType.EyeDropper;
+  fromFigma: false;
 }
 
-// Union type for all accepted messages
-export type PluginMessage = PluginMessageGetLocal;
+export interface EyeDropperResult extends PluginMessageBase {
+  type: PluginMessageType.EyeDropper;
+  value: string;
+  fromFigma: true;
+}
+
+// Union types for all accepted messages
+export type PluginMessage = OpenEyeDropper;
+export type PluginReturnMessage = EyeDropperResult;
 
 export enum Direction {
   Horizontal = 'HORIZONTAL',
@@ -39,7 +42,7 @@ export interface XY {
   y: number;
 }
 
-export const XYZero: XY = { x: 0, y: 0 };
+export const XYZero: Readonly<XY> = { x: 0, y: 0 };
 
 export interface Size {
   width: number;
