@@ -1,27 +1,36 @@
 import React, { MouseEventHandler, useEffect, useRef } from 'react';
 import PickerCanvas from './PickerCanvas';
 import PickerBall from './PickerBall';
-import { HorizontalChangeDirection, ImageDataCreator, VerticalChangeDirection, XY, XYChangeHandler } from '../types';
+import {
+  HorizontalChangeDirection,
+  ImageDataCreator,
+  Size,
+  VerticalChangeDirection,
+  XY,
+  XYChangeHandler
+} from '../types';
 import { clampTo0_1 } from '../util/mathUtils';
 
 interface Props {
-  createData: ImageDataCreator;
+  getImageData: ImageDataCreator;
   value: XY;
   globalValue: XY;
   dragging: boolean;
   onChange: XYChangeHandler;
   onMouseDown: MouseEventHandler<HTMLElement>;
+  onSizeChange?: (size: Size) => void;
   horizontalChangeDirection?: HorizontalChangeDirection;
   verticalChangeDirection?: VerticalChangeDirection;
 }
 
 const Picker: React.FC<Props> = ({
-  createData,
+  getImageData,
   value,
   globalValue,
   dragging,
   onChange,
   onMouseDown,
+  onSizeChange,
   horizontalChangeDirection = HorizontalChangeDirection.LeftToRight,
   verticalChangeDirection = VerticalChangeDirection.TopToBottom
 }) => {
@@ -53,7 +62,7 @@ const Picker: React.FC<Props> = ({
 
   return (
     <>
-      <PickerCanvas ref={canvasRef} createData={createData} onMouseDown={onMouseDown} />
+      <PickerCanvas ref={canvasRef} onSizeChange={onSizeChange} getImageData={getImageData} onMouseDown={onMouseDown} />
       <PickerBall
         value={value}
         horizontalChangeDirection={horizontalChangeDirection}

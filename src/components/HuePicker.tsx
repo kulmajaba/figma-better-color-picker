@@ -1,6 +1,6 @@
 import React, { MouseEventHandler } from 'react';
 import { okhsv_to_srgb } from '../util/colorconversion';
-import { Direction, XY } from '../types';
+import { Direction, Size, XY } from '../types';
 import Picker from './Picker';
 
 import './HuePicker.css';
@@ -33,6 +33,7 @@ interface Props {
   dragging: boolean;
   onChange: (val: number) => void;
   onMouseDown: MouseEventHandler<HTMLElement>;
+  onSizeChange: (size: Size) => void;
 }
 
 const HuePicker: React.FC<Props> = ({ value, onChange, ...otherProps }) => {
@@ -40,7 +41,7 @@ const HuePicker: React.FC<Props> = ({ value, onChange, ...otherProps }) => {
   return (
     <div className="hue-container">
       <Picker
-        createData={createHorizontalHueData}
+        getImageData={createHorizontalHueData}
         value={pickerValue}
         onChange={(val) => onChange(val.x)}
         {...otherProps}

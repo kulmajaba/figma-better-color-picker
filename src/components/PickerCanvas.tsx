@@ -1,16 +1,18 @@
 import React, { MouseEventHandler, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import { Size } from '../types';
 
 import './PickerCanvas.css';
 
 interface Props {
-  createData: (width: number, height: number) => ImageData;
+  getImageData: (width: number, height: number) => ImageData;
   /**
    * Callback for value change, x and y values in range 0..1
    */
-  onMouseDown?: MouseEventHandler<HTMLElement>;
+  onMouseDown: MouseEventHandler<HTMLElement>;
+  onSizeChange?: (size: Size) => void;
 }
 
-const PickerCanvas = React.forwardRef<HTMLCanvasElement, Props>(({ createData, onMouseDown }, ref) => {
+const PickerCanvas = React.forwardRef<HTMLCanvasElement, Props>(({ getImageData, onMouseDown, onSizeChange }, ref) => {
   const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 });
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -18,7 +20,7 @@ const PickerCanvas = React.forwardRef<HTMLCanvasElement, Props>(({ createData, o
 
   const draw = (ctx: CanvasRenderingContext2D) => {
     const { width, height } = ctx.canvas;
-    const data = createData(width, height);
+    const data = getImageData(width, height);
     ctx.putImageData(data, 0, 0);
   };
 
@@ -27,7 +29,9 @@ const PickerCanvas = React.forwardRef<HTMLCanvasElement, Props>(({ createData, o
     if (canvas) {
       const { offsetWidth, offsetHeight } = canvas;
       if (canvasSize.width !== offsetWidth || canvasSize.height !== offsetHeight) {
-        setCanvasSize({ width: offsetWidth, height: offsetHeight });
+        const newSize = { width: offsetWidth, height: offsetHeight };
+        onSizeChange?.(newSize);
+        setCanvasSize(newSize);
         canvas.width = offsetWidth;
         canvas.height = offsetHeight;
         const context = canvas.getContext('2d');
@@ -42,7 +46,7 @@ const PickerCanvas = React.forwardRef<HTMLCanvasElement, Props>(({ createData, o
       const context = canvas.getContext('2d');
       context && draw(context);
     }
-  }, [createData]);
+  }, [getImageData]);
 
   return <canvas ref={canvasRef} className="picker-canvas" id="hue-picker" onMouseDown={onMouseDown} />;
 });

@@ -1,4 +1,5 @@
 /* eslint-disable */
+// @ts-nocheck
 
 function rgb_to_hsl(r, g, b)
 {

@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import './App.css';
-import { pluginPostMessage } from './pluginApi';
-import { PluginMessageType, XYZero } from './types';
+import { XYZero } from './types';
 import HuePicker from './components/HuePicker';
 import SVPicker from './components/SVPicker';
 
@@ -15,6 +14,7 @@ function App() {
   const [mousePos, setMousePos] = useState(XYZero);
   const [activePicker, setActivePicker] = useState<PickerType | undefined>(undefined);
   const [hue, setHue] = useState(0);
+  const [hueValues, setHueValues] = useState<number[]>([]);
   const [sv, setSv] = useState(XYZero);
 
   /* const onCreate = () => {
@@ -48,6 +48,7 @@ function App() {
         <SVPicker
           globalValue={mousePos}
           hue={hue}
+          hueValues={hueValues}
           value={sv}
           dragging={activePicker === PickerType.SV}
           onChange={(val) => setSv(val)}
@@ -59,6 +60,10 @@ function App() {
           dragging={activePicker === PickerType.Hue}
           onChange={(val) => setHue(val)}
           onMouseDown={(e) => onMouseDown(e, PickerType.Hue)}
+          onSizeChange={(size) => {
+            const newHueValues = new Array(size.width).fill(0).map((_, i) => i / (size.width - 1));
+            setHueValues(newHueValues);
+          }}
         />
       </section>
       {/* <section>

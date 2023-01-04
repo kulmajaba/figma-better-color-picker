@@ -1,3 +1,19 @@
+# Better Color Picker
+
+## Roadmap
+
+### Caching SV picker imagedata
+
+At the moment at every startup the plugin will calculate SV image data into memory, taking several seconds.
+
+This is non-trivial to cache due to the architecture of the plugins and the size of the data. For reference, the data for 300px wide picker (300 hue values and 300x300px SV canvas) is about 105MB
+
+Things that have been tried:
+  - Using figma.clientStorage: aborts after timeout due to large size (apparently window.postMessage does send the data?)
+  - Saving the data as static JSON file and bundling it with the plugin: big-json does not work in browser out of the box and it sucks to download that much data that could be calculated and saved locally
+
+## Development instructions
+
 Below are the steps to get your plugin running. You can also find instructions at:
 
   https://www.figma.com/plugin-docs/setup/

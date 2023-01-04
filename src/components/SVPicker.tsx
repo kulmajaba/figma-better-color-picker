@@ -1,6 +1,7 @@
-import React, { MouseEventHandler } from 'react';
+import React, { MouseEventHandler, useEffect, useRef, useState } from 'react';
+
 import { okhsv_to_srgb } from '../util/colorconversion';
-import { VerticalChangeDirection, XY } from '../types';
+import { Size, SizeZero, VerticalChangeDirection, XY } from '../types';
 import Picker from './Picker';
 
 import './SVPicker.css';
@@ -22,8 +23,13 @@ const createSVData = (width: number, height: number, hue: number) => {
   return new ImageData(data, width);
 };
 
+interface SVCache {
+  [key: number]: ImageData;
+}
+
 interface Props {
   hue: number;
+  hueValues: number[];
   value: XY;
   globalValue: XY;
   dragging: boolean;
@@ -31,16 +37,57 @@ interface Props {
   onMouseDown: MouseEventHandler<HTMLElement>;
 }
 
-const SVPicker: React.FC<Props> = ({ hue, value, onChange, ...otherProps }) => {
+const SVPicker: React.FC<Props> = ({ hue, hueValues, value, onChange, ...otherProps }) => {
+  const [canvasSize, setCanvasSize] = useState<Size>(SizeZero);
+  const [svDataCache, setSvDataCache] = useState<SVCache>({});
+
+  // Use ref for loading status to make sure it is updated even when the UI thread is blocked
+  const svDataCacheLoading = useRef(false);
+
+  const updateSVCache = async () => {
+    if (svDataCacheLoading.current) {
+      console.log('Cache already updating');
+      return;
+    }
+    console.log('Update SV cache');
+
+    svDataCacheLoading.current = true;
+    const svData: SVCache = {};
+    hueValues.forEach((hue) => {
+      svData[hue] = createSVData(canvasSize.width, canvasSize.height, hue);
+    });
+    setSvDataCache(svData);
+    svDataCacheLoading.current = false;
+    console.log('SV cache updated');
+  };
+
+  const getSVData = (width: number, height: number) => {
+    return svDataCache[hue] ?? createSVData(width, height, hue);
+  };
+
+  useEffect(() => {
+    updateSVCache();
+  }, [canvasSize, hueValues]);
+
+  const onSizeChange = (size: Size) => {
+    setCanvasSize(size);
+  };
+
   return (
     <div className="sv-container">
       <Picker
-        createData={(width, height) => createSVData(width, height, hue)}
+        getImageData={getSVData}
         verticalChangeDirection={VerticalChangeDirection.BottomToTop}
         value={value}
-        onChange={(val) => onChange(val)}
+        onChange={onChange}
+        onSizeChange={onSizeChange}
         {...otherProps}
       />
+      {Object.keys(svDataCache).length === 0 && (
+        <div className="sv-loading-indicator">
+          <p className="sv-loading-indicator-text">Loading</p>
+        </div>
+      )}
     </div>
   );
 };

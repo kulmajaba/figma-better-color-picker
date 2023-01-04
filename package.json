@@ -5,9 +5,8 @@
   "main": "code.js",
   "scripts": {
     "start": "npm run dev",
-    "tsc:main": "tsc --noEmit -p plugin-src",
-    "tsc:ui": "tsc --noEmit -p ui-src",
-    "tsc:watch": "concurrently -n widget,iframe \"npm run tsc:main -- --watch --preserveWatchOutput\" \"npm run tsc:ui -- --watch --preserveWatchOutput\"",
+    "tsc:main": "tsc --noEmit -p .",
+    "tsc:watch": "concurrently -n widget,iframe \"npm run tsc:main -- --watch --preserveWatchOutput\"",
     "build": "npm run build:ui && npm run build:main -- --minify",
     "build:main": "esbuild src/plugin.ts --bundle --outfile=dist/plugin.js",
     "build:ui": "npx vite build --minify esbuild --emptyOutDir=false",

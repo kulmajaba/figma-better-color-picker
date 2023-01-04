@@ -1,13 +1,23 @@
 export enum PluginMessageType {
-  CreateRectangles = 'createRectangles'
+  ClientStorageGet = 'ClientStorageGet'
 }
 
-export interface PluginMessageCreateRectangles {
-  type: PluginMessageType.CreateRectangles;
-  count: number;
+export enum ClientStorageKey {
+  SvData = 'SV_DATA'
 }
 
-export type PluginMessage = PluginMessageCreateRectangles;
+interface PluginMessageBase {
+  type: PluginMessageType;
+  fromFigma: boolean;
+}
+
+export interface PluginMessageGetLocal extends PluginMessageBase {
+  type: PluginMessageType.ClientStorageGet;
+  key: ClientStorageKey;
+}
+
+// Union type for all accepted messages
+export type PluginMessage = PluginMessageGetLocal;
 
 export enum Direction {
   Horizontal = 'HORIZONTAL',
@@ -30,6 +40,13 @@ export interface XY {
 }
 
 export const XYZero: XY = { x: 0, y: 0 };
+
+export interface Size {
+  width: number;
+  height: number;
+}
+
+export const SizeZero: Readonly<Size> = { width: 0, height: 0 };
 
 export type XYChangeHandler = (val: XY) => void;
 
