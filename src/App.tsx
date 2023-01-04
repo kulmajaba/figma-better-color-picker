@@ -51,7 +51,7 @@ function App() {
 
   return (
     <main onMouseUp={onMouseUp} onMouseMove={onMouseMove}>
-      <section>
+      <section className="pickers">
         <SVPicker
           hue={hue}
           hueValues={hueValues}

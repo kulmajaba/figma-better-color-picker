@@ -12,6 +12,10 @@
     --color-border-brand: var(--figma-color-border-brand);
     --color-border-brand-focus: var(--figma-color-border-selected-strong);
     --color-text-brand: var(--figma-color-text-onbrand);
+
+    --size-picker: 12px;
+    --padding-picker: calc(var(--size-picker) * 1.5);
+    --radius-picker: calc(var(--size-picker) / 2);
   }
   
   html, body, main {
@@ -31,9 +35,34 @@
     background: var(--color-bg);
     color: var(--color-text);
     margin: 0;
+  }
+
+  main {
+    align-items: center;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
+  }
+  
+  section {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-bottom: 1rem;
+  }
+
+  section > * + * {
+    margin-top: 0.5rem;
+  }
+
+  section.pickers {
+    width: 100%;
+    box-sizing: border-box;
+    padding: var(--padding-picker);
+  }
+
+  footer > * + * {
+    margin-left: 0.5rem;
   }
   
   button {
@@ -86,29 +115,6 @@
   
   svg {
     stroke: var(--color-icon, rgba(0, 0, 0, 0.9));
-  }
-  
-  main {
-    align-items: center;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-  }
-  
-  section {
-    align-items: center;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    margin-bottom: 1rem;
-  }
-
-  section > * + * {
-    margin-top: 0.5rem;
-  }
-
-  footer > * + * {
-    margin-left: 0.5rem;
   }
   
   img {

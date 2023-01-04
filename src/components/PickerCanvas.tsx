@@ -5,10 +5,7 @@ import './PickerCanvas.css';
 
 interface Props {
   getImageData: (width: number, height: number) => ImageData;
-  /**
-   * Callback for value change, x and y values in range 0..1
-   */
-  onMouseDown: MouseEventHandler<HTMLElement>;
+  onMouseDown?: MouseEventHandler<HTMLElement>;
   onSizeChange?: (size: Size) => void;
 }
 
@@ -48,7 +45,7 @@ const PickerCanvas = React.forwardRef<HTMLCanvasElement, Props>(({ getImageData,
     }
   }, [getImageData]);
 
-  return <canvas ref={canvasRef} className="picker-canvas" id="hue-picker" onMouseDown={onMouseDown} />;
+  return <canvas ref={canvasRef} className="picker-canvas" onMouseDown={onMouseDown} />;
 });
 
 export default PickerCanvas;

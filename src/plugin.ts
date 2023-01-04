@@ -11,7 +11,7 @@ figma.ui.onmessage = (msg: PluginMessage) => {
     case PluginMessageType.EyeDropper: {
       console.log('Eyedropper');
       const openEyeDropper = async () => {
-        if (!window.EyeDropper) {
+        if (!window || !window.EyeDropper) {
           console.warn('This browser does not support EyeDropper API');
           return;
         }

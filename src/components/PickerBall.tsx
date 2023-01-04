@@ -17,15 +17,16 @@ const PickerBall: React.FC<Props> = ({ value, horizontalChangeDirection, vertica
   const draw = (ctx: CanvasRenderingContext2D) => {
     const { width, height } = ctx.canvas;
     const strokeWidth = 1;
+    // TODO: use CSS variable
     const r = 6;
     const x =
       horizontalChangeDirection === HorizontalChangeDirection.LeftToRight
-        ? Math.round(value.x * width)
-        : Math.round((1 - value.x) * width);
+        ? Math.round(value.x * (width - 2 * r) + r)
+        : Math.round((1 - value.x) * (width - 2 * r) + r);
     const y =
       verticalChangeDirection === VerticalChangeDirection.TopToBottom
-        ? Math.round(value.y * height)
-        : Math.round((1 - value.y) * height);
+        ? Math.round(value.y * (height - 2 * r) + r)
+        : Math.round((1 - value.y) * (height - 2 * r) + r);
     // console.log(`Ball coordinates x: ${x}, y: ${y}`);
 
     ctx.clearRect(0, 0, width, height);
