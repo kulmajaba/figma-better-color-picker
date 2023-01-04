@@ -1,26 +1,13 @@
-export enum PluginMessageType {
-  EyeDropper = 'EyeDropper'
-}
+export enum PluginMessageType {}
 
 interface PluginMessageBase {
   type: PluginMessageType;
   fromFigma: boolean;
 }
 
-export interface OpenEyeDropper extends PluginMessageBase {
-  type: PluginMessageType.EyeDropper;
-  fromFigma: false;
-}
-
-export interface EyeDropperResult extends PluginMessageBase {
-  type: PluginMessageType.EyeDropper;
-  value: string;
-  fromFigma: true;
-}
-
 // Union types for all accepted messages
-export type PluginMessage = OpenEyeDropper;
-export type PluginReturnMessage = EyeDropperResult;
+export type PluginMessage = unknown;
+export type PluginReturnMessage = unknown;
 
 export enum Direction {
   Horizontal = 'HORIZONTAL',

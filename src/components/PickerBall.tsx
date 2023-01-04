@@ -27,7 +27,6 @@ const PickerBall: React.FC<Props> = ({ value, horizontalChangeDirection, vertica
       verticalChangeDirection === VerticalChangeDirection.TopToBottom
         ? Math.round(value.y * (height - 2 * r) + r)
         : Math.round((1 - value.y) * (height - 2 * r) + r);
-    // console.log(`Ball coordinates x: ${x}, y: ${y}`);
 
     ctx.clearRect(0, 0, width, height);
     ctx.strokeStyle = '#ffffff';
