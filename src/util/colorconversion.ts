@@ -278,6 +278,9 @@ const toe_inv = (x: number) => {
 // Saturation here is defined as S = C/L
 // a and b must be normalized so a^2 + b^2 == 1
 const compute_max_saturation = (a: number, b: number) => {
+  if (a === 0 && b === 0) {
+    return 0;
+  }
   // Max saturation will be when one of r, g or b goes below zero.
 
   // Select different coefficients depending on which component goes below zero first
@@ -461,7 +464,7 @@ const get_ST_max = (a_: number, b_: number, cusp?: number[]) => {
 
   const L = cusp[0];
   const C = cusp[1];
-  return [C / L, C / (1 - L)];
+  return [C / L, C === 0 ? 0 : C / (1 - L)];
 };
 
 const get_ST_mid = (a_: number, b_: number) => {
@@ -531,7 +534,7 @@ const get_Cs = (L: number, a_: number, b_: number) => {
   return [C_0, C_mid, C_max];
 };
 
-const okhsl_to_srgb = (hsl: HSLFloat): RGB => {
+export const okhsl_to_srgb = (hsl: HSLFloat): RGB => {
   const { h, s, l } = hsl;
 
   if (l == 1) {
@@ -577,7 +580,7 @@ const okhsl_to_srgb = (hsl: HSLFloat): RGB => {
   };
 };
 
-const srgb_to_okhsl = (rgb: RGB): HSLFloat => {
+export const srgb_to_okhsl = (rgb: RGB): HSLFloat => {
   const { r, g, b } = rgb;
 
   const lab = linear_srgb_to_oklab(
@@ -647,7 +650,7 @@ export const okhsv_to_srgb = (hsv: HSVFloat): RGB => {
   const C_vt = (C_v * L_vt) / L_v;
 
   const L_new = toe_inv(L); // * L_v/L_vt;
-  C = (C * L_new) / L;
+  C = C === 0 ? 0 : (C * L_new) / L;
   L = L_new;
 
   const rgb_scale = oklab_to_linear_srgb(L_vt, a_ * C_vt, b_ * C_vt);
@@ -675,8 +678,8 @@ export const srgb_to_okhsv = (rgb: RGB): HSVFloat => {
   );
 
   let C = Math.sqrt(lab[1] * lab[1] + lab[2] * lab[2]);
-  const a_ = lab[1] / C;
-  const b_ = lab[2] / C;
+  const a_ = lab[1] === 0 ? 0 : lab[1] / C;
+  const b_ = lab[2] === 0 ? 0 : lab[2] / C;
 
   let L = lab[0];
   const h = 0.5 + (0.5 * Math.atan2(-lab[2], -lab[1])) / Math.PI;
@@ -687,12 +690,12 @@ export const srgb_to_okhsv = (rgb: RGB): HSVFloat => {
   const T = ST_max[1];
   const k = 1 - S_0 / S_max;
 
-  const t = T / (C + L * T);
+  const t = T === 0 ? 0 : T / (C + L * T);
   const L_v = t * L;
   const C_v = t * C;
 
   const L_vt = toe_inv(L_v);
-  const C_vt = (C_v * L_vt) / L_v;
+  const C_vt = C_v === 0 || L_vt === 0 ? 0 : (C_v * L_vt) / L_v;
 
   const rgb_scale = oklab_to_linear_srgb(L_vt, a_ * C_vt, b_ * C_vt);
   const scale_L = Math.cbrt(1 / Math.max(rgb_scale[0], rgb_scale[1], rgb_scale[2], 0));
@@ -700,16 +703,16 @@ export const srgb_to_okhsv = (rgb: RGB): HSVFloat => {
   L = L / scale_L;
   C = C / scale_L;
 
-  C = (C * toe(L)) / L;
+  C = C === 0 || L === 0 ? 0 : (C * toe(L)) / L;
   L = toe(L);
 
-  const v = L / L_v;
-  const s = ((S_0 + T) * C_v) / (T * S_0 + T * k * C_v);
+  const v = L === 0 ? 0 : L / L_v;
+  const s = C_v === 0 ? 0 : ((S_0 + T) * C_v) / (T * S_0 + T * k * C_v);
 
   return { h, s, v };
 };
 
-const hex_to_rgb = (hex: string): RGB => {
+export const hex_to_rgb = (hex: string): RGB => {
   if (hex.substring(0, 1) == '#') hex = hex.substring(1);
 
   if (hex.match(/^([0-9a-f]{3})$/i)) {
