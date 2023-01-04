@@ -34,7 +34,8 @@ const createCheckerBoardData = (width: number, height: number, direction: Direct
   return new ImageData(data, width);
 };
 
-const createHorizontalCheckerData = (width: number, height: number) => createCheckerBoardData(width, height, Direction.Horizontal);
+const createHorizontalCheckerData = (width: number, height: number) =>
+  createCheckerBoardData(width, height, Direction.Horizontal);
 
 const createAlphaData = (width: number, height: number, color: RGB, direction: Direction) => {
   const [sliderLength, sliderWidth] = direction === Direction.Horizontal ? [width, height] : [height, width];
@@ -42,7 +43,7 @@ const createAlphaData = (width: number, height: number, color: RGB, direction: D
   const data = new Uint8ClampedArray(sliderLength * sliderWidth * 4);
 
   for (let i = 0; i < sliderLength; i++) {
-    const alpha = Math.round(i / sliderLength * 255);
+    const alpha = Math.round((i / sliderLength) * 255);
     for (let j = 0; j < sliderWidth; j++) {
       const index = direction === Direction.Horizontal ? (j * sliderLength + i) * 4 : (i * sliderWidth + j) * 4;
 
@@ -72,9 +73,7 @@ const AlphaPicker: React.FC<Props> = ({ color, value, onChange, ...otherProps })
   const pickerValue = { x: value, y: 0.5 };
   return (
     <div className="alpha-container">
-      <PickerCanvas
-        getImageData={(width, height) => createHorizontalCheckerData(width, height)}
-      />
+      <PickerCanvas getImageData={(width, height) => createHorizontalCheckerData(width, height)} />
       <Picker
         getImageData={(width, height) => createHorizontalAlphaData(width, height, color)}
         value={pickerValue}
