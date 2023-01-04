@@ -3,10 +3,14 @@ import './App.css';
 import { XYZero } from './types';
 import HuePicker from './components/HuePicker';
 import SVPicker from './components/SVPicker';
+import { okhsv_to_srgb } from './util/colorconversion';
+import AlphaPicker from './components/AlphaPicker';
+import { roundTo2Decimals } from './util/mathUtils';
 
 enum PickerType {
   Hue = 'HUE',
-  SV = 'SV'
+  SV = 'SV',
+  Alpha = 'ALPHA'
 }
 
 function App() {
@@ -16,6 +20,7 @@ function App() {
   const [hue, setHue] = useState(0);
   const [hueValues, setHueValues] = useState<number[]>([]);
   const [sv, setSv] = useState(XYZero);
+  const [alpha, setAlpha] = useState(1);
 
   /* const onCreate = () => {
     const count = Number(inputRef.current?.value || 0);
@@ -42,13 +47,15 @@ function App() {
     setActivePicker(undefined);
   };
 
+  const rgb = okhsv_to_srgb({ h: hue, s: sv.x, v: sv.y });
+
   return (
     <main onMouseUp={onMouseUp} onMouseMove={onMouseMove}>
       <section>
         <SVPicker
-          globalValue={mousePos}
           hue={hue}
           hueValues={hueValues}
+          globalValue={mousePos}
           value={sv}
           dragging={activePicker === PickerType.SV}
           onChange={(val) => setSv(val)}
@@ -65,6 +72,15 @@ function App() {
             setHueValues(newHueValues);
           }}
         />
+        <AlphaPicker
+          color={rgb}
+          globalValue={mousePos}
+          value={alpha}
+          dragging={activePicker === PickerType.Alpha}
+          onChange={(val) => setAlpha(val)}
+          onMouseDown={(e) => onMouseDown(e, PickerType.Alpha)}
+        />
+        <p>{`RGB: ${Math.round(rgb.r)}, ${Math.round(rgb.g)}, ${Math.round(rgb.b)}, A: ${roundTo2Decimals(alpha)}`}</p>
       </section>
       {/* <section>
         <input id="input" type="number" min="0" ref={inputRef} />
