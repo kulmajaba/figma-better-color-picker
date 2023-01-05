@@ -1,9 +1,9 @@
 import React, { MouseEventHandler } from 'react';
 import { Direction, XY } from '../types';
 import Picker from './Picker';
+import PickerCanvas from './PickerCanvas';
 
 import './AlphaPicker.css';
-import PickerCanvas from './PickerCanvas';
 
 const createCheckerBoardData = (width: number, height: number, direction: Direction) => {
   const [sliderLength, sliderWidth] = direction === Direction.Horizontal ? [width, height] : [height, width];

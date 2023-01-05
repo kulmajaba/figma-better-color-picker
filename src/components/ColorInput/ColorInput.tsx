@@ -12,6 +12,8 @@ import { roundObjectValuesTo1Decimals, roundTo1Decimals } from '../../util/mathU
 import { inputValueToNumber, inputValueToString } from '../../util/parsingUtils';
 import ColorComponentInput from './ColorComponentInput';
 
+import './ColorInput.css';
+
 interface Props {
   value: HSVFloat;
   alpha: number;
@@ -77,7 +79,7 @@ const ColorInput: React.FC<Props> = ({
     // Hex input
     return (
       <div className="input-container">
-        <ColorComponentInput component="hex" type="text" value={hex} onChange={handleHexChange} />
+        <ColorComponentInput className="hex" component="hex" type="text" value={hex} onChange={handleHexChange} />
         <ColorComponentInput component="a" type="number" value={alpha} onChange={handleAlphaChange} />
       </div>
     );
