@@ -19,65 +19,18 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+import { HSL, HSLFloat, HSV, HSVFloat, RGB } from '../types';
 import { InvalidArgumentError } from './errors';
 
-/**
- * Represents an RGB color with all numbers in range 0..255
- */
-interface RGB {
-  r: number;
-  g: number;
-  b: number;
-}
+export const hsv_to_hsvfloat = (hsv: HSV): HSVFloat => ({ h: hsv.h / 360, s: hsv.s / 100, v: hsv.v / 100 });
 
-/**
- * Represents an RGB color with all numbers in range 0..1
- */
-interface RGBFloat {
-  r: number;
-  g: number;
-  b: number;
-}
+export const hsvfloat_to_hsv = (hsv: HSVFloat): HSV => ({ h: hsv.h * 360, s: hsv.s * 100, v: hsv.v * 100 });
 
-/**
- * Represents an HSL color with hue in range 0..360, saturation in range 0..100 and luminance in range 0..100
- * Decimals are allowed for more precision
- */
-interface HSL {
-  h: number;
-  s: number;
-  l: number;
-}
+export const hsl_to_hslfloat = (hsv: HSL): HSLFloat => ({ h: hsv.h / 360, s: hsv.s / 100, l: hsv.l / 100 });
 
-/**
- * Represents an HSL color with all numbers in range 0..1
- */
-interface HSLFloat {
-  h: number;
-  s: number;
-  l: number;
-}
+export const hslfloat_to_hsl = (hsv: HSLFloat): HSL => ({ h: hsv.h * 360, s: hsv.s * 100, l: hsv.l * 100 });
 
-/**
- * Represents an HSV color with hue in range 0..360, saturation in range 0..100 and value in range 0..100
- * Decimals are allowed for more precision
- */
-interface HSV {
-  h: number;
-  s: number;
-  v: number;
-}
-
-/**
- * Represents an HSV color with all numbers in range 0..1
- */
-interface HSVFloat {
-  h: number;
-  s: number;
-  v: number;
-}
-
-const rgb_to_hsl = (rgb: RGB): HSLFloat => {
+export const rgb_to_hsl = (rgb: RGB): HSLFloat => {
   let { r, g, b } = rgb;
 
   r /= 255;
@@ -110,7 +63,7 @@ const rgb_to_hsl = (rgb: RGB): HSLFloat => {
   return { h, s, l };
 };
 
-const hsl_to_rgb = (hsl: HSLFloat): RGB => {
+export const hsl_to_rgb = (hsl: HSLFloat): RGB => {
   const { h, s, l } = hsl;
 
   let r, g, b;
@@ -137,7 +90,7 @@ const hsl_to_rgb = (hsl: HSLFloat): RGB => {
   return { r: r * 255, g: g * 255, b: b * 255 };
 };
 
-const rgb_to_hsv = (rgb: RGB): HSVFloat => {
+export const rgb_to_hsv = (rgb: RGB): HSVFloat => {
   let { r, g, b } = rgb;
 
   r /= 255;
@@ -170,7 +123,7 @@ const rgb_to_hsv = (rgb: RGB): HSVFloat => {
   return { h, s, v };
 };
 
-const hsv_to_rgb = (hsv: HSVFloat): RGB => {
+export const hsv_to_rgb = (hsv: HSVFloat): RGB => {
   const { h, s, v } = hsv;
 
   let r = 0;
@@ -723,12 +676,12 @@ export const hex_to_rgb = (hex: string): RGB => {
   }
   if (hex.match(/^([0-9a-f]{6})$/i)) {
     const r = parseInt(hex.substring(0, 2), 16);
-    const g = parseInt(hex.substring(2, 2), 16);
-    const b = parseInt(hex.substring(4, 2), 16);
+    const g = parseInt(hex.substring(2, 4), 16);
+    const b = parseInt(hex.substring(4, 6), 16);
     return { r, g, b };
   }
   if (hex.match(/^([0-9a-f]{1})$/i)) {
-    const a = (parseInt(hex.substring(0), 16) / 15) * 255;
+    const a = (parseInt(hex.charAt(0), 16) / 15) * 255;
     return { r: a, g: a, b: a };
   }
   if (hex.match(/^([0-9a-f]{2})$/i)) {

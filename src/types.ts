@@ -1,3 +1,61 @@
+/**
+ * Represents an RGB color with all numbers in range 0..255
+ */
+export interface RGB {
+  r: number;
+  g: number;
+  b: number;
+}
+
+/**
+ * Represents an RGB color with all numbers in range 0..1
+ */
+export interface RGBFloat {
+  r: number;
+  g: number;
+  b: number;
+}
+
+/**
+ * Represents an HSL color with hue in range 0..360, saturation in range 0..100 and luminance in range 0..100
+ * Decimals are allowed for more precision
+ */
+export interface HSL {
+  h: number;
+  s: number;
+  l: number;
+}
+
+/**
+ * Represents an HSL color with all numbers in range 0..1
+ */
+export interface HSLFloat {
+  h: number;
+  s: number;
+  l: number;
+}
+
+/**
+ * Represents an HSV color with hue in range 0..360, saturation in range 0..100 and value in range 0..100
+ * Decimals are allowed for more precision
+ */
+export interface HSV {
+  h: number;
+  s: number;
+  v: number;
+}
+
+/**
+ * Represents an HSV color with all numbers in range 0..1
+ */
+export interface HSVFloat {
+  h: number;
+  s: number;
+  v: number;
+}
+
+export type InputValue = string | number | readonly string[] | undefined;
+
 export enum PluginMessageType {}
 
 interface PluginMessageBase {
