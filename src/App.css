@@ -52,7 +52,11 @@ section {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  margin-bottom: 1rem;
+  width: 100%;
+}
+
+section:not(:first-child) {
+  border-top: 1px solid var(--color-border);
 }
 
 section > * + * {

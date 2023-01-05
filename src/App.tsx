@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import './App.css';
-import { HSVFloat, XYZero } from './types';
+import { HSVFloat, XY, XYZero } from './types';
 import HuePicker from './components/HuePicker';
 import SVPicker from './components/SVPicker';
 import { okhsv_to_srgb } from './util/colorconversion';
 import AlphaPicker from './components/AlphaPicker';
-import { roundTo2Decimals } from './util/mathUtils';
+import { roundTo2Decimals, roundToFixedPrecision } from './util/mathUtils';
 import ColorInput from './components/ColorInput/ColorInput';
+import ColorRow from './components/ColorRow';
 
 enum PickerType {
   Hue = 'HUE',
@@ -28,33 +29,46 @@ function App() {
     pluginPostMessage({ type: PluginMessageType.CreateRectangles, count });
   }; */
 
-  const onMouseMove = (e: React.MouseEvent<HTMLElement>) => {
-    if (dragging && e.buttons === 0) {
-      setDragging(false);
-      return;
-    }
+  const onMouseMove = useCallback((e: React.MouseEvent<HTMLElement>) => {
+      if (dragging && e.buttons === 0) {
+        setDragging(false);
+        return;
+      }
 
-    dragging && setMousePos({ x: e.clientX, y: e.clientY });
-  };
+      dragging && setMousePos({ x: e.clientX, y: e.clientY });
+    },
+    [dragging]
+  );
 
-  const onMouseDown = (e: React.MouseEvent<HTMLElement>, picker: PickerType) => {
+  const onMouseDown = useCallback((e: React.MouseEvent<HTMLElement>, picker: PickerType) => {
     setActivePicker(picker);
     setDragging(true);
     setMousePos({ x: e.clientX, y: e.clientY });
-  };
+  }, []);
 
-  const onMouseUp = () => {
+  const onMouseUp = useCallback(() => {
     setDragging(false);
     setActivePicker(undefined);
-  };
+  }, []);
 
-  const onColorInputChange = (val: HSVFloat) => {
+  const onSvChange = useCallback((val: XY) => setSv(val), []);
+  const onSvMouseDown = useCallback(
+    (e: React.MouseEvent<HTMLElement, MouseEvent>) => onMouseDown(e, PickerType.SV),
+    [onMouseDown]
+  );
+
+  const onColorInputChange = useCallback((val: HSVFloat) => {
     setHue(val.h);
     setSv({ x: val.s, y: val.v });
-  };
+  }, []);
 
   const hsv: HSVFloat = { h: hue, s: sv.x, v: sv.y };
   const rgb = okhsv_to_srgb(hsv);
+
+  const hsvString = `HSV: ${roundToFixedPrecision(hsv.h, 3)}, ${roundToFixedPrecision(
+    hsv.s,
+    3
+  )}, ${roundToFixedPrecision(hsv.v, 3)}, A: ${roundTo2Decimals(alpha)}`;
 
   return (
     <main onMouseUp={onMouseUp} onMouseMove={onMouseMove}>
@@ -65,8 +79,8 @@ function App() {
           globalValue={mousePos}
           value={sv}
           dragging={activePicker === PickerType.SV}
-          onChange={(val) => setSv(val)}
-          onMouseDown={(e) => onMouseDown(e, PickerType.SV)}
+          onChange={onSvChange}
+          onMouseDown={onSvMouseDown}
         />
         <HuePicker
           globalValue={mousePos}
@@ -87,9 +101,7 @@ function App() {
           onChange={(val) => setAlpha(val)}
           onMouseDown={(e) => onMouseDown(e, PickerType.Alpha)}
         />
-        <p>{`HSV: ${hsv.h}, ${hsv.s}, ${hsv.v}, A: ${roundTo2Decimals(alpha)}`}</p>
-      </section>
-      <section>
+        <p>{hsvString}</p>
         <ColorInput
           type="hsv"
           value={hsv}

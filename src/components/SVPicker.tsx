@@ -1,4 +1,4 @@
-import React, { MouseEventHandler, useEffect, useRef, useState } from 'react';
+import React, { MouseEventHandler, useCallback, useEffect, useRef, useState } from 'react';
 
 import { okhsv_to_srgb } from '../util/colorconversion';
 import { Size, SizeZero, VerticalChangeDirection, XY } from '../types';
@@ -61,17 +61,21 @@ const SVPicker: React.FC<Props> = ({ hue, hueValues, value, onChange, ...otherPr
     console.log('SV cache updated');
   };
 
-  const getSVData = (width: number, height: number) => {
-    return svDataCache[hue] ?? createSVData(width, height, hue);
-  };
+  const getSVData = useCallback(
+    (width: number, height: number) => svDataCache[hue] ?? createSVData(width, height, hue),
+    [svDataCache, createSVData, hue]
+  );
 
   useEffect(() => {
-    updateSVCache();
+    // updateSVCache();
   }, [canvasSize, hueValues]);
 
-  const onSizeChange = (size: Size) => {
-    setCanvasSize(size);
-  };
+  const onSizeChange = useCallback(
+    (size: Size) => {
+      setCanvasSize(size);
+    },
+    [setCanvasSize]
+  );
 
   return (
     <div className="sv-container">
@@ -83,13 +87,22 @@ const SVPicker: React.FC<Props> = ({ hue, hueValues, value, onChange, ...otherPr
         onSizeChange={onSizeChange}
         {...otherProps}
       />
-      {Object.keys(svDataCache).length === 0 && (
+      {/* {Object.keys(svDataCache).length === 0 && (
         <div className="sv-loading-indicator">
           <p className="sv-loading-indicator-text">Loading</p>
         </div>
-      )}
+      )} */}
     </div>
   );
 };
 
-export default SVPicker;
+const areEqual = (prevProps: Props, nextProps: Props) =>
+  prevProps.hue === nextProps.hue &&
+  prevProps.hueValues === nextProps.hueValues &&
+  prevProps.value === nextProps.value &&
+  prevProps.dragging === nextProps.dragging &&
+  !prevProps.dragging &&
+  prevProps.onChange === nextProps.onChange &&
+  prevProps.onMouseDown === nextProps.onMouseDown;
+
+export default React.memo(SVPicker, areEqual);
