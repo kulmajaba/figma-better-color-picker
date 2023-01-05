@@ -564,7 +564,7 @@ function srgb_to_okhsl(r,g,b)
 }
 
 
-export function okhsv_to_srgb(h,s,v)
+function okhsv_to_srgb(h,s,v)
 {
     let a_ = Math.cos(2*Math.PI*h);
     let b_ = Math.sin(2*Math.PI*h);   
@@ -609,7 +609,7 @@ export function okhsv_to_srgb(h,s,v)
     ]
 }
 
-export function srgb_to_okhsv(r,g,b)
+function srgb_to_okhsv(r,g,b)
 {
     let lab = linear_srgb_to_oklab(
         srgb_transfer_function_inv(r/255),
@@ -685,7 +685,7 @@ function hex_to_rgb(hex)
     return null;
 }
 
-export function rgb_to_hex(r,g,b)
+function rgb_to_hex(r,g,b)
 {
     function componentToHex(x) 
     {

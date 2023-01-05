@@ -117,6 +117,18 @@ function App() {
           onAlphaChange={(val) => setAlpha(val)}
         />
       </section>
+      <section>
+        <ColorRow
+          hue={hue}
+          saturation={sv.x}
+          value={sv.y}
+          alpha={alpha}
+          hueLocked
+          saturationLocked
+          valueLocked
+          alphaLocked
+        />
+      </section>
       {/* <section>
         <input id="input" type="number" min="0" ref={inputRef} />
         <label htmlFor="input">Rectangle Count</label>
