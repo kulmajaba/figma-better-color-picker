@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import './App.css';
-import { XYZero } from './types';
+import { HSVFloat, XYZero } from './types';
 import HuePicker from './components/HuePicker';
 import SVPicker from './components/SVPicker';
 import { okhsv_to_srgb } from './util/colorconversion';
 import AlphaPicker from './components/AlphaPicker';
 import { roundTo2Decimals } from './util/mathUtils';
+import ColorInput from './components/ColorInput';
 
 enum PickerType {
   Hue = 'HUE',
@@ -47,7 +48,13 @@ function App() {
     setActivePicker(undefined);
   };
 
-  const rgb = okhsv_to_srgb({ h: hue, s: sv.x, v: sv.y });
+  const onColorInputChange = (val: HSVFloat) => {
+    setHue(val.h);
+    setSv({ x: val.s, y: val.v });
+  };
+
+  const hsv: HSVFloat = { h: hue, s: sv.x, v: sv.y };
+  const rgb = okhsv_to_srgb(hsv);
 
   return (
     <main onMouseUp={onMouseUp} onMouseMove={onMouseMove}>
@@ -80,8 +87,24 @@ function App() {
           onChange={(val) => setAlpha(val)}
           onMouseDown={(e) => onMouseDown(e, PickerType.Alpha)}
         />
-        <p>{`RGB: ${Math.round(rgb.r)}, ${Math.round(rgb.g)}, ${Math.round(rgb.b)}, A: ${roundTo2Decimals(alpha)}`}</p>
+        <p>{`HSV: ${hsv.h}, ${hsv.s}, ${hsv.v}, A: ${roundTo2Decimals(alpha)}`}</p>
       </section>
+      <form>
+        <ColorInput
+          type="hsv"
+          value={hsv}
+          alpha={alpha}
+          onColorChange={onColorInputChange}
+          onAlphaChange={(val) => setAlpha(val)}
+        />
+        <ColorInput
+          type="hex"
+          value={hsv}
+          alpha={alpha}
+          onColorChange={onColorInputChange}
+          onAlphaChange={(val) => setAlpha(val)}
+        />
+      </form>
       {/* <section>
         <input id="input" type="number" min="0" ref={inputRef} />
         <label htmlFor="input">Rectangle Count</label>

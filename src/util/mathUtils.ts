@@ -7,3 +7,15 @@ export const roundToFixedPrecision = (value: number, decimals: number) => {
 };
 
 export const roundTo2Decimals = (value: number) => roundToFixedPrecision(value, 2);
+export const roundTo1Decimals = (value: number) => roundToFixedPrecision(value, 1);
+
+export const roundObjectValuesToPrecision = <T extends { [key: string]: number }>(obj: T, decimals: number): T => {
+  const newObj: T = obj;
+  Object.keys(obj).forEach((key) => {
+    newObj[key] = roundToFixedPrecision(obj[key], decimals);
+  });
+  return newObj;
+};
+
+export const roundObjectValuesTo1Decimals = <T extends { [key: string]: number }>(obj: T): T =>
+  roundObjectValuesToPrecision(obj, 1);
