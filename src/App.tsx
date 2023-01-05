@@ -6,7 +6,7 @@ import SVPicker from './components/SVPicker';
 import { okhsv_to_srgb } from './util/colorconversion';
 import AlphaPicker from './components/AlphaPicker';
 import { roundTo2Decimals } from './util/mathUtils';
-import ColorInput from './components/ColorInput';
+import ColorInput from './components/ColorInput/ColorInput';
 
 enum PickerType {
   Hue = 'HUE',
@@ -89,7 +89,7 @@ function App() {
         />
         <p>{`HSV: ${hsv.h}, ${hsv.s}, ${hsv.v}, A: ${roundTo2Decimals(alpha)}`}</p>
       </section>
-      <form>
+      <section>
         <ColorInput
           type="hsv"
           value={hsv}
@@ -104,7 +104,7 @@ function App() {
           onColorChange={onColorInputChange}
           onAlphaChange={(val) => setAlpha(val)}
         />
-      </form>
+      </section>
       {/* <section>
         <input id="input" type="number" min="0" ref={inputRef} />
         <label htmlFor="input">Rectangle Count</label>

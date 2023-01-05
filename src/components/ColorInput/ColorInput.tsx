@@ -1,5 +1,5 @@
 import React from 'react';
-import { HSV, HSVFloat, InputValue } from '../types';
+import { HSV, HSVFloat, InputValue } from '../../types';
 import {
   hex_to_rgb,
   hsvfloat_to_hsv,
@@ -7,10 +7,10 @@ import {
   okhsv_to_srgb,
   rgb_to_hex,
   srgb_to_okhsv
-} from '../util/colorconversion';
-import { roundObjectValuesTo1Decimals, roundTo1Decimals } from '../util/mathUtils';
-import { inputValueToNumber, inputValueToString } from '../util/parsingUtils';
-import Input from './Input';
+} from '../../util/colorconversion';
+import { roundObjectValuesTo1Decimals, roundTo1Decimals } from '../../util/mathUtils';
+import { inputValueToNumber, inputValueToString } from '../../util/parsingUtils';
+import ColorComponentInput from './ColorComponentInput';
 
 interface Props {
   value: HSVFloat;
@@ -42,7 +42,7 @@ const ColorInput: React.FC<Props> = ({
     }
   };
 
-  const handleHexChange = (value: InputValue) => {
+  const handleHexChange = (_: 'hex', value: InputValue) => {
     try {
       const newValue = inputValueToString(value);
       onColorChange && onColorChange(srgb_to_okhsv(hex_to_rgb(newValue)));
@@ -53,7 +53,7 @@ const ColorInput: React.FC<Props> = ({
     }
   };
 
-  const handleAlphaChange = (value: InputValue) => {
+  const handleAlphaChange = (_: 'a', value: InputValue) => {
     try {
       const newValue = inputValueToNumber(value);
       onAlphaChange && onAlphaChange(newValue / 100);
@@ -64,34 +64,21 @@ const ColorInput: React.FC<Props> = ({
     }
   };
 
-  const HSVComponentInput: React.FC<{ component: keyof HSVFloat }> = ({ component }) => (
-    <Input
-      name={component}
-      type="number"
-      value={hsv[component]}
-      onChange={(value) => handleHsvChange(component, value)}
-    />
-  );
-
-  const HexInput: React.FC = () => <Input name="hex" type="text" value={hex} onChange={handleHexChange} />;
-
-  const AlphaInput: React.FC = () => <Input name="alpha" type="number" value={alpha} onChange={handleAlphaChange} />;
-
   if (type === 'hsv') {
     return (
       <div className="input-container">
-        <HSVComponentInput component="h" />
-        <HSVComponentInput component="s" />
-        <HSVComponentInput component="v" />
-        <AlphaInput />
+        <ColorComponentInput component="h" type="number" value={hsv.h} onChange={handleHsvChange} />
+        <ColorComponentInput component="s" type="number" value={hsv.s} onChange={handleHsvChange} />
+        <ColorComponentInput component="v" type="number" value={hsv.v} onChange={handleHsvChange} />
+        <ColorComponentInput component="a" type="number" value={alpha} onChange={handleAlphaChange} />
       </div>
     );
   } else {
     // Hex input
     return (
       <div className="input-container">
-        <HexInput />
-        <AlphaInput />
+        <ColorComponentInput component="hex" type="text" value={hex} onChange={handleHexChange} />
+        <ColorComponentInput component="a" type="number" value={alpha} onChange={handleAlphaChange} />
       </div>
     );
   }
