@@ -7,6 +7,7 @@
   --color-icon: var(--figma-color-icon);
   --color-text: var(--figma-color-text);
   --color-bg-brand: var(--figma-color-bg-brand);
+  --color-bg-brand-transparent: rgba(12, 140, 233, 0.6); /* #0c8ce9 */
   --color-bg-brand-hover: var(--figma-color-bg-brand-hover);
   --color-bg-brand-active: var(--figma-color-bg-brand-pressed);
   --color-border-brand: var(--figma-color-border-brand);
@@ -16,18 +17,19 @@
   --size-picker: 12px;
   --padding-picker: calc(var(--size-picker) * 1.5);
   --radius-picker: calc(var(--size-picker) / 2);
+  --border-radius-s: 4px;
 }
   
 html, body, main {
   height: 100%;
 }
 
-body, input, button, h1, h2, h3, h4, h5, h6, p {
+body, input, button, h1, h2, h3, h4, h5, h6, p, span {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
     Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
 }
 
-p, input, button {
+p, input, button, span {
   font-size: 11px;
 }
 
@@ -74,12 +76,17 @@ footer > * + * {
 }
 
 button {
+  position: relative;
   border-radius: 0.25rem;
   background: var(--color-bg);
   color: var(--color-text);
   cursor: pointer;
   border: 1px solid var(--color-border);
   padding: 0.5rem;
+}
+
+button.small {
+  padding: 0.3rem;
 }
 
 button:hover {
@@ -109,6 +116,11 @@ button svg {
   height: 18px;
 }
 
+button.small svg {
+  width: 14px;
+  height: 14px;
+}
+
 input {
   background: 1px solid var(--color-bg);
   border: 1px solid var(--color-border);
@@ -134,10 +146,14 @@ input[type=number] {
 }
   
 svg {
-  stroke: var(--color-icon, rgba(0, 0, 0, 0.9));
+  stroke: var(--color-icon);
 }
 
 img {
   height: auto;
   width: 2rem;
+}
+
+.border-none {
+  border: none;
 }
