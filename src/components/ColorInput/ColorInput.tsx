@@ -68,7 +68,7 @@ const ColorInput: React.FC<Props> = ({
 
   if (type === 'hsv') {
     return (
-      <div className="input-container">
+      <div className="color-input-container">
         <ColorComponentInput component="h" type="number" value={hsv.h} onChange={handleHsvChange} />
         <ColorComponentInput component="s" type="number" value={hsv.s} onChange={handleHsvChange} />
         <ColorComponentInput component="v" type="number" value={hsv.v} onChange={handleHsvChange} />
@@ -78,7 +78,7 @@ const ColorInput: React.FC<Props> = ({
   } else {
     // Hex input
     return (
-      <div className="input-container">
+      <div className="color-input-container">
         <ColorComponentInput className="hex" component="hex" type="text" value={hex} onChange={handleHexChange} />
         <ColorComponentInput component="a" type="number" value={alpha} onChange={handleAlphaChange} />
       </div>

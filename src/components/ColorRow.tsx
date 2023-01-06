@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import strings from '../assets/strings';
 import { HSVFloat } from '../types';
 import { okhsv_to_srgb } from '../util/colorconversion';
@@ -77,6 +77,17 @@ const ColorRow: React.FC<Props> = ({
     }
   }, [alphaProp, alphaLocked]);
 
+  const onColorChange = useCallback(
+    (hsv: HSVFloat) => {
+      !hueLocked && setHue(hsv.h);
+      !saturationLocked && setSaturation(hsv.s);
+      !valueLocked && setValue(hsv.v);
+    },
+    [hueLocked, saturationLocked, valueLocked]
+  );
+
+  const onAlphaChange = useCallback((alpha: number) => !alphaLocked && setAlpha(alpha), [alphaLocked]);
+
   const hsv: HSVFloat = { h: hue, s: saturation, v: value };
 
   return (
@@ -85,7 +96,7 @@ const ColorRow: React.FC<Props> = ({
         <PickerCanvas getImageData={(width, height) => createCheckerData(width, height)} />
         <PickerCanvas getImageData={(width, height) => createColorFill(width, height, hsv, alpha)} />
       </div>
-      <ColorInput type="hsv" value={hsv} alpha={alpha} />
+      <ColorInput type="hsv" value={hsv} alpha={alpha} onColorChange={onColorChange} onAlphaChange={onAlphaChange} />
       <div className="color-row-buttons">
         <button className="small border-none">
           <Icon icon="content_copy" />

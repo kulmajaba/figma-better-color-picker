@@ -1,23 +1,28 @@
 :root {
-  --color-bg: var(--figma-color-bg);
-  --color-bg-hover: var(--figma-color-bg-hover);
-  --color-bg-active: var(--figma-color-bg-pressed);
-  --color-border: var(--figma-color-border);
-  --color-border-focus: var(--figma-color-border-selected);
-  --color-icon: var(--figma-color-icon);
-  --color-text: var(--figma-color-text);
-  --color-bg-brand: var(--figma-color-bg-brand);
+  --color-bg: var(--figma-color-bg, #2c2c2c);
+  --color-bg-hover: var(--figma-color-bg-hover, #383838);
+  --color-bg-active: var(--figma-color-bg-pressed, #383838);
+  --color-bg-brand: var(--figma-color-bg-brand, #0c8ce9);
   --color-bg-brand-transparent: rgba(12, 140, 233, 0.6); /* #0c8ce9 */
-  --color-bg-brand-hover: var(--figma-color-bg-brand-hover);
-  --color-bg-brand-active: var(--figma-color-bg-brand-pressed);
-  --color-border-brand: var(--figma-color-border-brand);
-  --color-border-brand-focus: var(--figma-color-border-selected-strong);
-  --color-text-brand: var(--figma-color-text-onbrand);
+  --color-bg-brand-hover: var(--figma-color-bg-brand-hover, #0a6dc2);
+  --color-bg-brand-active: var(--figma-color-bg-brand-pressed, #0a6dc2);
+  --color-border: var(--figma-color-border, #444444);
+  --color-border-focus: var(--figma-color-border-selected, #0c8ce9);
+  --color-icon: var(--figma-color-ico, rgba(255, 255, 255, 1));
+  --color-icon-brand: var(--figma-color-icon-brand, #7cc4f8);
+  --color-text: var(--figma-color-text, rgba(255, 255, 255, 1));
+  --color-text-brand: var(--figma-color-text-brand, #7cc4f8);
+  --color-text-onbrand: var(--figma-color-text-onbrand, rgba(255, 255, 255, 1));
+  --color-border-brand: var(--figma-color-border-brand, #105cad);
+  --color-border-brand-focus: var(--figma-color-border-selected-strong, #7cc4f8);
 
   --size-picker: 12px;
   --padding-picker: calc(var(--size-picker) * 1.5);
   --radius-picker: calc(var(--size-picker) / 2);
   --border-radius-s: 4px;
+
+  --font-size: 11px;
+  --font-size-button: 12px;
 }
   
 html, body, main {
@@ -30,7 +35,7 @@ body, input, button, h1, h2, h3, h4, h5, h6, p, span {
 }
 
 p, input, button, span {
-  font-size: 11px;
+  font-size: var(--font-size);
 }
 
 body, input, button {
@@ -146,7 +151,7 @@ input[type=number] {
 }
   
 svg {
-  stroke: var(--color-icon);
+  fill: var(--color-icon);
 }
 
 img {
@@ -156,4 +161,18 @@ img {
 
 .border-none {
   border: none;
+}
+
+.color-row, .lock-button-row-container {
+  width: calc(100% - 1rem);
+  margin: 0.5rem 0.5rem 0;
+  display: grid;
+  grid-template-columns: 24px 4.5fr 1.8fr;
+  column-gap: 4px;
+  align-items: center;
+}
+
+.color-input-container, .lock-button-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1.5fr;
 }

@@ -7,7 +7,7 @@ import { okhsv_to_srgb } from './util/colorconversion';
 import AlphaPicker from './components/AlphaPicker';
 import { roundTo2Decimals, roundToFixedPrecision } from './util/mathUtils';
 import ColorInput from './components/ColorInput/ColorInput';
-import ColorRow from './components/ColorRow';
+import ColorTable from './components/ColorTable';
 
 enum PickerType {
   Hue = 'HUE',
@@ -29,7 +29,8 @@ function App() {
     pluginPostMessage({ type: PluginMessageType.CreateRectangles, count });
   }; */
 
-  const onMouseMove = useCallback((e: React.MouseEvent<HTMLElement>) => {
+  const onMouseMove = useCallback(
+    (e: React.MouseEvent<HTMLElement>) => {
       if (dragging && e.buttons === 0) {
         setDragging(false);
         return;
@@ -118,16 +119,7 @@ function App() {
         />
       </section>
       <section>
-        <ColorRow
-          hue={hue}
-          saturation={sv.x}
-          value={sv.y}
-          alpha={alpha}
-          hueLocked
-          saturationLocked
-          valueLocked
-          alphaLocked
-        />
+        <ColorTable hue={hue} saturation={sv.x} value={sv.y} alpha={alpha} />
       </section>
       {/* <section>
         <input id="input" type="number" min="0" ref={inputRef} />

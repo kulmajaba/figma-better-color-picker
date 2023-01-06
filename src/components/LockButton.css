@@ -1,0 +1,19 @@
+.lock-button {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+}
+
+.lock-button span {
+  font-size: var(--font-size-button);
+  font-weight: 500;
+}
+
+.lock-button.locked {
+  color: var(--color-text-brand);
+}
+
+.lock-button.locked svg {
+  fill: var(--color-icon-brand);
+}
