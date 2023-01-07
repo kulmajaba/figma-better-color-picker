@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react';
 
 import ColorRow from './ColorRow';
-import Icon from './Icon';
+import Icon from '../Icon';
 import LockButton from './LockButton';
 
 import './ColorTable.css';

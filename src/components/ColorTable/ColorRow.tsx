@@ -1,13 +1,14 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import strings from '../assets/strings';
-import { HSVFloat } from '../types';
-import { okhsv_to_srgb } from '../util/colorconversion';
-import { createCheckerData } from '../util/imageData';
-import ColorInput from './ColorInput/ColorInput';
+
+import strings from '../../assets/strings';
+import { HSVFloat } from '../../types';
+import { okhsv_to_srgb } from '../../util/colorconversion';
+import { createCheckerData } from '../../util/imageData';
+import ColorInput from '../ColorInput/ColorInput';
+import Icon from '../Icon';
+import PickerCanvas from '../PickerCanvas';
 
 import './ColorRow.css';
-import Icon from './Icon';
-import PickerCanvas from './PickerCanvas';
 
 const createColorFill = (width: number, height: number, color: HSVFloat, alpha: number) => {
   const rgb = okhsv_to_srgb(color);
@@ -100,6 +101,7 @@ const ColorRow: React.FC<Props> = ({
       <div className="color-row-buttons">
         <button className="small border-none">
           <Icon icon="content_copy" />
+          {/* TODO: make sure these don't appear as tabbable content */}
           <span className="tooltip">{strings.tooltip.copyColor}</span>
         </button>
         <button className="small border-none">

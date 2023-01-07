@@ -3,7 +3,7 @@
   --color-bg-hover: var(--figma-color-bg-hover, #383838);
   --color-bg-active: var(--figma-color-bg-pressed, #383838);
   --color-bg-brand: var(--figma-color-bg-brand, #0c8ce9);
-  --color-bg-brand-transparent: rgba(12, 140, 233, 0.6); /* #0c8ce9 */
+  --color-bg-brand-transparent: rgba(12, 140, 233, 0.75); /* #0c8ce9 */
   --color-bg-brand-hover: var(--figma-color-bg-brand-hover, #0a6dc2);
   --color-bg-brand-active: var(--figma-color-bg-brand-pressed, #0a6dc2);
   --color-border: var(--figma-color-border, #444444);

@@ -17,6 +17,7 @@
 
 button .tooltip {
   visibility: hidden;
+  pointer-events: none;
   white-space: nowrap;
   max-width: 160px;
   background-color: var(--color-bg-brand-transparent);

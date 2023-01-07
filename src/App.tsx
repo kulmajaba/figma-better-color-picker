@@ -5,9 +5,9 @@ import HuePicker from './components/HuePicker';
 import SVPicker from './components/SVPicker';
 import { okhsv_to_srgb } from './util/colorconversion';
 import AlphaPicker from './components/AlphaPicker';
-import { roundTo2Decimals, roundToFixedPrecision } from './util/mathUtils';
+import { roundToFixedPrecision } from './util/mathUtils';
 import ColorInput from './components/ColorInput/ColorInput';
-import ColorTable from './components/ColorTable';
+import ColorTable from './components/ColorTable/ColorTable';
 
 enum PickerType {
   Hue = 'HUE',
@@ -66,10 +66,10 @@ function App() {
   const hsv: HSVFloat = { h: hue, s: sv.x, v: sv.y };
   const rgb = okhsv_to_srgb(hsv);
 
-  const hsvString = `HSV: ${roundToFixedPrecision(hsv.h, 3)}, ${roundToFixedPrecision(
-    hsv.s,
+  const hsvString = `RGB: ${roundToFixedPrecision(rgb.r, 3)}, ${roundToFixedPrecision(
+    rgb.g,
     3
-  )}, ${roundToFixedPrecision(hsv.v, 3)}, A: ${roundTo2Decimals(alpha)}`;
+  )}, ${roundToFixedPrecision(rgb.b, 3)}, A: ${roundToFixedPrecision(alpha, 3)}`;
 
   return (
     <main onMouseUp={onMouseUp} onMouseMove={onMouseMove}>

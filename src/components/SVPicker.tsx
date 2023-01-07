@@ -89,7 +89,7 @@ const SVPicker: React.FC<Props> = ({ hue, hueValues, value, onChange, ...otherPr
       />
       {Object.keys(svDataCache).length === 0 && (
         <div className="sv-loading-indicator">
-          <p className="sv-loading-indicator-text">Loading</p>
+          <p>Loading</p>
         </div>
       )}
     </div>

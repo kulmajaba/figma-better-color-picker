@@ -12,4 +12,9 @@
   height: 100%;
   justify-content: center;
   align-items: center;
+  pointer-events: none;
+}
+
+.sv-loading-indicator p {
+  user-select: none;
 }
