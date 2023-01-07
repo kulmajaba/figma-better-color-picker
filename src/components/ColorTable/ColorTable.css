@@ -1,5 +1,7 @@
+ .lock-button-row-container > :last-child {
+  justify-self: end;
+}
+
 .lock-button-row {
-  padding: 0 1px;
   grid-column: 2 / 3;
-  column-gap: 4px;
 }

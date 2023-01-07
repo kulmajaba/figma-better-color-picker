@@ -3,11 +3,12 @@ import './App.css';
 import { HSVFloat, XY, XYZero } from './types';
 import HuePicker from './components/HuePicker';
 import SVPicker from './components/SVPicker';
-import { okhsv_to_srgb } from './util/colorconversion';
+import { okhsv_to_srgb, srgb_to_okhsv, hex_to_rgb } from './util/colorconversion';
 import AlphaPicker from './components/AlphaPicker';
 import { roundToFixedPrecision } from './util/mathUtils';
 import ColorInput from './components/ColorInput/ColorInput';
 import ColorTable from './components/ColorTable/ColorTable';
+import Icon from './components/Icon';
 
 enum PickerType {
   Hue = 'HUE',
@@ -71,6 +72,21 @@ function App() {
     3
   )}, ${roundToFixedPrecision(rgb.b, 3)}, A: ${roundToFixedPrecision(alpha, 3)}`;
 
+  const onEyeDropper = useCallback(async () => {
+    if (EyeDropper) {
+      console.log(new EyeDropper());
+      try {
+        const res = await new EyeDropper().open();
+        console.log(res.sRGBHex);
+        const hsv = srgb_to_okhsv(hex_to_rgb(res.sRGBHex));
+        setHue(hsv.h);
+        setSv({ x: hsv.s, y: hsv.v });
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  }, []);
+
   return (
     <main onMouseUp={onMouseUp} onMouseMove={onMouseMove}>
       <section className="pickers">
@@ -104,20 +120,27 @@ function App() {
           onMouseDown={(e) => onMouseDown(e, PickerType.Alpha)}
         />
         <p>{hsvString}</p>
-        <ColorInput
-          type="hsv"
-          value={hsv}
-          alpha={alpha}
-          onColorChange={onColorInputChange}
-          onAlphaChange={(val) => setAlpha(val)}
-        />
-        <ColorInput
-          type="hex"
-          value={hsv}
-          alpha={alpha}
-          onColorChange={onColorInputChange}
-          onAlphaChange={(val) => setAlpha(val)}
-        />
+        <div className="main-inputs">
+          <button onClick={onEyeDropper}>
+            <Icon icon="eyedropper" />
+          </button>
+          <div className="main-inputs-color-inputs">
+            <ColorInput
+              type="hsv"
+              value={hsv}
+              alpha={alpha}
+              onColorChange={onColorInputChange}
+              onAlphaChange={(val) => setAlpha(val)}
+            />
+            <ColorInput
+              type="hex"
+              value={hsv}
+              alpha={alpha}
+              onColorChange={onColorInputChange}
+              onAlphaChange={(val) => setAlpha(val)}
+            />
+          </div>
+        </div>
       </section>
       <section>
         <ColorTable hue={hue} saturation={sv.x} value={sv.y} alpha={alpha} />

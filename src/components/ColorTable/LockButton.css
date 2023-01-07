@@ -1,11 +1,12 @@
 .lock-button {
+  width: 100%;
   display: flex;
-  flex: 1;
   flex-direction: column;
   align-items: center;
 }
 
 .lock-button span {
+  line-height: normal;
   font-size: var(--font-size-button);
   font-weight: 500;
 }

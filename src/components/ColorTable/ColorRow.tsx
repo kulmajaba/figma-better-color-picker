@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 
 import strings from '../../assets/strings';
 import { HSVFloat } from '../../types';
-import { okhsv_to_srgb } from '../../util/colorconversion';
+import { okhsv_to_srgb, rgb_to_hex } from '../../util/colorconversion';
 import { createCheckerData } from '../../util/imageData';
 import ColorInput from '../ColorInput/ColorInput';
 import Icon from '../Icon';
@@ -89,6 +89,20 @@ const ColorRow: React.FC<Props> = ({
 
   const onAlphaChange = useCallback((alpha: number) => !alphaLocked && setAlpha(alpha), [alphaLocked]);
 
+  const onCopy = useCallback(async () => {
+    console.log('copy');
+    if (navigator.clipboard) {
+      try {
+        await navigator.clipboard.writeText(rgb_to_hex(okhsv_to_srgb({ h: hue, s: saturation, v: value })));
+        console.log('copy succesful');
+      } catch (e) {
+        console.error(e);
+      }
+    } else {
+      console.warn('Clipboard API not available');
+    }
+  }, [hue, saturation, value]);
+
   const hsv: HSVFloat = { h: hue, s: saturation, v: value };
 
   return (
@@ -99,7 +113,7 @@ const ColorRow: React.FC<Props> = ({
       </div>
       <ColorInput type="hsv" value={hsv} alpha={alpha} onColorChange={onColorChange} onAlphaChange={onAlphaChange} />
       <div className="color-row-buttons">
-        <button className="small border-none">
+        <button className="small border-none" onClick={onCopy}>
           <Icon icon="content_copy" />
           {/* TODO: make sure these don't appear as tabbable content */}
           <span className="tooltip">{strings.tooltip.copyColor}</span>
