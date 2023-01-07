@@ -74,6 +74,7 @@ function App() {
   return (
     <main onMouseUp={onMouseUp} onMouseMove={onMouseMove}>
       <section className="pickers">
+        {/* TODO: Indicate if picker is run online or offline */}
         <SVPicker
           hue={hue}
           hueValues={hueValues}

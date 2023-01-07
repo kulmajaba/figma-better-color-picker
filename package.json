@@ -5,13 +5,12 @@
   "main": "code.js",
   "scripts": {
     "start": "npm run dev",
-    "tsc:main": "tsc --noEmit -p .",
-    "tsc:watch": "concurrently -n widget,iframe \"npm run tsc:main -- --watch --preserveWatchOutput\"",
-    "build": "npm run build:ui && npm run build:main -- --minify",
-    "build:main": "esbuild src/plugin.ts --bundle --outfile=dist/plugin.js",
+    "build:prod": "npm run build:ui && npm run build:main:prod -- --minify",
+    "build:main:prod": "esbuild src/plugin.ts --bundle --outfile=dist/plugin.js",
+    "build:main:dev": "esbuild src/plugin.ts --bundle --outfile=dist/plugin.js --define:BASE_URL=\\\"http://localhost:5173/\\\"",
     "build:ui": "npx vite build --minify esbuild --emptyOutDir=false",
-    "build:watch": "concurrently -n widget,iframe \"npm run build:main -- --watch\" \"npm run build:ui -- --watch\"",
-    "dev": "concurrently -n tsc,build,vite 'npm:tsc:watch' 'npm:build:watch' 'vite'"
+    "build:watch": "concurrently -n widget,iframe \"npm run build:main:dev -- --watch\" \"npm run build:ui -- --watch\"",
+    "dev": "concurrently -n build,vite 'npm:build:watch' 'vite'"
   },
   "author": "Mika Kuitunen",
   "license": "MIT License",
