@@ -9,13 +9,7 @@ export const roundToFixedPrecision = (value: number, decimals: number) => {
 export const roundTo2Decimals = (value: number) => roundToFixedPrecision(value, 2);
 export const roundTo1Decimals = (value: number) => roundToFixedPrecision(value, 1);
 
-export const roundObjectValuesToPrecision = (obj: Record<string, number>, decimals: number) => {
-  const newObj = obj;
-  const keys = Object.keys(obj);
-  keys.forEach((key) => {
-    newObj[key] = roundToFixedPrecision(obj[key], decimals);
-  });
-  return newObj;
-};
+export const roundArrayToPrecision = (arr: number[], decimals: number) =>
+  arr.map((val) => roundToFixedPrecision(val, decimals));
 
-export const roundObjectValuesTo1Decimals = (obj: Record<string, number>) => roundObjectValuesToPrecision(obj, 1);
+export const roundArrayTo1Decimals = (arr: number[]) => roundArrayToPrecision(arr, 1);

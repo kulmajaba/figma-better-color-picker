@@ -1,6 +1,7 @@
 export const createCheckerData = (width: number, height: number) => {
   const checkerBoardSize = 3;
   const checkerDouble = checkerBoardSize * 2;
+  // TODO: Use CSS variables
   const checkerColor = 225;
   const defaultColor = 255;
 

@@ -1,13 +1,14 @@
 import React, { MouseEventHandler } from 'react';
-import { Direction, XY } from '../types';
+import { Color, Direction, XY } from '../types';
 import Picker from './Picker';
 import PickerCanvas from './PickerCanvas';
 import { createCheckerData } from '../util/imageData';
 
 import './AlphaPicker.css';
 
-const createAlphaData = (width: number, height: number, color: RGB, direction: Direction) => {
+const createAlphaData = (width: number, height: number, color: Color, direction: Direction) => {
   const [sliderLength, sliderWidth] = direction === Direction.Horizontal ? [width, height] : [height, width];
+  const [r, g, b] = color;
 
   const data = new Uint8ClampedArray(sliderLength * sliderWidth * 4);
 
@@ -16,9 +17,9 @@ const createAlphaData = (width: number, height: number, color: RGB, direction: D
     for (let j = 0; j < sliderWidth; j++) {
       const index = direction === Direction.Horizontal ? (j * sliderLength + i) * 4 : (i * sliderWidth + j) * 4;
 
-      data[index + 0] = color.r;
-      data[index + 1] = color.g;
-      data[index + 2] = color.b;
+      data[index + 0] = r;
+      data[index + 1] = g;
+      data[index + 2] = b;
       data[index + 3] = alpha;
     }
   }
@@ -26,11 +27,11 @@ const createAlphaData = (width: number, height: number, color: RGB, direction: D
   return new ImageData(data, width);
 };
 
-const createHorizontalAlphaData = (width: number, height: number, color: RGB) =>
+const createHorizontalAlphaData = (width: number, height: number, color: Color) =>
   createAlphaData(width, height, color, Direction.Horizontal);
 
 interface Props {
-  color: RGB;
+  color: Color;
   value: number;
   globalValue: XY;
   dragging: boolean;

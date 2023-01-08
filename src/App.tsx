@@ -1,34 +1,44 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import './App.css';
-import { HSVFloat, XY, XYZero } from './types';
-import HuePicker from './components/HuePicker';
-import SVPicker from './components/SVPicker';
-import { okhsv_to_srgb, srgb_to_okhsv, hex_to_rgb } from './util/colorconversion';
+import { Color, XY, XYZero } from './types';
+import HuePicker from './components/SliderPicker';
+import SVPicker from './components/XYPicker';
 import AlphaPicker from './components/AlphaPicker';
 import { roundToFixedPrecision } from './util/mathUtils';
 import ColorInput from './components/ColorInput/ColorInput';
 import ColorTable from './components/ColorTable/ColorTable';
 import Icon from './components/Icon';
+import { useColorSpace } from './hooks/useColorSpace';
+import { hex_to_rgb } from './components/color/general';
 
 enum PickerType {
-  Hue = 'HUE',
-  SV = 'SV',
+  FirstComponentSlider = 'FIRST_COMPONENT_SLIDER',
+  XY = 'XY',
   Alpha = 'ALPHA'
 }
 
 function App() {
   const [dragging, setDragging] = useState(false);
-  const [mousePos, setMousePos] = useState(XYZero);
   const [activePicker, setActivePicker] = useState<PickerType | undefined>(undefined);
-  const [hue, setHue] = useState(0);
-  const [hueValues, setHueValues] = useState<number[]>([]);
-  const [sv, setSv] = useState(XYZero);
+  const [mousePos, setMousePos] = useState(XYZero);
+
+  const [firstComponentValues, setFirstComponentValues] = useState<number[]>([]);
+  const [firstComponent, setFirstComponent] = useState(0);
+  const [xyComponent, setXyComponent] = useState(XYZero);
   const [alpha, setAlpha] = useState(1);
+
+  const { fromSRGB, toSRGB } = useColorSpace();
 
   /* const onCreate = () => {
     const count = Number(inputRef.current?.value || 0);
     pluginPostMessage({ type: PluginMessageType.CreateRectangles, count });
   }; */
+
+  useEffect(() => {
+    window.addEventListener('message', (e) => console.log(e));
+    console.log(window);
+    console.log(navigator);
+  }, []);
 
   const onMouseMove = useCallback(
     (e: React.MouseEvent<HTMLElement>) => {
@@ -53,24 +63,19 @@ function App() {
     setActivePicker(undefined);
   }, []);
 
-  const onSvChange = useCallback((val: XY) => setSv(val), []);
-  const onSvMouseDown = useCallback(
-    (e: React.MouseEvent<HTMLElement, MouseEvent>) => onMouseDown(e, PickerType.SV),
+  const onXyChange = useCallback((val: XY) => {
+    setXyComponent(val);
+  }, []);
+
+  const onXyMouseDown = useCallback(
+    (e: React.MouseEvent<HTMLElement, MouseEvent>) => onMouseDown(e, PickerType.XY),
     [onMouseDown]
   );
 
-  const onColorInputChange = useCallback((val: HSVFloat) => {
-    setHue(val.h);
-    setSv({ x: val.s, y: val.v });
+  const onColorInputChange = useCallback((color: Color) => {
+    setFirstComponent(color[0]);
+    setXyComponent({ x: color[1], y: color[2] });
   }, []);
-
-  const hsv: HSVFloat = { h: hue, s: sv.x, v: sv.y };
-  const rgb = okhsv_to_srgb(hsv);
-
-  const hsvString = `RGB: ${roundToFixedPrecision(rgb.r, 3)}, ${roundToFixedPrecision(
-    rgb.g,
-    3
-  )}, ${roundToFixedPrecision(rgb.b, 3)}, A: ${roundToFixedPrecision(alpha, 3)}`;
 
   const onEyeDropper = useCallback(async () => {
     if (EyeDropper) {
@@ -78,63 +83,69 @@ function App() {
       try {
         const res = await new EyeDropper().open();
         console.log(res.sRGBHex);
-        const hsv = srgb_to_okhsv(hex_to_rgb(res.sRGBHex));
-        setHue(hsv.h);
-        setSv({ x: hsv.s, y: hsv.v });
+        const color = fromSRGB(hex_to_rgb(res.sRGBHex));
+        setFirstComponent(color[0]);
+        setXyComponent({ x: color[1], y: color[2] });
       } catch (e) {
         console.log(e);
       }
     }
   }, []);
 
+  const color: Color = [firstComponent, xyComponent.x, xyComponent.y];
+  const rgb = toSRGB(color);
+
+  const colorString = `Component: ${roundToFixedPrecision(color[0], 3)}, ${roundToFixedPrecision(color[1], 3)}, ${roundToFixedPrecision(color[2], 3)}, A: ${roundToFixedPrecision(alpha, 3)}<br />
+  RGB: ${roundToFixedPrecision(rgb[0], 3)}, ${roundToFixedPrecision(rgb[1], 3)}, ${roundToFixedPrecision(rgb[2], 3)}}`;
+
   return (
     <main onMouseUp={onMouseUp} onMouseMove={onMouseMove}>
       <section className="pickers">
         {/* TODO: Indicate if picker is run online or offline */}
         <SVPicker
-          hue={hue}
-          hueValues={hueValues}
+          firstComponentValues={firstComponentValues}
+          firstComponent={firstComponent}
           globalValue={mousePos}
-          value={sv}
-          dragging={activePicker === PickerType.SV}
-          onChange={onSvChange}
-          onMouseDown={onSvMouseDown}
+          value={xyComponent}
+          dragging={activePicker === PickerType.XY}
+          onChange={onXyChange}
+          onMouseDown={onXyMouseDown}
         />
         <HuePicker
           globalValue={mousePos}
-          value={hue}
-          dragging={activePicker === PickerType.Hue}
-          onChange={(val) => setHue(val)}
-          onMouseDown={(e) => onMouseDown(e, PickerType.Hue)}
+          value={firstComponent}
+          dragging={activePicker === PickerType.FirstComponentSlider}
+          onChange={(val) => setFirstComponent(val)}
+          onMouseDown={(e) => onMouseDown(e, PickerType.FirstComponentSlider)}
           onSizeChange={(size) => {
-            const newHueValues = new Array(size.width).fill(0).map((_, i) => i / (size.width - 1));
-            setHueValues(newHueValues);
+            const newFirstComponentValues = new Array(size.width).fill(0).map((_, i) => i / (size.width - 1));
+            setFirstComponentValues(newFirstComponentValues);
           }}
         />
         <AlphaPicker
-          color={rgb}
+          color={color}
           globalValue={mousePos}
           value={alpha}
           dragging={activePicker === PickerType.Alpha}
           onChange={(val) => setAlpha(val)}
           onMouseDown={(e) => onMouseDown(e, PickerType.Alpha)}
         />
-        <p>{hsvString}</p>
+        <p dangerouslySetInnerHTML={{ __html: colorString }} />
         <div className="main-inputs">
           <button onClick={onEyeDropper}>
             <Icon icon="eyedropper" />
           </button>
           <div className="main-inputs-color-inputs">
             <ColorInput
-              type="hsv"
-              value={hsv}
+              type="component"
+              value={color}
               alpha={alpha}
               onColorChange={onColorInputChange}
               onAlphaChange={(val) => setAlpha(val)}
             />
             <ColorInput
               type="hex"
-              value={hsv}
+              value={color}
               alpha={alpha}
               onColorChange={onColorInputChange}
               onAlphaChange={(val) => setAlpha(val)}
@@ -143,7 +154,12 @@ function App() {
         </div>
       </section>
       <section>
-        <ColorTable hue={hue} saturation={sv.x} value={sv.y} alpha={alpha} />
+        <ColorTable
+          firstComponent={firstComponent}
+          secondComponent={xyComponent.x}
+          thirdComponent={xyComponent.y}
+          alpha={alpha}
+        />
       </section>
       {/* <section>
         <input id="input" type="number" min="0" ref={inputRef} />

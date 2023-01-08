@@ -1,53 +1,49 @@
-import React from 'react';
-import { HSV, HSVFloat, InputValue } from '../../types';
-import {
-  hex_to_rgb,
-  hsvfloat_to_hsv,
-  hsv_to_hsvfloat,
-  okhsv_to_srgb,
-  rgb_to_hex,
-  srgb_to_okhsv
-} from '../../util/colorconversion';
-import { roundObjectValuesTo1Decimals, roundTo1Decimals } from '../../util/mathUtils';
+import React, { useCallback } from 'react';
+import { useColorSpace } from '../../hooks/useColorSpace';
+import { Color, InputValue } from '../../types';
+import { roundArrayTo1Decimals, roundTo1Decimals } from '../../util/mathUtils';
 import { inputValueToNumber, inputValueToString } from '../../util/parsingUtils';
+import { hex_to_rgb, rgb_to_hex } from '../color/general';
 import ColorComponentInput from './ColorComponentInput';
 
 import './ColorInput.css';
 
 interface Props {
-  value: HSVFloat;
+  value: Color;
   alpha: number;
-  type?: 'hex' | 'hsv';
-  onColorChange?: (val: HSVFloat) => void;
+  type?: 'hex' | 'component';
+  onColorChange?: (val: Color) => void;
   onAlphaChange?: (val: number) => void;
 }
 
 const ColorInput: React.FC<Props> = ({
   value: valueProp,
   alpha: alphaProp,
-  type = 'hsv',
+  type = 'component',
   onColorChange,
   onAlphaChange
 }) => {
-  const hsv: HSV = roundObjectValuesTo1Decimals(hsvfloat_to_hsv(valueProp));
-  const hex = rgb_to_hex(okhsv_to_srgb(valueProp));
+  const { fromSRGB, toSRGB, fromComponentRepresentation, toComponentRepresentation } = useColorSpace();
+
   const alpha = roundTo1Decimals(alphaProp * 100);
 
-  const handleHsvChange = (component: keyof HSVFloat, value: InputValue) => {
+  const handleComponentChange = useCallback((componentIndex: number, value: InputValue) => {
     try {
-      const newValue = inputValueToNumber(value);
-      onColorChange && onColorChange(hsv_to_hsvfloat({ ...hsvfloat_to_hsv(valueProp), [component]: newValue }));
+      const newComponent = inputValueToNumber(value);
+      const newValue = valueProp;
+      newValue[componentIndex] = newComponent;
+      onColorChange && onColorChange(fromComponentRepresentation(newValue));
       return true;
     } catch (e) {
       console.error(e);
       return false;
     }
-  };
+  }, []);
 
-  const handleHexChange = (_: 'hex', value: InputValue) => {
+  const handleHexChange = (_: number, value: InputValue) => {
     try {
       const newValue = inputValueToString(value);
-      onColorChange && onColorChange(srgb_to_okhsv(hex_to_rgb(newValue)));
+      onColorChange && onColorChange(fromSRGB(hex_to_rgb(newValue)));
       return true;
     } catch (e) {
       console.error(e);
@@ -55,7 +51,7 @@ const ColorInput: React.FC<Props> = ({
     }
   };
 
-  const handleAlphaChange = (_: 'a', value: InputValue) => {
+  const handleAlphaChange = (_: number, value: InputValue) => {
     try {
       const newValue = inputValueToNumber(value);
       onAlphaChange && onAlphaChange(newValue / 100);
@@ -66,21 +62,25 @@ const ColorInput: React.FC<Props> = ({
     }
   };
 
-  if (type === 'hsv') {
+  if (type === 'component') {
+    const hsv = roundArrayTo1Decimals(toComponentRepresentation(valueProp));
+
     return (
       <div className="color-input-container">
-        <ColorComponentInput component="h" type="number" value={hsv.h} onChange={handleHsvChange} />
-        <ColorComponentInput component="s" type="number" value={hsv.s} onChange={handleHsvChange} />
-        <ColorComponentInput component="v" type="number" value={hsv.v} onChange={handleHsvChange} />
-        <ColorComponentInput component="a" type="number" value={alpha} onChange={handleAlphaChange} />
+        <ColorComponentInput componentIndex={0} type="number" value={hsv[0]} onChange={handleComponentChange} />
+        <ColorComponentInput componentIndex={1} type="number" value={hsv[1]} onChange={handleComponentChange} />
+        <ColorComponentInput componentIndex={2} type="number" value={hsv[2]} onChange={handleComponentChange} />
+        <ColorComponentInput componentIndex={3} type="number" value={alpha} onChange={handleAlphaChange} />
       </div>
     );
   } else {
     // Hex input
+    const hex = rgb_to_hex(toSRGB(valueProp));
+
     return (
       <div className="color-input-container">
-        <ColorComponentInput className="hex" component="hex" type="text" value={hex} onChange={handleHexChange} />
-        <ColorComponentInput component="a" type="number" value={alpha} onChange={handleAlphaChange} />
+        <ColorComponentInput className="hex" componentIndex={0} type="text" value={hex} onChange={handleHexChange} />
+        <ColorComponentInput componentIndex={1} type="number" value={alpha} onChange={handleAlphaChange} />
       </div>
     );
   }

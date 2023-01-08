@@ -1,11 +1,11 @@
-.sv-container {
+.xy-container {
   position: relative;
   width: 100%;
   height: auto;
   aspect-ratio: 1;
 }
 
-.sv-loading-indicator {
+.xy-loading-indicator {
   position: absolute;
   display: flex;
   width: 100%;
@@ -15,6 +15,6 @@
   pointer-events: none;
 }
 
-.sv-loading-indicator p {
+.xy-loading-indicator p {
   user-select: none;
 }

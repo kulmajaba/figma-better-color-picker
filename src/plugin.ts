@@ -8,6 +8,8 @@ const html = BASE_URL ? `<script>window.location.href="${BASE_URL}";</script>` :
 
 figma.showUI(html, { themeColors: true, width: 336, height: 800 });
 
+figma.ui.postMessage('this is Figma');
+
 figma.ui.onmessage = (msg: PluginMessage) => {
   console.log(msg);
 };

@@ -19,166 +19,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { HSL, HSLFloat, HSV, HSVFloat, RGB } from '../types';
-import { InvalidArgumentError } from './errors';
-
-export const hsv_to_hsvfloat = (hsv: HSV): HSVFloat => ({ h: hsv.h / 360, s: hsv.s / 100, v: hsv.v / 100 });
-
-export const hsvfloat_to_hsv = (hsv: HSVFloat): HSV => ({ h: hsv.h * 360, s: hsv.s * 100, v: hsv.v * 100 });
-
-export const hsl_to_hslfloat = (hsv: HSL): HSLFloat => ({ h: hsv.h / 360, s: hsv.s / 100, l: hsv.l / 100 });
-
-export const hslfloat_to_hsl = (hsv: HSLFloat): HSL => ({ h: hsv.h * 360, s: hsv.s * 100, l: hsv.l * 100 });
-
-export const rgb_to_hsl = (rgb: RGB): HSLFloat => {
-  let { r, g, b } = rgb;
-
-  r /= 255;
-  g /= 255;
-  b /= 255;
-
-  const max = Math.max(r, g, b);
-  const min = Math.min(r, g, b);
-  let h = 0;
-  let s = 0;
-  const l = (max + min) / 2;
-
-  if (max !== min) {
-    const d = max - min;
-    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-    switch (max) {
-      case r:
-        h = (g - b) / d + (g < b ? 6 : 0);
-        break;
-      case g:
-        h = (b - r) / d + 2;
-        break;
-      case b:
-        h = (r - g) / d + 4;
-        break;
-    }
-    h /= 6;
-  }
-
-  return { h, s, l };
-};
-
-export const hsl_to_rgb = (hsl: HSLFloat): RGB => {
-  const { h, s, l } = hsl;
-
-  let r, g, b;
-
-  const hue_to_rgb = (p: number, q: number, t: number) => {
-    if (t < 0) t += 1;
-    if (t > 1) t -= 1;
-    if (t < 1 / 6) return p + (q - p) * 6 * t;
-    if (t < 1 / 2) return q;
-    if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
-    return p;
-  };
-
-  if (s == 0) {
-    r = g = b = l;
-  } else {
-    const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
-    const p = 2 * l - q;
-    r = hue_to_rgb(p, q, h + 1 / 3);
-    g = hue_to_rgb(p, q, h);
-    b = hue_to_rgb(p, q, h - 1 / 3);
-  }
-
-  return { r: r * 255, g: g * 255, b: b * 255 };
-};
-
-export const rgb_to_hsv = (rgb: RGB): HSVFloat => {
-  let { r, g, b } = rgb;
-
-  r /= 255;
-  g /= 255;
-  b /= 255;
-
-  const max = Math.max(r, g, b);
-  const min = Math.min(r, g, b);
-  let h = 0;
-  const v = max;
-
-  const d = max - min;
-  const s = max == 0 ? 0 : d / max;
-
-  if (max !== min) {
-    switch (max) {
-      case r:
-        h = (g - b) / d + (g < b ? 6 : 0);
-        break;
-      case g:
-        h = (b - r) / d + 2;
-        break;
-      case b:
-        h = (r - g) / d + 4;
-        break;
-    }
-    h /= 6;
-  }
-
-  return { h, s, v };
-};
-
-export const hsv_to_rgb = (hsv: HSVFloat): RGB => {
-  const { h, s, v } = hsv;
-
-  let r = 0;
-  let g = 0;
-  let b = 0;
-
-  const i = Math.floor(h * 6);
-  const f = h * 6 - i;
-  const p = v * (1 - s);
-  const q = v * (1 - f * s);
-  const t = v * (1 - (1 - f) * s);
-
-  switch (i % 6) {
-    case 0:
-      r = v;
-      g = t;
-      b = p;
-      break;
-    case 1:
-      r = q;
-      g = v;
-      b = p;
-      break;
-    case 2:
-      r = p;
-      g = v;
-      b = t;
-      break;
-    case 3:
-      r = p;
-      g = q;
-      b = v;
-      break;
-    case 4:
-      r = t;
-      g = p;
-      b = v;
-      break;
-    case 5:
-      r = v;
-      g = p;
-      b = q;
-      break;
-  }
-
-  return { r: r * 255, g: g * 255, b: b * 255 };
-};
-
-const srgb_transfer_function = (a: number) => {
-  return 0.0031308 >= a ? 12.92 * a : 1.055 * Math.pow(a, 0.4166666666666667) - 0.055;
-};
-
-const srgb_transfer_function_inv = (a: number) => {
-  return 0.04045 < a ? Math.pow((a + 0.055) / 1.055, 2.4) : a / 12.92;
-};
+import { Color } from '../../types';
+import { srgb_transfer_function, srgb_transfer_function_inv } from './srgb';
 
 const linear_srgb_to_oklab = (r: number, g: number, b: number) => {
   const l = 0.4122214708 * r + 0.5363325363 * g + 0.0514459929 * b;
@@ -487,13 +329,13 @@ const get_Cs = (L: number, a_: number, b_: number) => {
   return [C_0, C_mid, C_max];
 };
 
-export const okhsl_to_srgb = (hsl: HSLFloat): RGB => {
-  const { h, s, l } = hsl;
+export const okhsl_to_srgb = (hsl: Color): Color => {
+  const [h, s, l] = hsl;
 
   if (l == 1) {
-    return { r: 255, g: 255, b: 255 };
+    return [255, 255, 255];
   } else if (l == 0) {
-    return { r: 0, g: 0, b: 0 };
+    return [0, 0, 0];
   }
 
   const a_ = Math.cos(2 * Math.PI * h);
@@ -526,15 +368,15 @@ export const okhsl_to_srgb = (hsl: HSLFloat): RGB => {
   //C = s*C_max;
 
   const rgb = oklab_to_linear_srgb(L, C * a_, C * b_);
-  return {
-    r: 255 * srgb_transfer_function(rgb[0]),
-    g: 255 * srgb_transfer_function(rgb[1]),
-    b: 255 * srgb_transfer_function(rgb[2])
-  };
+  return [
+    255 * srgb_transfer_function(rgb[0]),
+    255 * srgb_transfer_function(rgb[1]),
+    255 * srgb_transfer_function(rgb[2])
+  ];
 };
 
-export const srgb_to_okhsl = (rgb: RGB): HSLFloat => {
-  const { r, g, b } = rgb;
+export const srgb_to_okhsl = (rgb: Color): Color => {
+  const [r, g, b] = rgb;
 
   const lab = linear_srgb_to_oklab(
     srgb_transfer_function_inv(r / 255),
@@ -572,11 +414,11 @@ export const srgb_to_okhsl = (rgb: RGB): HSLFloat => {
   }
 
   const l = toe(L);
-  return { h, s, l };
+  return [h, s, l];
 };
 
-export const okhsv_to_srgb = (hsv: HSVFloat): RGB => {
-  const { h, s, v } = hsv;
+export const okhsv_to_srgb = (hsv: Color): Color => {
+  const [h, s, v] = hsv;
 
   const a_ = Math.cos(2 * Math.PI * h);
   const b_ = Math.sin(2 * Math.PI * h);
@@ -614,15 +456,15 @@ export const okhsv_to_srgb = (hsv: HSVFloat): RGB => {
   C = C * scale_L;
 
   const rgb = oklab_to_linear_srgb(L, C * a_, C * b_);
-  return {
-    r: 255 * srgb_transfer_function(rgb[0]),
-    g: 255 * srgb_transfer_function(rgb[1]),
-    b: 255 * srgb_transfer_function(rgb[2])
-  };
+  return [
+    255 * srgb_transfer_function(rgb[0]),
+    255 * srgb_transfer_function(rgb[1]),
+    255 * srgb_transfer_function(rgb[2])
+  ];
 };
 
-export const srgb_to_okhsv = (rgb: RGB): HSVFloat => {
-  const { r, g, b } = rgb;
+export const srgb_to_okhsv = (rgb: Color): Color => {
+  const [r, g, b] = rgb;
 
   const lab = linear_srgb_to_oklab(
     srgb_transfer_function_inv(r / 255),
@@ -662,43 +504,5 @@ export const srgb_to_okhsv = (rgb: RGB): HSVFloat => {
   const v = L === 0 ? 0 : L / L_v;
   const s = C_v === 0 ? 0 : ((S_0 + T) * C_v) / (T * S_0 + T * k * C_v);
 
-  return { h, s, v };
-};
-
-export const hex_to_rgb = (hex: string): RGB => {
-  if (hex.substring(0, 1) == '#') hex = hex.substring(1);
-
-  if (hex.match(/^([0-9a-f]{3})$/i)) {
-    const r = (parseInt(hex.charAt(0), 16) / 15) * 255;
-    const g = (parseInt(hex.charAt(1), 16) / 15) * 255;
-    const b = (parseInt(hex.charAt(2), 16) / 15) * 255;
-    return { r, g, b };
-  }
-  if (hex.match(/^([0-9a-f]{6})$/i)) {
-    const r = parseInt(hex.substring(0, 2), 16);
-    const g = parseInt(hex.substring(2, 4), 16);
-    const b = parseInt(hex.substring(4, 6), 16);
-    return { r, g, b };
-  }
-  if (hex.match(/^([0-9a-f]{1})$/i)) {
-    const a = (parseInt(hex.charAt(0), 16) / 15) * 255;
-    return { r: a, g: a, b: a };
-  }
-  if (hex.match(/^([0-9a-f]{2})$/i)) {
-    const a = parseInt(hex.substring(0, 2), 16);
-    return { r: a, g: a, b: a };
-  }
-
-  throw new InvalidArgumentError(`hex_to_rgb: ${hex} does not match a hexadecimal color representation`);
-};
-
-export const rgb_to_hex = (rgb: RGB): string => {
-  const componentToHex = (x: number) => {
-    const hex = Math.round(x).toString(16);
-    return hex.length == 1 ? '0' + hex : hex;
-  };
-
-  const { r, g, b } = rgb;
-
-  return '#' + componentToHex(r) + componentToHex(g) + componentToHex(b);
+  return [h, s, v];
 };

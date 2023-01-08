@@ -5,32 +5,35 @@ import Icon from '../Icon';
 import LockButton from './LockButton';
 
 import './ColorTable.css';
+import { useColorSpace } from '../../hooks/useColorSpace';
 
 interface Props {
-  hue: number;
-  saturation: number;
-  value: number;
+  firstComponent: number;
+  secondComponent: number;
+  thirdComponent: number;
   alpha: number;
 }
 
-const ColorTable: React.FC<Props> = ({ hue, saturation, value, alpha }) => {
-  const [hueLocked, setHueLocked] = useState(true);
-  const [saturationLocked, setSaturationLocked] = useState(true);
-  const [valueLocked, setValueLocked] = useState(true);
+const ColorTable: React.FC<Props> = ({ firstComponent, secondComponent, thirdComponent, alpha }) => {
+  const [firstComponentLocked, setFirstComponentLocked] = useState(true);
+  const [secondComponentLocked, setSecondComponentLocked] = useState(true);
+  const [thirdComponentLocked, setThirdComponentLocked] = useState(true);
   const [alphaLocked, setAlphaLocked] = useState(true);
   const [rows, setRows] = useState([0]);
 
-  const toggleHueLocked = useCallback(() => {
-    setHueLocked(!hueLocked);
-  }, [hueLocked]);
+  const { componentShortNames } = useColorSpace();
 
-  const toggleSaturationLocked = useCallback(() => {
-    setSaturationLocked(!saturationLocked);
-  }, [saturationLocked]);
+  const toggleFirstComponentLocked = useCallback(() => {
+    setFirstComponentLocked(!firstComponentLocked);
+  }, [firstComponentLocked]);
 
-  const toggleValueLocked = useCallback(() => {
-    setValueLocked(!valueLocked);
-  }, [valueLocked]);
+  const toggleSecondComponentLocked = useCallback(() => {
+    setSecondComponentLocked(!secondComponentLocked);
+  }, [secondComponentLocked]);
+
+  const toggleThirdComponentLocked = useCallback(() => {
+    setThirdComponentLocked(!thirdComponentLocked);
+  }, [thirdComponentLocked]);
 
   const toggleAlphaLocked = useCallback(() => {
     setAlphaLocked(!alphaLocked);
@@ -52,13 +55,13 @@ const ColorTable: React.FC<Props> = ({ hue, saturation, value, alpha }) => {
   const colorRows = rows.map((key) => (
     <ColorRow
       key={key}
-      hue={hue}
-      saturation={saturation}
-      value={value}
+      firstComponent={firstComponent}
+      secondComponent={secondComponent}
+      thirdComponent={thirdComponent}
       alpha={alpha}
-      hueLocked={hueLocked}
-      saturationLocked={saturationLocked}
-      valueLocked={valueLocked}
+      firstComponentLocked={firstComponentLocked}
+      secondComponentLocked={secondComponentLocked}
+      thirdComponentLocked={thirdComponentLocked}
       alphaLocked={alphaLocked}
       onDelete={() => deleteRow(key)}
     />
@@ -68,14 +71,14 @@ const ColorTable: React.FC<Props> = ({ hue, saturation, value, alpha }) => {
     <>
       <div className="lock-button-row-container">
         <div className="lock-button-row">
-          <LockButton locked={hueLocked} onClick={toggleHueLocked}>
-            H
+          <LockButton locked={firstComponentLocked} onClick={toggleFirstComponentLocked}>
+            {componentShortNames[0]}
           </LockButton>
-          <LockButton locked={saturationLocked} onClick={toggleSaturationLocked}>
-            S
+          <LockButton locked={secondComponentLocked} onClick={toggleSecondComponentLocked}>
+            {componentShortNames[1]}
           </LockButton>
-          <LockButton locked={valueLocked} onClick={toggleValueLocked}>
-            V
+          <LockButton locked={thirdComponentLocked} onClick={toggleThirdComponentLocked}>
+            {componentShortNames[2]}
           </LockButton>
           <LockButton locked={alphaLocked} onClick={toggleAlphaLocked}>
             A

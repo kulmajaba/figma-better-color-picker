@@ -1,25 +1,26 @@
 import React, { useCallback, useEffect, useState } from 'react';
 
 import strings from '../../assets/strings';
-import { HSVFloat } from '../../types';
-import { okhsv_to_srgb, rgb_to_hex } from '../../util/colorconversion';
+import { useColorSpace } from '../../hooks/useColorSpace';
+import { Color } from '../../types';
 import { createCheckerData } from '../../util/imageData';
+import { rgb_to_hex } from '../color/general';
 import ColorInput from '../ColorInput/ColorInput';
 import Icon from '../Icon';
 import PickerCanvas from '../PickerCanvas';
 
 import './ColorRow.css';
 
-const createColorFill = (width: number, height: number, color: HSVFloat, alpha: number) => {
-  const rgb = okhsv_to_srgb(color);
+const createColorFill = (width: number, height: number, color: Color, alpha: number, toSRGB: (val: Color) => Color) => {
+  const [r, g, b] = toSRGB(color);
   alpha = Math.round(alpha * 255);
   const data = new Uint8ClampedArray(width * height * 4);
 
   for (let i = 0; i < width * height; i++) {
     const index = i * 4;
-    data[index + 0] = rgb.r;
-    data[index + 1] = rgb.g;
-    data[index + 2] = rgb.b;
+    data[index + 0] = r;
+    data[index + 1] = g;
+    data[index + 2] = b;
     data[index + 3] = alpha;
   }
 
@@ -27,50 +28,52 @@ const createColorFill = (width: number, height: number, color: HSVFloat, alpha: 
 };
 
 interface Props {
-  hue: number;
-  saturation: number;
-  value: number;
+  firstComponent: number;
+  secondComponent: number;
+  thirdComponent: number;
   alpha: number;
-  hueLocked: boolean;
-  saturationLocked: boolean;
-  valueLocked: boolean;
+  firstComponentLocked: boolean;
+  secondComponentLocked: boolean;
+  thirdComponentLocked: boolean;
   alphaLocked: boolean;
   onDelete: () => void;
 }
 
 const ColorRow: React.FC<Props> = ({
-  hue: hueProp,
-  saturation: saturationProp,
-  value: valueProp,
+  firstComponent: firstComponentProp,
+  secondComponent: secondComponentProp,
+  thirdComponent: thirdComponentProp,
   alpha: alphaProp,
-  hueLocked,
-  saturationLocked,
-  valueLocked,
+  firstComponentLocked,
+  secondComponentLocked,
+  thirdComponentLocked,
   alphaLocked,
   onDelete
 }) => {
-  const [hue, setHue] = useState(hueProp);
-  const [saturation, setSaturation] = useState(saturationProp);
-  const [value, setValue] = useState(valueProp);
+  const [firstComponent, setFirstComponent] = useState(firstComponentProp);
+  const [secondComponent, setSecondComponent] = useState(secondComponentProp);
+  const [thirdComponent, setThirdComponent] = useState(thirdComponentProp);
   const [alpha, setAlpha] = useState(alphaProp);
 
-  useEffect(() => {
-    if (hueLocked) {
-      setHue(hueProp);
-    }
-  }, [hueProp, hueLocked]);
+  const { toSRGB } = useColorSpace();
 
   useEffect(() => {
-    if (saturationLocked) {
-      setSaturation(saturationProp);
+    if (firstComponentLocked) {
+      setFirstComponent(firstComponentProp);
     }
-  }, [saturationProp, saturationLocked]);
+  }, [firstComponentProp, firstComponentLocked]);
 
   useEffect(() => {
-    if (valueLocked) {
-      setValue(valueProp);
+    if (secondComponentLocked) {
+      setSecondComponent(secondComponentProp);
     }
-  }, [valueProp, valueLocked]);
+  }, [secondComponentProp, secondComponentLocked]);
+
+  useEffect(() => {
+    if (thirdComponentLocked) {
+      setThirdComponent(thirdComponentProp);
+    }
+  }, [thirdComponentProp, thirdComponentLocked]);
 
   useEffect(() => {
     if (alphaLocked) {
@@ -79,12 +82,12 @@ const ColorRow: React.FC<Props> = ({
   }, [alphaProp, alphaLocked]);
 
   const onColorChange = useCallback(
-    (hsv: HSVFloat) => {
-      !hueLocked && setHue(hsv.h);
-      !saturationLocked && setSaturation(hsv.s);
-      !valueLocked && setValue(hsv.v);
+    (color: Color) => {
+      !firstComponentLocked && setFirstComponent(color[0]);
+      !secondComponentLocked && setSecondComponent(color[1]);
+      !thirdComponentLocked && setThirdComponent(color[2]);
     },
-    [hueLocked, saturationLocked, valueLocked]
+    [firstComponentLocked, secondComponentLocked, thirdComponentLocked]
   );
 
   const onAlphaChange = useCallback((alpha: number) => !alphaLocked && setAlpha(alpha), [alphaLocked]);
@@ -93,25 +96,31 @@ const ColorRow: React.FC<Props> = ({
     console.log('copy');
     if (navigator.clipboard) {
       try {
-        await navigator.clipboard.writeText(rgb_to_hex(okhsv_to_srgb({ h: hue, s: saturation, v: value })));
-        console.log('copy succesful');
+        await navigator.clipboard.writeText(rgb_to_hex(toSRGB([firstComponent, secondComponent, thirdComponent])));
+        console.log('copy successful');
       } catch (e) {
         console.error(e);
       }
     } else {
       console.warn('Clipboard API not available');
     }
-  }, [hue, saturation, value]);
+  }, [firstComponent, secondComponent, thirdComponent]);
 
-  const hsv: HSVFloat = { h: hue, s: saturation, v: value };
+  const color: Color = [firstComponent, secondComponent, thirdComponent];
 
   return (
     <div className="color-row">
       <div className="color-row-sample">
         <PickerCanvas getImageData={(width, height) => createCheckerData(width, height)} />
-        <PickerCanvas getImageData={(width, height) => createColorFill(width, height, hsv, alpha)} />
+        <PickerCanvas getImageData={(width, height) => createColorFill(width, height, color, alpha, toSRGB)} />
       </div>
-      <ColorInput type="hsv" value={hsv} alpha={alpha} onColorChange={onColorChange} onAlphaChange={onAlphaChange} />
+      <ColorInput
+        type="component"
+        value={color}
+        alpha={alpha}
+        onColorChange={onColorChange}
+        onAlphaChange={onAlphaChange}
+      />
       <div className="color-row-buttons">
         <button className="small border-none" onClick={onCopy}>
           <Icon icon="content_copy" />

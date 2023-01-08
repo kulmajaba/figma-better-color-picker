@@ -1,21 +1,21 @@
 import React, { MouseEventHandler, useCallback, useEffect, useRef, useState } from 'react';
+import { useColorSpace } from '../hooks/useColorSpace';
 
-import { okhsv_to_srgb } from '../util/colorconversion';
-import { Size, SizeZero, VerticalChangeDirection, XY } from '../types';
+import { ColorConverter, Size, SizeZero, VerticalChangeDirection, XY } from '../types';
 import Picker from './Picker';
 
-import './SVPicker.css';
+import './XYPicker.css';
 
-const createSVData = (width: number, height: number, hue: number) => {
+const createXYData = (width: number, height: number, firstComponent: number, toSRGB: ColorConverter) => {
   const data = new Uint8ClampedArray(width * height * 4);
 
   for (let j = 0; j < height; j++) {
     for (let i = 0; i < width; i++) {
       const index = (j * width + i) * 4;
-      const rgb = okhsv_to_srgb({ h: hue, s: i / width, v: 1 - j / height });
-      data[index + 0] = rgb.r;
-      data[index + 1] = rgb.g;
-      data[index + 2] = rgb.b;
+      const [r, g, b] = toSRGB([firstComponent, i / width, 1 - j / height]);
+      data[index + 0] = r;
+      data[index + 1] = g;
+      data[index + 2] = b;
       data[index + 3] = 255;
     }
   }
@@ -28,8 +28,8 @@ interface SVCache {
 }
 
 interface Props {
-  hue: number;
-  hueValues: number[];
+  firstComponentValues: number[];
+  firstComponent: number;
   value: XY;
   globalValue: XY;
   dragging: boolean;
@@ -37,38 +37,41 @@ interface Props {
   onMouseDown: MouseEventHandler<HTMLElement>;
 }
 
-const SVPicker: React.FC<Props> = ({ hue, hueValues, value, onChange, ...otherProps }) => {
+const XYPicker: React.FC<Props> = ({ firstComponentValues, firstComponent, value, onChange, ...otherProps }) => {
   const [canvasSize, setCanvasSize] = useState<Size>(SizeZero);
-  const [svDataCache, setSvDataCache] = useState<SVCache>({});
+  const [xyDataCache, setXyDataCache] = useState<SVCache>({});
 
   // Use ref for loading status to make sure it is updated even when the UI thread is blocked
   const svDataCacheLoading = useRef(false);
 
-  const updateSVCache = async () => {
+  const { toSRGB } = useColorSpace();
+
+  const updateXYCache = async () => {
     if (svDataCacheLoading.current) {
       console.log('Cache already updating');
       return;
     }
-    console.log('Update SV cache');
+    console.log('Update XY cache');
 
     svDataCacheLoading.current = true;
     const svData: SVCache = {};
-    hueValues.forEach((hue) => {
-      svData[hue] = createSVData(canvasSize.width, canvasSize.height, hue);
+    firstComponentValues.forEach((val) => {
+      svData[val] = createXYData(canvasSize.width, canvasSize.height, val, toSRGB);
     });
-    setSvDataCache(svData);
+    setXyDataCache(svData);
     svDataCacheLoading.current = false;
-    console.log('SV cache updated');
+    console.log('XY cache updated');
   };
 
-  const getSVData = useCallback(
-    (width: number, height: number) => svDataCache[hue] ?? createSVData(width, height, hue),
-    [svDataCache, createSVData, hue]
+  const getXYData = useCallback(
+    (width: number, height: number) =>
+      xyDataCache[firstComponent] ?? createXYData(width, height, firstComponent, toSRGB),
+    [xyDataCache, createXYData, firstComponent]
   );
 
   useEffect(() => {
-    updateSVCache();
-  }, [canvasSize, hueValues]);
+    // updateXYCache();
+  }, [canvasSize, firstComponentValues]);
 
   const onSizeChange = useCallback(
     (size: Size) => {
@@ -78,17 +81,17 @@ const SVPicker: React.FC<Props> = ({ hue, hueValues, value, onChange, ...otherPr
   );
 
   return (
-    <div className="sv-container">
+    <div className="xy-container">
       <Picker
-        getImageData={getSVData}
+        getImageData={getXYData}
         verticalChangeDirection={VerticalChangeDirection.BottomToTop}
         value={value}
         onChange={onChange}
         onSizeChange={onSizeChange}
         {...otherProps}
       />
-      {Object.keys(svDataCache).length === 0 && (
-        <div className="sv-loading-indicator">
+      {Object.keys(xyDataCache).length === 0 && (
+        <div className="xy-loading-indicator">
           <p>Loading</p>
         </div>
       )}
@@ -97,12 +100,12 @@ const SVPicker: React.FC<Props> = ({ hue, hueValues, value, onChange, ...otherPr
 };
 
 const areEqual = (prevProps: Props, nextProps: Props) =>
-  prevProps.hue === nextProps.hue &&
-  prevProps.hueValues === nextProps.hueValues &&
+  prevProps.firstComponentValues === nextProps.firstComponentValues &&
+  prevProps.firstComponent === nextProps.firstComponent &&
   prevProps.value === nextProps.value &&
   prevProps.dragging === nextProps.dragging &&
   !prevProps.dragging &&
   prevProps.onChange === nextProps.onChange &&
   prevProps.onMouseDown === nextProps.onMouseDown;
 
-export default React.memo(SVPicker, areEqual);
+export default React.memo(XYPicker, areEqual);

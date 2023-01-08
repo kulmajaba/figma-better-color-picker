@@ -1,6 +1,7 @@
 /* eslint-disable */
 // @ts-nocheck
 
+/*
 function rgb_to_hsl(r, g, b)
 {
     r /= 255; 
@@ -695,3 +696,4 @@ function rgb_to_hex(r,g,b)
 
     return "#" + componentToHex(r) + componentToHex(g) + componentToHex(b); 
 }
+*/

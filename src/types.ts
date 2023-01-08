@@ -54,6 +54,10 @@ export interface HSVFloat {
   v: number;
 }
 
+export type Color = [number, number, number];
+
+export type ColorConverter = (color: Color) => Color;
+
 export type InputValue = string | number | readonly string[] | undefined;
 
 export enum PluginMessageType {}
