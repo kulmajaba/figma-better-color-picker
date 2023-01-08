@@ -72,6 +72,24 @@ function App() {
     [onMouseDown]
   );
 
+  const onFirstComponentChange = useCallback((val: number) => {
+    setFirstComponent(val);
+  }, []);
+
+  const onFirstComponentMouseDown = useCallback(
+    (e: React.MouseEvent<HTMLElement, MouseEvent>) => onMouseDown(e, PickerType.FirstComponentSlider),
+    [onMouseDown]
+  );
+
+  const onAlphaChange = useCallback((val: number) => {
+    setAlpha(val);
+  }, []);
+
+  const onAlphaMouseDown = useCallback(
+    (e: React.MouseEvent<HTMLElement, MouseEvent>) => onMouseDown(e, PickerType.Alpha),
+    [onMouseDown]
+  );
+
   const onColorInputChange = useCallback((color: Color) => {
     setFirstComponent(color[0]);
     setXyComponent({ x: color[1], y: color[2] });
@@ -95,6 +113,7 @@ function App() {
   const color: Color = [firstComponent, xyComponent.x, xyComponent.y];
   const rgb = toSRGB(color);
 
+  // eslint-disable-next-line prettier/prettier
   const colorString = `Component: ${roundToFixedPrecision(color[0], 3)}, ${roundToFixedPrecision(color[1], 3)}, ${roundToFixedPrecision(color[2], 3)}, A: ${roundToFixedPrecision(alpha, 3)}<br />
   RGB: ${roundToFixedPrecision(rgb[0], 3)}, ${roundToFixedPrecision(rgb[1], 3)}, ${roundToFixedPrecision(rgb[2], 3)}}`;
 
@@ -115,8 +134,8 @@ function App() {
           globalValue={mousePos}
           value={firstComponent}
           dragging={activePicker === PickerType.FirstComponentSlider}
-          onChange={(val) => setFirstComponent(val)}
-          onMouseDown={(e) => onMouseDown(e, PickerType.FirstComponentSlider)}
+          onChange={onFirstComponentChange}
+          onMouseDown={onFirstComponentMouseDown}
           onSizeChange={(size) => {
             const newFirstComponentValues = new Array(size.width).fill(0).map((_, i) => i / (size.width - 1));
             setFirstComponentValues(newFirstComponentValues);
@@ -127,8 +146,8 @@ function App() {
           globalValue={mousePos}
           value={alpha}
           dragging={activePicker === PickerType.Alpha}
-          onChange={(val) => setAlpha(val)}
-          onMouseDown={(e) => onMouseDown(e, PickerType.Alpha)}
+          onChange={onAlphaChange}
+          onMouseDown={onAlphaMouseDown}
         />
         <p dangerouslySetInnerHTML={{ __html: colorString }} />
         <div className="main-inputs">
@@ -141,14 +160,14 @@ function App() {
               value={color}
               alpha={alpha}
               onColorChange={onColorInputChange}
-              onAlphaChange={(val) => setAlpha(val)}
+              onAlphaChange={onAlphaChange}
             />
             <ColorInput
               type="hex"
               value={color}
               alpha={alpha}
               onColorChange={onColorInputChange}
-              onAlphaChange={(val) => setAlpha(val)}
+              onAlphaChange={onAlphaChange}
             />
           </div>
         </div>

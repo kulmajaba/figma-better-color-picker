@@ -1,14 +1,15 @@
 import React, { MouseEventHandler } from 'react';
-import { Color, Direction, XY } from '../types';
+import { Color, ColorConverter, Direction, XY } from '../types';
 import Picker from './Picker';
 import PickerCanvas from './PickerCanvas';
 import { createCheckerData } from '../util/imageData';
 
 import './AlphaPicker.css';
+import { useColorSpace } from '../hooks/useColorSpace';
 
-const createAlphaData = (width: number, height: number, color: Color, direction: Direction) => {
+const createAlphaData = (width: number, height: number, toSRGB: ColorConverter, color: Color, direction: Direction) => {
   const [sliderLength, sliderWidth] = direction === Direction.Horizontal ? [width, height] : [height, width];
-  const [r, g, b] = color;
+  const [r, g, b] = toSRGB(color);
 
   const data = new Uint8ClampedArray(sliderLength * sliderWidth * 4);
 
@@ -27,8 +28,8 @@ const createAlphaData = (width: number, height: number, color: Color, direction:
   return new ImageData(data, width);
 };
 
-const createHorizontalAlphaData = (width: number, height: number, color: Color) =>
-  createAlphaData(width, height, color, Direction.Horizontal);
+const createHorizontalAlphaData = (width: number, height: number, toSRGB: ColorConverter, color: Color) =>
+  createAlphaData(width, height, toSRGB, color, Direction.Horizontal);
 
 interface Props {
   color: Color;
@@ -40,12 +41,13 @@ interface Props {
 }
 
 const AlphaPicker: React.FC<Props> = ({ color, value, onChange, ...otherProps }) => {
+  const { toSRGB } = useColorSpace();
   const pickerValue = { x: value, y: 0.5 };
   return (
     <div className="alpha-container">
       <PickerCanvas getImageData={(width, height) => createCheckerData(width, height)} />
       <Picker
-        getImageData={(width, height) => createHorizontalAlphaData(width, height, color)}
+        getImageData={(width, height) => createHorizontalAlphaData(width, height, toSRGB, color)}
         value={pickerValue}
         onChange={(val) => onChange(val.x)}
         {...otherProps}
