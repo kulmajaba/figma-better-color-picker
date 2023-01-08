@@ -47,7 +47,7 @@ const PickerBall: React.FC<Props> = ({ value, horizontalChangeDirection, vertica
       const context = canvas.getContext('2d');
       context && draw(context);
     }
-  });
+  }, [value]);
 
   return <canvas ref={canvasRef} className="picker-ball" />;
 };

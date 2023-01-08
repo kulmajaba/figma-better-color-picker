@@ -40,37 +40,58 @@ const ColorInput: React.FC<Props> = ({
     }
   }, []);
 
-  const handleHexChange = (_: number, value: InputValue) => {
-    try {
-      const newValue = inputValueToString(value);
-      onColorChange && onColorChange(fromSRGB(hex_to_rgb(newValue)));
-      return true;
-    } catch (e) {
-      console.error(e);
-      return false;
-    }
-  };
+  const handleFirstComponentChange = useCallback(
+    (value: InputValue) => handleComponentChange(0, value),
+    [handleComponentChange]
+  );
 
-  const handleAlphaChange = (_: number, value: InputValue) => {
-    try {
-      const newValue = inputValueToNumber(value);
-      onAlphaChange && onAlphaChange(newValue / 100);
-      return true;
-    } catch (e) {
-      console.error(e);
-      return false;
-    }
-  };
+  const handleSecondComponentChange = useCallback(
+    (value: InputValue) => handleComponentChange(1, value),
+    [handleComponentChange]
+  );
+
+  const handleThirdComponentChange = useCallback(
+    (value: InputValue) => handleComponentChange(2, value),
+    [handleComponentChange]
+  );
+
+  const handleHexChange = useCallback(
+    (value: InputValue) => {
+      try {
+        const newValue = inputValueToString(value);
+        onColorChange && onColorChange(fromSRGB(hex_to_rgb(newValue)));
+        return true;
+      } catch (e) {
+        console.error(e);
+        return false;
+      }
+    },
+    [fromSRGB, onColorChange]
+  );
+
+  const handleAlphaChange = useCallback(
+    (value: InputValue) => {
+      try {
+        const newValue = inputValueToNumber(value);
+        onAlphaChange && onAlphaChange(newValue / 100);
+        return true;
+      } catch (e) {
+        console.error(e);
+        return false;
+      }
+    },
+    [onAlphaChange]
+  );
 
   if (type === 'component') {
     const hsv = roundArrayTo1Decimals(toComponentRepresentation(valueProp));
 
     return (
       <div className="color-input-container">
-        <ColorComponentInput componentIndex={0} type="number" value={hsv[0]} onChange={handleComponentChange} />
-        <ColorComponentInput componentIndex={1} type="number" value={hsv[1]} onChange={handleComponentChange} />
-        <ColorComponentInput componentIndex={2} type="number" value={hsv[2]} onChange={handleComponentChange} />
-        <ColorComponentInput componentIndex={3} type="number" value={alpha} onChange={handleAlphaChange} />
+        <ColorComponentInput type="number" value={hsv[0]} onChange={handleFirstComponentChange} />
+        <ColorComponentInput type="number" value={hsv[1]} onChange={handleSecondComponentChange} />
+        <ColorComponentInput type="number" value={hsv[2]} onChange={handleThirdComponentChange} />
+        <ColorComponentInput type="number" value={alpha} onChange={handleAlphaChange} />
       </div>
     );
   } else {
@@ -79,8 +100,8 @@ const ColorInput: React.FC<Props> = ({
 
     return (
       <div className="color-input-container">
-        <ColorComponentInput className="hex" componentIndex={0} type="text" value={hex} onChange={handleHexChange} />
-        <ColorComponentInput componentIndex={1} type="number" value={alpha} onChange={handleAlphaChange} />
+        <ColorComponentInput className="hex" type="text" value={hex} onChange={handleHexChange} />
+        <ColorComponentInput type="number" value={alpha} onChange={handleAlphaChange} />
       </div>
     );
   }

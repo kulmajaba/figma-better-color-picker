@@ -1,6 +1,6 @@
 import React, { MouseEventHandler, useCallback, useEffect, useRef, useState } from 'react';
-import { useColorSpace } from '../hooks/useColorSpace';
 
+import { useColorSpace } from '../hooks/useColorSpace';
 import { ColorConverter, Size, SizeZero, VerticalChangeDirection, XY } from '../types';
 import Picker from './Picker';
 
@@ -42,26 +42,27 @@ const XYPicker: React.FC<Props> = ({ firstComponentValues, firstComponent, value
   const [xyDataCache, setXyDataCache] = useState<SVCache>({});
 
   // Use ref for loading status to make sure it is updated even when the UI thread is blocked
-  const svDataCacheLoading = useRef(false);
+  const xyDataCacheLoading = useRef(false);
 
   const { toSRGB } = useColorSpace();
 
-  const updateXYCache = async () => {
-    if (svDataCacheLoading.current) {
+  const updateXYCache = useCallback(async () => {
+    if (xyDataCacheLoading.current) {
       console.log('Cache already updating');
       return;
     }
     console.log('Update XY cache');
 
-    svDataCacheLoading.current = true;
-    const svData: SVCache = {};
+    xyDataCacheLoading.current = true;
+    setXyDataCache({});
+    const xyData: SVCache = {};
     firstComponentValues.forEach((val) => {
-      svData[val] = createXYData(canvasSize.width, canvasSize.height, val, toSRGB);
+      xyData[val] = createXYData(canvasSize.width, canvasSize.height, val, toSRGB);
     });
-    setXyDataCache(svData);
-    svDataCacheLoading.current = false;
+    setXyDataCache(xyData);
+    xyDataCacheLoading.current = false;
     console.log('XY cache updated');
-  };
+  }, [toSRGB]);
 
   const getXYData = useCallback(
     (width: number, height: number) =>
@@ -73,12 +74,9 @@ const XYPicker: React.FC<Props> = ({ firstComponentValues, firstComponent, value
     // updateXYCache();
   }, [canvasSize, firstComponentValues]);
 
-  const onSizeChange = useCallback(
-    (size: Size) => {
-      setCanvasSize(size);
-    },
-    [setCanvasSize]
-  );
+  const onSizeChange = useCallback((size: Size) => {
+    setCanvasSize(size);
+  }, []);
 
   return (
     <div className="xy-container">

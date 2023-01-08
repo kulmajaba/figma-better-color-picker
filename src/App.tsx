@@ -1,8 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import './App.css';
-import { Color, XY, XYZero } from './types';
+import { Color, Size, XY, XYZero } from './types';
 import HuePicker from './components/SliderPicker';
-import SVPicker from './components/XYPicker';
+import XYPicker from './components/XYPicker';
 import AlphaPicker from './components/AlphaPicker';
 import { roundToFixedPrecision } from './util/mathUtils';
 import ColorInput from './components/ColorInput/ColorInput';
@@ -63,6 +63,11 @@ function App() {
     setActivePicker(undefined);
   }, []);
 
+  const onFirstComponentPickerSizeChange = useCallback((size: Size) => {
+    const newFirstComponentValues = new Array(size.width).fill(0).map((_, i) => i / (size.width - 1));
+    setFirstComponentValues(newFirstComponentValues);
+  }, []);
+
   const onXyChange = useCallback((val: XY) => {
     setXyComponent(val);
   }, []);
@@ -121,7 +126,7 @@ function App() {
     <main onMouseUp={onMouseUp} onMouseMove={onMouseMove}>
       <section className="pickers">
         {/* TODO: Indicate if picker is run online or offline */}
-        <SVPicker
+        <XYPicker
           firstComponentValues={firstComponentValues}
           firstComponent={firstComponent}
           globalValue={mousePos}
@@ -136,10 +141,7 @@ function App() {
           dragging={activePicker === PickerType.FirstComponentSlider}
           onChange={onFirstComponentChange}
           onMouseDown={onFirstComponentMouseDown}
-          onSizeChange={(size) => {
-            const newFirstComponentValues = new Array(size.width).fill(0).map((_, i) => i / (size.width - 1));
-            setFirstComponentValues(newFirstComponentValues);
-          }}
+          onSizeChange={onFirstComponentPickerSizeChange}
         />
         <AlphaPicker
           color={color}

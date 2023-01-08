@@ -1,4 +1,4 @@
-import React, { MouseEventHandler } from 'react';
+import React, { MouseEventHandler, useCallback } from 'react';
 import { Color, ColorConverter, Direction, XY } from '../types';
 import Picker from './Picker';
 import PickerCanvas from './PickerCanvas';
@@ -43,15 +43,16 @@ interface Props {
 const AlphaPicker: React.FC<Props> = ({ color, value, onChange, ...otherProps }) => {
   const { toSRGB } = useColorSpace();
   const pickerValue = { x: value, y: 0.5 };
+
+  const getAlphaData = useCallback(
+    (width: number, height: number) => createHorizontalAlphaData(width, height, toSRGB, color),
+    [toSRGB, color]
+  );
+
   return (
     <div className="alpha-container">
       <PickerCanvas getImageData={(width, height) => createCheckerData(width, height)} />
-      <Picker
-        getImageData={(width, height) => createHorizontalAlphaData(width, height, toSRGB, color)}
-        value={pickerValue}
-        onChange={(val) => onChange(val.x)}
-        {...otherProps}
-      />
+      <Picker getImageData={getAlphaData} value={pickerValue} onChange={(val) => onChange(val.x)} {...otherProps} />
     </div>
   );
 };

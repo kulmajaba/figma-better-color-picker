@@ -1,4 +1,4 @@
-import React, { MouseEventHandler, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import React, { MouseEventHandler, useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react';
 import { Size } from '../types';
 
 import './PickerCanvas.css';
@@ -15,11 +15,14 @@ const PickerCanvas = React.forwardRef<HTMLCanvasElement, Props>(({ getImageData,
   const canvasRef = useRef<HTMLCanvasElement>(null);
   useImperativeHandle<HTMLCanvasElement | null, HTMLCanvasElement | null>(ref, () => canvasRef.current);
 
-  const draw = (ctx: CanvasRenderingContext2D) => {
-    const { width, height } = ctx.canvas;
-    const data = getImageData(width, height);
-    ctx.putImageData(data, 0, 0);
-  };
+  const draw = useCallback(
+    (ctx: CanvasRenderingContext2D) => {
+      const { width, height } = ctx.canvas;
+      const data = getImageData(width, height);
+      ctx.putImageData(data, 0, 0);
+    },
+    [getImageData]
+  );
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -35,7 +38,7 @@ const PickerCanvas = React.forwardRef<HTMLCanvasElement, Props>(({ getImageData,
         context && draw(context);
       }
     }
-  });
+  }, []);
 
   useEffect(() => {
     const canvas = canvasRef.current;
