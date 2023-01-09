@@ -29,6 +29,14 @@ interface ColorSpace {
    * Converts a color from the human-readable representation to color space
    */
   fromComponentRepresentation: ColorConverter;
+  /**
+   * When generating the slider control for the first color component,
+   * the second and third components (e.g. S and V for HSV) are set to these values
+   */
+  firstComponentSliderConstants: [number, number];
+  /**
+   * Visible in the color table header
+   */
   componentShortNames: [string, string, string];
 }
 
@@ -37,6 +45,7 @@ const OKHSV: ColorSpace = {
   toSRGB: okhsv_to_srgb,
   toComponentRepresentation: hslvfloat_to_hslv,
   fromComponentRepresentation: hslv_to_hslvfloat,
+  firstComponentSliderConstants: [0.9, 0.9],
   componentShortNames: ['H', 'S', 'V']
 };
 
@@ -45,6 +54,7 @@ const OKHSL: ColorSpace = {
   toSRGB: okhsl_to_srgb,
   toComponentRepresentation: hslvfloat_to_hslv,
   fromComponentRepresentation: hslv_to_hslvfloat,
+  firstComponentSliderConstants: [1, 0.6],
   componentShortNames: ['H', 'S', 'L']
 };
 
@@ -53,23 +63,36 @@ const colorSpaces = {
   OKHSL
 };
 
-type ColorSpaceSetter = (name: keyof typeof colorSpaces) => void;
+type ColorSpaceName = keyof typeof colorSpaces;
+type ColorSpaceSetter = (name: ColorSpaceName) => void;
+
+export const colorSpaceNames = Object.keys(colorSpaces) as ColorSpaceName[];
 
 interface SpaceContext extends ColorSpace {
   setColorSpace: ColorSpaceSetter;
+  name: ColorSpaceName;
 }
 
-const ColorSpaceContext = createContext<SpaceContext>({ ...colorSpaces.OKHSV, setColorSpace: () => undefined });
+const ColorSpaceContext = createContext<SpaceContext>({
+  ...colorSpaces.OKHSV,
+  setColorSpace: () => undefined,
+  name: 'OKHSV'
+});
 
 export const ColorSpaceProvider = ({ children }: { children: React.ReactNode }) => {
   const [colorSpace, _setColorSpace] = useState(colorSpaces.OKHSV);
+  const [colorSpaceName, setColorSpaceName] = useState<ColorSpaceName>('OKHSV');
 
-  const setColorSpace: ColorSpaceSetter = useCallback(
-    (name: keyof typeof colorSpaces) => _setColorSpace(colorSpaces[name]),
-    []
+  const setColorSpace: ColorSpaceSetter = useCallback((name: ColorSpaceName) => {
+    _setColorSpace(colorSpaces[name]);
+    setColorSpaceName(name);
+  }, []);
+
+  return (
+    <ColorSpaceContext.Provider value={{ ...colorSpace, setColorSpace, name: colorSpaceName }}>
+      {children}
+    </ColorSpaceContext.Provider>
   );
-
-  return <ColorSpaceContext.Provider value={{ ...colorSpace, setColorSpace }}>{children}</ColorSpaceContext.Provider>;
 };
 
 export const useColorSpace = () => useContext(ColorSpaceContext);

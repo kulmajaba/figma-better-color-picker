@@ -47,6 +47,7 @@ const XYPicker: React.FC<Props> = ({ firstComponentValues, firstComponent, value
   const { toSRGB } = useColorSpace();
 
   const updateXYCache = useCallback(async () => {
+    // TODO: use WebWorker to do this in the background
     if (xyDataCacheLoading.current) {
       console.log('Cache already updating');
       return;
@@ -62,17 +63,17 @@ const XYPicker: React.FC<Props> = ({ firstComponentValues, firstComponent, value
     setXyDataCache(xyData);
     xyDataCacheLoading.current = false;
     console.log('XY cache updated');
-  }, [toSRGB]);
+  }, [toSRGB, firstComponentValues]);
 
   const getXYData = useCallback(
     (width: number, height: number) =>
       xyDataCache[firstComponent] ?? createXYData(width, height, firstComponent, toSRGB),
-    [xyDataCache, createXYData, firstComponent]
+    [xyDataCache, firstComponent, toSRGB]
   );
 
   useEffect(() => {
-    // updateXYCache();
-  }, [canvasSize, firstComponentValues]);
+    updateXYCache();
+  }, [canvasSize, firstComponentValues, toSRGB]);
 
   const onSizeChange = useCallback((size: Size) => {
     setCanvasSize(size);

@@ -42,10 +42,18 @@ interface Props {
 }
 
 const SliderPicker: React.FC<Props> = ({ value, onChange, ...otherProps }) => {
-  const { toSRGB } = useColorSpace();
+  const { toSRGB, firstComponentSliderConstants } = useColorSpace();
 
   const createHorizontalSliderData = useCallback(
-    (width: number, height: number) => createSliderData(width, height, toSRGB, 0.9, 0.9, Direction.Horizontal),
+    (width: number, height: number) =>
+      createSliderData(
+        width,
+        height,
+        toSRGB,
+        firstComponentSliderConstants[0],
+        firstComponentSliderConstants[1],
+        Direction.Horizontal
+      ),
     [toSRGB]
   );
 
