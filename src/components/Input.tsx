@@ -1,8 +1,9 @@
 import React, { useCallback, useEffect, useState } from 'react';
+import { InputValue } from '../types';
 
 interface Props
   extends Omit<React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>, 'onChange'> {
-  onChange?: (value: string | number | readonly string[] | undefined) => boolean;
+  onChange: (value: InputValue) => boolean;
 }
 
 const Input: React.FC<Props> = ({ value: valueProp, onChange: onChangeProp, ...inputProps }) => {
@@ -29,7 +30,7 @@ const Input: React.FC<Props> = ({ value: valueProp, onChange: onChangeProp, ...i
         setValue(valueProp);
       }
     }
-  }, [onChangeProp]);
+  }, [onChangeProp, value, valueProp]);
 
   return <input value={value} onChange={onChange} onKeyDown={onKeyDown} onBlur={onBlur} {...inputProps} />;
 };

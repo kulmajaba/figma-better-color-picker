@@ -36,8 +36,6 @@ function App() {
 
   useEffect(() => {
     window.addEventListener('message', (e) => console.log(e));
-    console.log(window);
-    console.log(navigator);
   }, []);
 
   const onMouseMove = useCallback(

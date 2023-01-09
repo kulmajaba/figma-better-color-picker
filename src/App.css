@@ -157,7 +157,7 @@ input::-webkit-inner-spin-button {
 input[type=number] {
   -moz-appearance: textfield;
 }
-  
+
 svg {
   fill: var(--color-icon);
 }
