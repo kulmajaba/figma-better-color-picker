@@ -2,7 +2,6 @@ import React, { MouseEventHandler, useCallback, useEffect, useState } from 'reac
 
 import { useColorSpace } from '../hooks/useColorSpace';
 import {
-  ColorConverter,
   ImageDataCache,
   ImageDataWorkerMessage,
   Size,
@@ -11,26 +10,10 @@ import {
   VerticalChangeDirection,
   XY
 } from '../types';
+import { createXYData } from '../util/imageData';
 import Picker from './Picker';
 
 import './XYPicker.css';
-
-const createXYData = (width: number, height: number, firstComponent: number, toSRGB: ColorConverter) => {
-  const data = new Uint8ClampedArray(width * height * 4);
-
-  for (let j = 0; j < height; j++) {
-    for (let i = 0; i < width; i++) {
-      const index = (j * width + i) * 4;
-      const [r, g, b] = toSRGB([firstComponent, i / width, 1 - j / height]);
-      data[index + 0] = r;
-      data[index + 1] = g;
-      data[index + 2] = b;
-      data[index + 3] = 255;
-    }
-  }
-
-  return new ImageData(data, width);
-};
 
 interface Props {
   firstComponentValues: number[];
