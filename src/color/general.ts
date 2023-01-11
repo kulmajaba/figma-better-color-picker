@@ -1,5 +1,5 @@
-import { Color } from '../../types';
-import { InvalidArgumentError } from '../../util/errors';
+import { Color } from '../types';
+import { InvalidArgumentError } from '../util/errors';
 
 /**
  * Convert a HSL/HSV value with ranges 0..360, 0..100, 0..100 to range 0..1

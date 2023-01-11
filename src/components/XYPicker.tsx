@@ -1,7 +1,16 @@
-import React, { MouseEventHandler, useCallback, useEffect, useRef, useState } from 'react';
+import React, { MouseEventHandler, useCallback, useEffect, useState } from 'react';
 
 import { useColorSpace } from '../hooks/useColorSpace';
-import { ColorConverter, Size, SizeZero, VerticalChangeDirection, XY } from '../types';
+import {
+  ColorConverter,
+  ImageDataCache,
+  ImageDataWorkerMessage,
+  Size,
+  SizeZero,
+  ToSRGBFuncName,
+  VerticalChangeDirection,
+  XY
+} from '../types';
 import Picker from './Picker';
 
 import './XYPicker.css';
@@ -23,10 +32,6 @@ const createXYData = (width: number, height: number, firstComponent: number, toS
   return new ImageData(data, width);
 };
 
-interface SVCache {
-  [key: number]: ImageData;
-}
-
 interface Props {
   firstComponentValues: number[];
   firstComponent: number;
@@ -37,32 +42,38 @@ interface Props {
   onMouseDown: MouseEventHandler<HTMLElement>;
 }
 
+const imageDataWorker = new Worker('../util/imageDataWorker.ts', {
+  type: 'module'
+});
+
 const XYPicker: React.FC<Props> = ({ firstComponentValues, firstComponent, value, onChange, ...otherProps }) => {
   const [canvasSize, setCanvasSize] = useState<Size>(SizeZero);
-  const [xyDataCache, setXyDataCache] = useState<SVCache>({});
-
-  // Use ref for loading status to make sure it is updated even when the UI thread is blocked
-  const xyDataCacheLoading = useRef(false);
+  const [xyDataCache, setXyDataCache] = useState<ImageDataCache>({});
+  const [xyDataCacheLoading, setXyDataCacheLoading] = useState(false);
 
   const { toSRGB } = useColorSpace();
 
   const updateXYCache = useCallback(async () => {
-    // TODO: use WebWorker to do this in the background
-    if (xyDataCacheLoading.current) {
+    if (xyDataCacheLoading) {
       console.log('Cache already updating');
       return;
     }
+    if (firstComponentValues.length === 0) {
+      console.log('No first component values given');
+      return;
+    }
+
     console.log('Update XY cache');
 
-    xyDataCacheLoading.current = true;
+    setXyDataCacheLoading(true);
     setXyDataCache({});
-    const xyData: SVCache = {};
-    firstComponentValues.forEach((val) => {
-      xyData[val] = createXYData(canvasSize.width, canvasSize.height, val, toSRGB);
-    });
-    setXyDataCache(xyData);
-    xyDataCacheLoading.current = false;
-    console.log('XY cache updated');
+    const message: ImageDataWorkerMessage = {
+      width: canvasSize.width,
+      height: canvasSize.height,
+      firstComponentValues,
+      toSRGBFuncName: toSRGB.name as ToSRGBFuncName
+    };
+    imageDataWorker.postMessage(message);
   }, [toSRGB, firstComponentValues]);
 
   const getXYData = useCallback(
@@ -74,6 +85,18 @@ const XYPicker: React.FC<Props> = ({ firstComponentValues, firstComponent, value
   useEffect(() => {
     updateXYCache();
   }, [canvasSize, firstComponentValues, toSRGB]);
+
+  useEffect(() => {
+    imageDataWorker.onmessage = (e: MessageEvent<ImageDataCache>) => {
+      if (e && e.data) {
+        console.log('XY data received');
+        setXyDataCache(e.data);
+        setXyDataCacheLoading(false);
+      }
+    };
+
+    return () => imageDataWorker.terminate();
+  }, [imageDataWorker]);
 
   const onSizeChange = useCallback((size: Size) => {
     setCanvasSize(size);
@@ -89,7 +112,7 @@ const XYPicker: React.FC<Props> = ({ firstComponentValues, firstComponent, value
         onSizeChange={onSizeChange}
         {...otherProps}
       />
-      {Object.keys(xyDataCache).length === 0 && (
+      {xyDataCacheLoading && (
         <div className="xy-loading-indicator">
           <p>Loading</p>
         </div>

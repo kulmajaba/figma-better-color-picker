@@ -1,3 +1,5 @@
+import * as colorSpace from './color';
+
 /**
  * Represents an RGB color with all numbers in range 0..255
  */
@@ -103,3 +105,16 @@ export const SizeZero: Readonly<Size> = { width: 0, height: 0 };
 export type XYChangeHandler = (val: XY) => void;
 
 export type ImageDataCreator = (width: number, height: number) => ImageData;
+
+export interface ImageDataCache {
+  [key: number]: ImageData;
+}
+
+export type ToSRGBFuncName = keyof typeof colorSpace;
+
+export interface ImageDataWorkerMessage {
+  width: number;
+  height: number;
+  firstComponentValues: number[];
+  toSRGBFuncName: ToSRGBFuncName;
+}

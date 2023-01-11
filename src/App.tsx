@@ -9,7 +9,7 @@ import ColorInput from './components/ColorInput/ColorInput';
 import ColorTable from './components/ColorTable/ColorTable';
 import Icon from './components/Icon';
 import { useColorSpace } from './hooks/useColorSpace';
-import { hex_to_rgb } from './components/color/general';
+import { hex_to_rgb } from './color/general';
 import ColorSpaceDropDown from './components/ColorSpaceDropDown';
 
 enum PickerType {

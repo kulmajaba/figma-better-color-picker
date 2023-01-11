@@ -19,7 +19,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import { Color } from '../../types';
+import { Color } from '../types';
 import { srgb_transfer_function, srgb_transfer_function_inv } from './srgb';
 
 const linear_srgb_to_oklab = (r: number, g: number, b: number) => {

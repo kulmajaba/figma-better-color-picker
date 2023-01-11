@@ -1,6 +1,6 @@
 import React, { useState, useContext, createContext, useCallback } from 'react';
-import { hslvfloat_to_hslv, hslv_to_hslvfloat } from '../components/color/general';
-import { okhsl_to_srgb, okhsv_to_srgb, srgb_to_okhsl, srgb_to_okhsv } from '../components/color/oklab';
+import { hslvfloat_to_hslv, hslv_to_hslvfloat } from '../color/general';
+import { okhsl_to_srgb, okhsv_to_srgb, srgb_to_okhsl, srgb_to_okhsv } from '../color/oklab';
 import { ColorConverter } from '../types';
 
 /**

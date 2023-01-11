@@ -4,7 +4,7 @@ import strings from '../../assets/strings';
 import { useColorSpace } from '../../hooks/useColorSpace';
 import { Color } from '../../types';
 import { createCheckerData } from '../../util/imageData';
-import { rgb_to_hex } from '../color/general';
+import { rgb_to_hex } from '../../color/general';
 import ColorInput from '../ColorInput/ColorInput';
 import Icon from '../Icon';
 import PickerCanvas from '../PickerCanvas';

@@ -3,7 +3,7 @@ import { useColorSpace } from '../../hooks/useColorSpace';
 import { Color, InputValue } from '../../types';
 import { roundArrayTo1Decimals, roundTo1Decimals } from '../../util/mathUtils';
 import { inputValueToNumber, inputValueToString } from '../../util/parsingUtils';
-import { hex_to_rgb, rgb_to_hex } from '../color/general';
+import { hex_to_rgb, rgb_to_hex } from '../../color/general';
 import Input from '../Input';
 
 import './ColorInput.css';
