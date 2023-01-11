@@ -2,10 +2,6 @@
 
 ## Roadmap
 
-### Update XY picker data in a background thread
-
-Make the UI responsive during loads.
-
 ### Caching XY picker imagedata
 
 At the moment at every startup the plugin will calculate XY picker image data into memory, taking several seconds.
