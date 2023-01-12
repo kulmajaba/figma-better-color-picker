@@ -332,9 +332,9 @@ const get_Cs = (L: number, a_: number, b_: number) => {
 export const okhsl_to_srgb = (hsl: Color): Color => {
   const [h, s, l] = hsl;
 
-  if (l == 1) {
+  if (l === 1) {
     return [255, 255, 255];
-  } else if (l == 0) {
+  } else if (l === 0) {
     return [0, 0, 0];
   }
 
@@ -377,6 +377,12 @@ export const okhsl_to_srgb = (hsl: Color): Color => {
 
 export const srgb_to_okhsl = (rgb: Color): Color => {
   const [r, g, b] = rgb;
+
+  if (r === 1 && g === 1 && b === 1) {
+    return [0, 0, 1];
+  } else if (r === 0 && g === 0 && b === 0) {
+    return [0, 0, 0];
+  }
 
   const lab = linear_srgb_to_oklab(
     srgb_transfer_function_inv(r / 255),
