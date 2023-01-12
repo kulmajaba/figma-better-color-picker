@@ -87,13 +87,13 @@ const ColorInput: React.FC<Props> = ({
   );
 
   if (type === 'component') {
-    const hsv = roundArrayTo1Decimals(toComponentRepresentation(valueProp));
+    const componentRepr = roundArrayTo1Decimals(toComponentRepresentation(valueProp));
 
     return (
       <div className="color-input-container">
-        <Input type="number" value={hsv[0]} onChange={handleFirstComponentChange} />
-        <Input type="number" value={hsv[1]} onChange={handleSecondComponentChange} />
-        <Input type="number" value={hsv[2]} onChange={handleThirdComponentChange} />
+        <Input type="number" value={componentRepr[0]} onChange={handleFirstComponentChange} />
+        <Input type="number" value={componentRepr[1]} onChange={handleSecondComponentChange} />
+        <Input type="number" value={componentRepr[2]} onChange={handleThirdComponentChange} />
         <Input type="number" value={alpha} onChange={handleAlphaChange} />
       </div>
     );
