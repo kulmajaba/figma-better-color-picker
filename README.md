@@ -51,10 +51,6 @@ Things that have been tried:
   - Using figma.clientStorage: aborts after timeout due to large size (apparently window.postMessage does send the data?)
   - Saving the data as static JSON file and bundling it with the plugin: big-json does not work in browser out of the box and it sucks to download that much data that could be calculated and saved locally
 
-### Converting all current colors when switching color space
-
-This requires that all color spaces have conversions to and from a common color space. This can be sRGB, but on the negative it will then clamp the color range to values within the sRGB gamut.
-
 ## Development instructions
 
 Below are the steps to get your plugin running. You can also find instructions at:

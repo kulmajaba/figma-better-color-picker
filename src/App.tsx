@@ -28,7 +28,7 @@ function App() {
   const [xyComponent, setXyComponent] = useState(XYZero);
   const [alpha, setAlpha] = useState(1);
 
-  const { fromSRGB, toSRGB } = useColorSpace();
+  const { fromSRGB, toSRGB, convertFromPrevious } = useColorSpace();
 
   /* const onCreate = () => {
     const count = Number(inputRef.current?.value || 0);
@@ -38,6 +38,15 @@ function App() {
   useEffect(() => {
     window.addEventListener('message', (e) => console.log(e));
   }, []);
+
+  useEffect(() => {
+    if (convertFromPrevious) {
+      const prevColor: Color = [firstComponent, xyComponent.x, xyComponent.y];
+      const [first, x, y] = convertFromPrevious(prevColor);
+      setFirstComponent(first);
+      setXyComponent({ x, y });
+    }
+  }, [convertFromPrevious]);
 
   const onMouseMove = useCallback(
     (e: React.MouseEvent<HTMLElement>) => {

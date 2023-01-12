@@ -55,7 +55,17 @@ const ColorRow: React.FC<Props> = ({
   const [thirdComponent, setThirdComponent] = useState(thirdComponentProp);
   const [alpha, setAlpha] = useState(alphaProp);
 
-  const { toSRGB } = useColorSpace();
+  const { toSRGB, convertFromPrevious } = useColorSpace();
+
+  useEffect(() => {
+    if (convertFromPrevious) {
+      const prevColor: Color = [firstComponent, secondComponent, thirdComponent];
+      const [first, second, third] = convertFromPrevious(prevColor);
+      !firstComponentLocked && setFirstComponent(first);
+      !secondComponentLocked && setSecondComponent(second);
+      !thirdComponentLocked && setThirdComponent(third);
+    }
+  }, [convertFromPrevious]);
 
   useEffect(() => {
     if (firstComponentLocked) {

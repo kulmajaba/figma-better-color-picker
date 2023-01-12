@@ -1,7 +1,7 @@
 import React, { useState, useContext, createContext, useCallback } from 'react';
 import { hslvfloat_to_hslv, hslv_to_hslvfloat } from '../color/general';
 import { okhsl_to_srgb, okhsv_to_srgb, srgb_to_okhsl, srgb_to_okhsv } from '../color/oklab';
-import { ColorConverter } from '../types';
+import { Color, ColorConverter } from '../types';
 
 /**
  * Color spaces work with arrays of exactly three color components.
@@ -16,7 +16,7 @@ interface ColorSpace {
    */
   fromSRGB: ColorConverter;
   /**
-   * Converts a color space color back to sRGB
+   * Converts a color space color to an sRGB value
    */
   toSRGB: ColorConverter;
   /**
@@ -26,7 +26,7 @@ interface ColorSpace {
    */
   toComponentRepresentation: ColorConverter;
   /**
-   * Converts a color from the human-readable representation to color space
+   * Converts a color from the human-readable representation to range 0..1 for all components
    */
   fromComponentRepresentation: ColorConverter;
   /**
@@ -71,25 +71,43 @@ export const colorSpaceNames = Object.keys(colorSpaces) as ColorSpaceName[];
 interface SpaceContext extends ColorSpace {
   setColorSpace: ColorSpaceSetter;
   name: ColorSpaceName;
+  /**
+   * Function that takes a color in the previous color space
+   * and returns the same color in the new color space
+   * Currently the common color space to convert to and from is sRGB, which is limiting
+   */
+  convertFromPrevious: ColorConverter | undefined;
 }
 
 const ColorSpaceContext = createContext<SpaceContext>({
   ...colorSpaces.OKHSV,
   setColorSpace: () => undefined,
-  name: 'OKHSV'
+  name: 'OKHSV',
+  convertFromPrevious: undefined
 });
 
 export const ColorSpaceProvider = ({ children }: { children: React.ReactNode }) => {
   const [colorSpace, _setColorSpace] = useState(colorSpaces.OKHSV);
   const [colorSpaceName, setColorSpaceName] = useState<ColorSpaceName>('OKHSV');
+  const [convertFromPrevious, setConvertFromPrevious] = useState<ColorConverter | undefined>(undefined);
 
-  const setColorSpace: ColorSpaceSetter = useCallback((name: ColorSpaceName) => {
-    _setColorSpace(colorSpaces[name]);
-    setColorSpaceName(name);
-  }, []);
+  const setColorSpace: ColorSpaceSetter = useCallback(
+    (name: ColorSpaceName) => {
+      const prevSpace = colorSpace;
+      const nextSpace = colorSpaces[name];
+      _setColorSpace(nextSpace);
+      setColorSpaceName(name);
+      setConvertFromPrevious(() => (color: Color) => {
+        console.log('Previous to sRGB:', prevSpace.toSRGB(color));
+        console.log('Next from SRGB:', nextSpace.fromSRGB(prevSpace.toSRGB(color)));
+        return nextSpace.fromSRGB(prevSpace.toSRGB(color));
+      });
+    },
+    [colorSpace]
+  );
 
   return (
-    <ColorSpaceContext.Provider value={{ ...colorSpace, setColorSpace, name: colorSpaceName }}>
+    <ColorSpaceContext.Provider value={{ ...colorSpace, setColorSpace, name: colorSpaceName, convertFromPrevious }}>
       {children}
     </ColorSpaceContext.Provider>
   );
