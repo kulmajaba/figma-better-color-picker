@@ -6,7 +6,7 @@ interface Props
   onChange: (value: InputValue) => boolean;
 }
 
-const Input: React.FC<Props> = ({ value: valueProp, onChange: onChangeProp, ...inputProps }) => {
+const Input: React.FC<Props> = ({ value: valueProp, onChange: onChangeProp, required, ...inputProps }) => {
   const [value, setValue] = useState(valueProp);
 
   useEffect(() => {
@@ -24,6 +24,11 @@ const Input: React.FC<Props> = ({ value: valueProp, onChange: onChangeProp, ...i
   const onChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => setValue(e.currentTarget.value), []);
 
   const onBlur = useCallback(() => {
+    if (required && value === '') {
+      setValue(valueProp);
+      return;
+    }
+
     if (onChangeProp && value !== valueProp) {
       const changed = onChangeProp(value);
       if (!changed) {

@@ -93,14 +93,33 @@ const ColorRow: React.FC<Props> = ({
 
   const onColorChange = useCallback(
     (color: Color) => {
-      !firstComponentLocked && setFirstComponent(color[0]);
-      !secondComponentLocked && setSecondComponent(color[1]);
-      !thirdComponentLocked && setThirdComponent(color[2]);
+      const shouldChangeFirst = !firstComponentLocked && color[0] !== firstComponent;
+      const shouldChangeSecond = !secondComponentLocked && color[1] !== secondComponent;
+      const shouldChangeThird = !thirdComponentLocked && color[2] !== thirdComponent;
+
+      shouldChangeFirst && setFirstComponent(color[0]);
+      shouldChangeSecond && setSecondComponent(color[1]);
+      shouldChangeThird && setThirdComponent(color[2]);
+
+      if (shouldChangeFirst || shouldChangeSecond || shouldChangeThird) {
+        return true;
+      }
+      return false;
     },
     [firstComponentLocked, secondComponentLocked, thirdComponentLocked]
   );
 
-  const onAlphaChange = useCallback((alpha: number) => !alphaLocked && setAlpha(alpha), [alphaLocked]);
+  const onAlphaChange = useCallback(
+    (newAlpha: number) => {
+      if (!alphaLocked && alpha !== newAlpha) {
+        setAlpha(newAlpha);
+        return true;
+      } else {
+        return false;
+      }
+    },
+    [alphaLocked]
+  );
 
   const onCopy = useCallback(async () => {
     console.log('copy');

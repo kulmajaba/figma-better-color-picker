@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import { useColorSpace } from '../../hooks/useColorSpace';
 import { Color, InputValue } from '../../types';
-import { roundArrayTo1Decimals, roundTo1Decimals } from '../../util/mathUtils';
+import { clampArrayTo0_1, clampTo0_1, roundArrayTo1Decimals, roundTo1Decimals } from '../../util/mathUtils';
 import { inputValueToNumber, inputValueToString } from '../../util/parsingUtils';
 import { hex_to_rgb, rgb_to_hex } from '../../color/general';
 import Input from '../Input';
@@ -12,8 +12,8 @@ interface Props {
   value: Color;
   alpha: number;
   type?: 'hex' | 'component';
-  onColorChange?: (val: Color) => void;
-  onAlphaChange?: (val: number) => void;
+  onColorChange: (val: Color) => boolean | void;
+  onAlphaChange: (val: number) => boolean | void;
 }
 
 const ColorInput: React.FC<Props> = ({
@@ -31,10 +31,12 @@ const ColorInput: React.FC<Props> = ({
     (componentIndex: number, value: InputValue) => {
       try {
         const newComponent = inputValueToNumber(value);
-        const newValue = valueProp;
-        newValue[componentIndex] = newComponent;
-        onColorChange && onColorChange(fromComponentRepresentation(newValue));
-        return true;
+        if (newComponent !== valueProp[componentIndex]) {
+          const newValue = valueProp;
+          newValue[componentIndex] = newComponent;
+          return onColorChange(clampArrayTo0_1(fromComponentRepresentation(newValue)) as Color) ?? true;
+        }
+        return false;
       } catch (e) {
         console.error(e);
         return false;
@@ -62,8 +64,7 @@ const ColorInput: React.FC<Props> = ({
     (value: InputValue) => {
       try {
         const newValue = inputValueToString(value);
-        onColorChange && onColorChange(fromSRGB(hex_to_rgb(newValue)));
-        return true;
+        return onColorChange(fromSRGB(hex_to_rgb(newValue))) ?? true;
       } catch (e) {
         console.error(e);
         return false;
@@ -76,8 +77,7 @@ const ColorInput: React.FC<Props> = ({
     (value: InputValue) => {
       try {
         const newValue = inputValueToNumber(value);
-        onAlphaChange && onAlphaChange(newValue / 100);
-        return true;
+        return onAlphaChange(clampTo0_1(newValue / 100)) ?? true;
       } catch (e) {
         console.error(e);
         return false;
@@ -91,10 +91,10 @@ const ColorInput: React.FC<Props> = ({
 
     return (
       <div className="color-input-container">
-        <Input type="number" value={componentRepr[0]} onChange={handleFirstComponentChange} />
-        <Input type="number" value={componentRepr[1]} onChange={handleSecondComponentChange} />
-        <Input type="number" value={componentRepr[2]} onChange={handleThirdComponentChange} />
-        <Input type="number" value={alpha} onChange={handleAlphaChange} />
+        <Input type="number" required value={componentRepr[0]} onChange={handleFirstComponentChange} />
+        <Input type="number" required value={componentRepr[1]} onChange={handleSecondComponentChange} />
+        <Input type="number" required value={componentRepr[2]} onChange={handleThirdComponentChange} />
+        <Input type="number" required value={alpha} onChange={handleAlphaChange} />
       </div>
     );
   } else {
@@ -103,8 +103,8 @@ const ColorInput: React.FC<Props> = ({
 
     return (
       <div className="color-input-container">
-        <Input className="hex" type="text" value={hex} onChange={handleHexChange} />
-        <Input type="number" value={alpha} onChange={handleAlphaChange} />
+        <Input className="hex" type="text" required value={hex} onChange={handleHexChange} />
+        <Input type="number" required value={alpha} onChange={handleAlphaChange} />
       </div>
     );
   }
