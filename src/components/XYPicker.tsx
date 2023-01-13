@@ -38,6 +38,8 @@ const XYPicker: React.FC<Props> = ({ firstComponentValues, firstComponent, value
 
   const updateXYCache = useCallback(async () => {
     if (xyDataCacheLoading) {
+      // TODO: terminate worker job and start a new one
+      // Calling imageDataWorker.terminate destroys the worker
       console.log('Cache already updating');
       return;
     }
