@@ -97,11 +97,7 @@ export const ColorSpaceProvider = ({ children }: { children: React.ReactNode }) 
       const nextSpace = colorSpaces[name];
       _setColorSpace(nextSpace);
       setColorSpaceName(name);
-      setConvertFromPrevious(() => (color: Color) => {
-        console.log('Previous to sRGB:', prevSpace.toSRGB(color));
-        console.log('Next from SRGB:', nextSpace.fromSRGB(prevSpace.toSRGB(color)));
-        return nextSpace.fromSRGB(prevSpace.toSRGB(color));
-      });
+      setConvertFromPrevious(() => (color: Color) => nextSpace.fromSRGB(prevSpace.toSRGB(color)));
     },
     [colorSpace]
   );
