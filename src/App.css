@@ -16,9 +16,10 @@
   --color-border-brand: var(--figma-color-border-brand, #105cad);
   --color-border-brand-focus: var(--figma-color-border-selected-strong, #7cc4f8);
 
-  --size-picker: 12px;
-  --padding-picker: calc(var(--size-picker) * 1.5);
-  --radius-picker: calc(var(--size-picker) / 2);
+  --max-size-picker: 300px;
+  --height-picker: 12px;
+  --padding-picker: calc(var(--height-picker) * 1.5);
+  --radius-picker: calc(var(--height-picker) / 2);
   --border-radius-s: 4px;
 
   --font-size: 11px;
