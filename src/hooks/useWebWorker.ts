@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { WorkerStatus } from '../types';
 
 interface Options {
@@ -16,6 +16,10 @@ const useWebWorker = <MessageType, ReturnType>({
   const worker = useRef(workerFactory());
 
   const [status, setStatus] = useState<WorkerStatus>(WorkerStatus.Idle);
+
+  useEffect(() => {
+    return () => worker.current.terminate();
+  }, []);
 
   const handleMessage = useCallback(
     (e: MessageEvent<ReturnType>, resolve: (value: ReturnType | PromiseLike<ReturnType>) => void) => {

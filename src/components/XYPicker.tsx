@@ -65,10 +65,6 @@ const XYPicker: React.FC<Props> = ({ firstComponentValues, firstComponent, value
     updateXYCache();
   }, [canvasSize, firstComponentValues, toSRGB]);
 
-  useEffect(() => {
-    return () => terminate();
-  }, []);
-
   const getXYData = useCallback(
     (width: number, height: number) =>
       xyDataCache[firstComponent] ?? createXYData(width, height, firstComponent, toSRGB),
