@@ -8,9 +8,9 @@
       "./node_modules/@types",
       "./node_modules/@figma"
     ],
-    "rootDir": "src",
     "outDir": "dist",
     "allowSyntheticDefaultImports": true,
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "resolveJsonModule": true
   }
 }
