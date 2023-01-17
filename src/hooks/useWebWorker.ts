@@ -21,7 +21,7 @@ const useWebWorker = <MessageType, ReturnType>({
     (e: MessageEvent<ReturnType>, resolve: (value: ReturnType | PromiseLike<ReturnType>) => void) => {
       if (e && e.data) {
         setStatus(WorkerStatus.Idle);
-        console.log('XY data received');
+        console.log('WebWorker data received');
         console.log(e.data);
         resolve(e.data);
       }
@@ -30,7 +30,7 @@ const useWebWorker = <MessageType, ReturnType>({
   );
 
   const terminate = useCallback(() => {
-    console.log('terminate');
+    console.log('Terminate WebWorker');
     setStatus(WorkerStatus.Idle);
     worker.current.terminate();
     worker.current = workerFactory();
@@ -46,7 +46,6 @@ const useWebWorker = <MessageType, ReturnType>({
         }
 
         if (terminateOnNewJob && status !== WorkerStatus.Idle) {
-          console.log('Terminate job before starting new one');
           terminate();
         }
 
