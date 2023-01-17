@@ -1,6 +1,7 @@
-import React, { MouseEventHandler, useCallback, useEffect, useRef, useState } from 'react';
+import React, { MouseEventHandler, useCallback, useEffect, useState } from 'react';
 
 import { useColorSpace } from '../hooks/useColorSpace';
+import useWebWorker from '../hooks/useWebWorker';
 import {
   ImageDataCache,
   ImageDataWorkerMessage,
@@ -8,6 +9,7 @@ import {
   SizeZero,
   ToSRGBFuncName,
   VerticalChangeDirection,
+  WorkerStatus,
   XY
 } from '../types';
 import { createXYData } from '../util/imageData';
@@ -25,45 +27,24 @@ interface Props {
   onMouseDown: MouseEventHandler<HTMLElement>;
 }
 
-const workerFactory = () =>
-  new Worker('../util/imageDataWorker.ts', {
-    type: 'module'
-  });
-
 const XYPicker: React.FC<Props> = ({ firstComponentValues, firstComponent, value, onChange, ...otherProps }) => {
   const [canvasSize, setCanvasSize] = useState<Size>(SizeZero);
   const [xyDataCache, setXyDataCache] = useState<ImageDataCache>({});
-  const [xyDataCacheLoading, setXyDataCacheLoading] = useState(false);
 
   const { toSRGB } = useColorSpace();
-
-  const handleImageDataResults = useCallback((e: MessageEvent<ImageDataCache>) => {
-    if (e && e.data) {
-      console.log('XY data received');
-      setXyDataCache(e.data);
-      console.log(e.data);
-      setXyDataCacheLoading(false);
-    }
-  }, []);
-
-  const imageDataWorker = useRef(workerFactory());
-  imageDataWorker.current.onmessage = handleImageDataResults;
+  const { status, job, terminate } = useWebWorker<ImageDataWorkerMessage, ImageDataCache>({
+    worker: '../util/imageDataWorker.ts',
+    workerOptions: { type: 'module' },
+    terminateOnNewJob: true
+  });
 
   const updateXYCache = useCallback(async () => {
-    if (xyDataCacheLoading) {
-      console.log('Cache already updating, terminate current worker');
-      imageDataWorker.current.terminate();
-      imageDataWorker.current = workerFactory();
-      imageDataWorker.current.onmessage = handleImageDataResults;
-    }
     if (firstComponentValues.length === 0) {
       console.log('No first component values given');
       return;
     }
 
     console.log('Update XY cache');
-
-    setXyDataCacheLoading(true);
     setXyDataCache({});
 
     const message: ImageDataWorkerMessage = {
@@ -72,22 +53,27 @@ const XYPicker: React.FC<Props> = ({ firstComponentValues, firstComponent, value
       firstComponentValues,
       toSRGBFuncName: toSRGB.name as ToSRGBFuncName
     };
-    imageDataWorker.current.postMessage(message);
+    try {
+      const cache = await job(message);
+      setXyDataCache(cache);
+    } catch (e) {
+      console.log(e);
+    }
   }, [toSRGB, firstComponentValues]);
-
-  const getXYData = useCallback(
-    (width: number, height: number) =>
-      xyDataCache[firstComponent] ?? createXYData(width, height, firstComponent, toSRGB),
-    [xyDataCache, firstComponent, toSRGB]
-  );
 
   useEffect(() => {
     updateXYCache();
   }, [canvasSize, firstComponentValues, toSRGB]);
 
   useEffect(() => {
-    return () => imageDataWorker.current.terminate();
+    return () => terminate();
   }, []);
+
+  const getXYData = useCallback(
+    (width: number, height: number) =>
+      xyDataCache[firstComponent] ?? createXYData(width, height, firstComponent, toSRGB),
+    [xyDataCache, firstComponent, toSRGB]
+  );
 
   const onSizeChange = useCallback((size: Size) => {
     setCanvasSize(size);
@@ -103,7 +89,7 @@ const XYPicker: React.FC<Props> = ({ firstComponentValues, firstComponent, value
         onSizeChange={onSizeChange}
         {...otherProps}
       />
-      {xyDataCacheLoading && (
+      {status !== WorkerStatus.Idle && (
         <div className="xy-loading-indicator">
           <p>Loading</p>
         </div>

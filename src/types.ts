@@ -62,3 +62,8 @@ export interface ImageDataWorkerMessage {
   firstComponentValues: number[];
   toSRGBFuncName: ToSRGBFuncName;
 }
+
+export enum WorkerStatus {
+  Idle = 0,
+  Working
+}
