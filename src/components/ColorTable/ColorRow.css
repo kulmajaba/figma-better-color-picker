@@ -14,32 +14,3 @@
   grid-template-columns: 1fr 1fr 1fr;
   column-gap: 4px;
 }
-
-button .tooltip {
-  visibility: hidden;
-  pointer-events: none;
-  white-space: nowrap;
-  max-width: 160px;
-  background-color: var(--color-bg-brand-transparent);
-  color: var(--color-text-onbrand);
-  text-align: center;
-  border-radius: var(--border-radius-s);
-  padding: 0.5rem;
-
-  position: absolute;
-  z-index: 1;
-  bottom: 100%;
-  margin-bottom: 0.25rem;
-  right: 0;
-  transform: translate(5%, 0);
-
-  opacity: 0;
-  transition: opacity 0.3s ease-in-out;
-  transition-delay: 0s
-}
-
-button:hover .tooltip {
-  visibility: visible;
-  opacity: 1;
-  transition-delay: 1.5s
-}
