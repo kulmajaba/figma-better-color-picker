@@ -5,14 +5,30 @@ import { InputValue } from '../types';
 interface Props
   extends Omit<React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>, 'onChange'> {
   onChange: (value: InputValue) => boolean;
+  selectAllOnFocus?: boolean;
 }
 
-const Input: React.FC<Props> = ({ value: valueProp, onChange: onChangeProp, required, ...inputProps }) => {
+const Input: React.FC<Props> = ({
+  value: valueProp,
+  onChange: onChangeProp,
+  required = true,
+  selectAllOnFocus = true,
+  ...inputProps
+}) => {
   const [value, setValue] = useState(valueProp);
 
   useEffect(() => {
     setValue(valueProp);
   }, [valueProp]);
+
+  const onFocus = useCallback(
+    (e: React.FocusEvent<HTMLInputElement>) => {
+      if (selectAllOnFocus) {
+        e.target.select();
+      }
+    },
+    [selectAllOnFocus]
+  );
 
   const onKeyDown = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
@@ -38,7 +54,9 @@ const Input: React.FC<Props> = ({ value: valueProp, onChange: onChangeProp, requ
     }
   }, [onChangeProp, value, valueProp]);
 
-  return <input value={value} onChange={onChange} onKeyDown={onKeyDown} onBlur={onBlur} {...inputProps} />;
+  return (
+    <input value={value} onFocus={onFocus} onChange={onChange} onKeyDown={onKeyDown} onBlur={onBlur} {...inputProps} />
+  );
 };
 
 export default Input;
