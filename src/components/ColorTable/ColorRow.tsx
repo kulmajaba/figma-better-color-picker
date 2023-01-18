@@ -6,8 +6,9 @@ import { Color } from '../../types';
 import { createCheckerData } from '../../util/imageData';
 import { rgb_to_hex } from '../../color/general';
 import ColorInput from '../ColorInput/ColorInput';
-import Icon from '../Icon';
 import PickerCanvas from '../PickerCanvas';
+import ColorRowAddButton from './ColorRowAddButton';
+import Button from '../Button';
 
 import './ColorRow.css';
 
@@ -151,18 +152,19 @@ const ColorRow: React.FC<Props> = ({
         onAlphaChange={onAlphaChange}
       />
       <div className="color-row-buttons">
-        <button className="small border-none" onClick={onCopy}>
-          <Icon icon="content_copy" />
-          {/* TODO: make sure these don't appear as tabbable content */}
-          <span className="tooltip">{strings.tooltip.copyColor}</span>
-        </button>
-        <button className="small border-none">
-          <Icon icon="add" />
-          <span className="tooltip">{strings.tooltip.addColor}</span>
-        </button>
-        <button className="small border-none" onClick={onDelete}>
-          <Icon icon="delete" />
-        </button>
+        <Button
+          className="small border-none"
+          icon="content_copy"
+          tooltip={strings.tooltip.copyColor}
+          onClick={onCopy}
+        />
+        <ColorRowAddButton
+          firstComponent={firstComponent}
+          secondComponent={secondComponent}
+          thirdComponent={thirdComponent}
+          alpha={alpha}
+        />
+        <Button className="small border-none" icon="delete" onClick={onDelete} />
       </div>
     </div>
   );

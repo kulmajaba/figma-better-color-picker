@@ -1,4 +1,5 @@
 import React, { MouseEventHandler, useCallback } from 'react';
+
 import { useColorSpace } from '../hooks/useColorSpace';
 import { Color, Direction, Size, XY } from '../types';
 import Picker from './Picker';

@@ -1,4 +1,5 @@
 import React, { MouseEventHandler, useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react';
+
 import { Size } from '../types';
 
 import './PickerCanvas.css';

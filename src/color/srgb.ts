@@ -1,3 +1,6 @@
+// Copyright (c) 2021 Björn Ottosson
+// Copyright (c) 2022 Mika Kuitunen
+
 export const srgb_transfer_function = (a: number) => {
   return 0.0031308 >= a ? 12.92 * a : 1.055 * Math.pow(a, 0.4166666666666667) - 0.055;
 };

@@ -1,11 +1,12 @@
 import React, { MouseEventHandler, useCallback } from 'react';
+
 import { Color, ColorConverter, Direction, XY } from '../types';
 import Picker from './Picker';
 import PickerCanvas from './PickerCanvas';
 import { createCheckerData } from '../util/imageData';
+import { useColorSpace } from '../hooks/useColorSpace';
 
 import './AlphaPicker.css';
-import { useColorSpace } from '../hooks/useColorSpace';
 
 const createAlphaData = (width: number, height: number, toSRGB: ColorConverter, color: Color, direction: Direction) => {
   const [sliderLength, sliderWidth] = direction === Direction.Horizontal ? [width, height] : [height, width];

@@ -6,15 +6,23 @@ export type ColorConverter = (color: Color) => Color;
 
 export type InputValue = string | number | readonly string[] | undefined;
 
-export enum PluginMessageType {}
+export enum PluginMessageType {
+  AddColor = 'ADD_COLOR'
+}
 
 interface PluginMessageBase {
   type: PluginMessageType;
   fromFigma: boolean;
 }
 
+export interface PluginMessageAddColor extends PluginMessageBase {
+  type: PluginMessageType.AddColor;
+  payload: { color: Color; alpha: number; colorSpaceName: string; componentRepresentation: Color };
+  fromFigma: false;
+}
+
 // Union types for all accepted messages
-export type PluginMessage = unknown;
+export type PluginMessage = PluginMessageAddColor;
 export type PluginReturnMessage = unknown;
 
 export enum Direction {

@@ -1,3 +1,6 @@
+// Copyright (c) 2021 Björn Ottosson
+// Copyright (c) 2022 Mika Kuitunen
+
 import { Color } from '../types';
 import { InvalidArgumentError } from '../util/errors';
 

@@ -1,11 +1,11 @@
 import React, { useCallback, useState } from 'react';
 
 import ColorRow from './ColorRow';
-import Icon from '../Icon';
 import LockButton from './LockButton';
+import { useColorSpace } from '../../hooks/useColorSpace';
+import Button from '../Button';
 
 import './ColorTable.css';
-import { useColorSpace } from '../../hooks/useColorSpace';
 
 interface Props {
   firstComponent: number;
@@ -84,9 +84,7 @@ const ColorTable: React.FC<Props> = ({ firstComponent, secondComponent, thirdCom
             A
           </LockButton>
         </div>
-        <button onClick={addRow}>
-          <Icon icon="add" />
-        </button>
+        <Button icon="add" onClick={addRow} />
       </div>
       {colorRows}
     </>

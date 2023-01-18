@@ -32,7 +32,7 @@ const XYPicker: React.FC<Props> = ({ firstComponentValues, firstComponent, value
   const [xyDataCache, setXyDataCache] = useState<ImageDataCache>({});
 
   const { toSRGB } = useColorSpace();
-  const { status, job, terminate } = useWebWorker<ImageDataWorkerMessage, ImageDataCache>({
+  const { status, job } = useWebWorker<ImageDataWorkerMessage, ImageDataCache>({
     worker: '../util/imageDataWorker.ts',
     workerOptions: { type: 'module' },
     terminateOnNewJob: true

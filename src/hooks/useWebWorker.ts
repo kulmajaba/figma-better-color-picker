@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+
 import { WorkerStatus } from '../types';
 
 interface Options {
@@ -25,8 +26,6 @@ const useWebWorker = <MessageType, ReturnType>({
     (e: MessageEvent<ReturnType>, resolve: (value: ReturnType | PromiseLike<ReturnType>) => void) => {
       if (e && e.data) {
         setStatus(WorkerStatus.Idle);
-        console.log('WebWorker data received');
-        console.log(e.data);
         resolve(e.data);
       }
     },
@@ -43,7 +42,6 @@ const useWebWorker = <MessageType, ReturnType>({
   const job = useCallback(
     (message: MessageType): Promise<ReturnType> => {
       return new Promise((resolve, reject) => {
-        console.log(status);
         if (!terminateOnNewJob && status !== WorkerStatus.Idle) {
           console.error('The worker already has a job and terminateOnNewJob is false, new job not started');
           return;

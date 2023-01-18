@@ -1,4 +1,5 @@
 import React, { useCallback } from 'react';
+
 import { useColorSpace } from '../../hooks/useColorSpace';
 import { Color, InputValue } from '../../types';
 import { clampArrayTo0_1, clampTo0_1, roundArrayTo1Decimals, roundTo1Decimals } from '../../util/mathUtils';

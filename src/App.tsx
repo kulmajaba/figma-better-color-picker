@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import './App.css';
+
 import { Color, Size, XY, XYZero } from './types';
 import HuePicker from './components/SliderPicker';
 import XYPicker from './components/XYPicker';
@@ -7,10 +7,12 @@ import AlphaPicker from './components/AlphaPicker';
 import { roundToFixedPrecision } from './util/mathUtils';
 import ColorInput from './components/ColorInput/ColorInput';
 import ColorTable from './components/ColorTable/ColorTable';
-import Icon from './components/Icon';
 import { useColorSpace } from './hooks/useColorSpace';
 import { hex_to_rgb } from './color/general';
 import ColorSpaceDropDown from './components/ColorSpaceDropDown';
+import Button from './components/Button';
+
+import './App.css';
 
 enum PickerType {
   FirstComponentSlider = 'FIRST_COMPONENT_SLIDER',
@@ -29,11 +31,6 @@ function App() {
   const [alpha, setAlpha] = useState(1);
 
   const { fromSRGB, toSRGB, convertFromPrevious } = useColorSpace();
-
-  /* const onCreate = () => {
-    const count = Number(inputRef.current?.value || 0);
-    pluginPostMessage({ type: PluginMessageType.CreateRectangles, count });
-  }; */
 
   useEffect(() => {
     window.addEventListener('message', (e) => console.log(e));
@@ -110,10 +107,9 @@ function App() {
 
   const onEyeDropper = useCallback(async () => {
     if (EyeDropper) {
-      console.log(new EyeDropper());
       try {
         const res = await new EyeDropper().open();
-        console.log(res.sRGBHex);
+        console.log('Eyedropper color', res.sRGBHex);
         const color = fromSRGB(hex_to_rgb(res.sRGBHex));
         setFirstComponent(color[0]);
         setXyComponent({ x: color[1], y: color[2] });
@@ -164,9 +160,7 @@ function App() {
         />
         <p dangerouslySetInnerHTML={{ __html: colorString }} />
         <div className="main-inputs">
-          <button onClick={onEyeDropper}>
-            <Icon icon="eyedropper" />
-          </button>
+          <Button icon="eyedropper" onClick={onEyeDropper} />
           <div className="main-inputs-color-inputs">
             <ColorInput
               type="component"
@@ -193,15 +187,6 @@ function App() {
           alpha={alpha}
         />
       </section>
-      {/* <section>
-        <input id="input" type="number" min="0" ref={inputRef} />
-        <label htmlFor="input">Rectangle Count</label>
-      </section>
-      <footer>
-        <button className="brand" onClick={onCreate}>
-          Create
-        </button>
-      </footer> */}
     </main>
   );
 }

@@ -1,4 +1,5 @@
 import React from 'react';
+
 import strings from '../assets/strings';
 
 import { useColorSpace, colorSpaceNames } from '../hooks/useColorSpace';
