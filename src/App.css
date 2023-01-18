@@ -60,9 +60,13 @@ body {
   background: var(--color-bg);
   color: var(--color-text);
   margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 main {
+  max-width: 460px;
   align-items: center;
   display: flex;
   flex-direction: column;
