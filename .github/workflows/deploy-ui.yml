@@ -52,12 +52,13 @@ jobs:
       with:
         name: node-app
     
-    - name: Create a temp file for SSH key
+    - name: Create a temp files for SSH key and known hosts
       env:
         SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        SSH_HOST_FINGERPRINT: ${{ secrets.SSH_HOST_FINGERPRINT }}
       run: |
-        echo "::add-mask::$SSH_PRIVATE_KEY"
-        echo "$SSH_PRIVATE_KEY" > $RUNNER_TEMP/private_key
+        echo "::add-mask::$SSH_PRIVATE_KEY" > $RUNNER_TEMP/private_key
+        echo "::add-mask::$SSH_HOST_FINGERPRINT" > $RUNNER_TEMP/known_hosts
       
 
     - name: 'Deploy to VPS via SCP'
@@ -66,4 +67,4 @@ jobs:
         SSH_HOST: ${{ secrets.SSH_HOST }}
         DEPLOY_PATH: ${{ env.DEPLOY_PATH }}
       run: |
-        scp -i $RUNNER_TEMP/private_key ./dist/index.html $SSH_USER@$SSH_HOST:/home/$SSH_USER/$DEPLOY_PATH/index.html
+        scp -i $RUNNER_TEMP/private_key -o UserKnownHostsFile=$RUNNER_TEMP/known_hosts ./dist/index.html $SSH_USER@$SSH_HOST:/home/$SSH_USER/$DEPLOY_PATH/index.html
