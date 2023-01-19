@@ -55,7 +55,9 @@ jobs:
     - name: Create a temp file for SSH key
       env:
         SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-      run: echo "::add-mask::$SSH_PRIVATE_KEY" > $RUNNER_TEMP/private_key
+      run: |
+        echo "::add-mask::$SSH_PRIVATE_KEY"
+        echo "$SSH_PRIVATE_KEY" > $RUNNER_TEMP/private_key
       
 
     - name: 'Deploy to VPS via SCP'
