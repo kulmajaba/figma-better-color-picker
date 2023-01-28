@@ -33,6 +33,7 @@ jobs:
         npm ci
         npm run build:ui --if-present
         npm test --if-present
+        npm run copy:static --if-present
     
     - name: Upload artifact for deployment job
       uses: actions/upload-artifact@v3
