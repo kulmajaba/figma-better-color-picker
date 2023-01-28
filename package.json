@@ -5,13 +5,14 @@
   "main": "code.js",
   "scripts": {
     "start": "npm run dev",
-    "build:prod": "npm run build:ui && npm run build:main:prod -- --minify",
+    "build": "npm run build:ui && npm run build:main:prod -- --minify && npm run copy:static",
     "build:main:prod": "esbuild src/plugin.ts --bundle --outfile=dist/plugin.js",
     "build:main:dev": "esbuild src/plugin.ts --bundle --outfile=dist/plugin.js --define:BASE_URL=\\\"http://localhost:5173/\\\"",
-    "build:ui": "npx vite build --minify esbuild --emptyOutDir=false",
-    "build:watch": "concurrently -n widget,iframe \"npm run build:main:dev -- --watch\" \"npm run build:ui -- --watch\"",
+    "build:ui": "vite build --emptyOutDir=false",
+    "build:watch": "npm run build:main:dev -- --watch",
     "dev": "concurrently -n build,vite 'npm:build:watch' 'vite'",
-    "tsc:main": "tsc --noEmit -p ."
+    "tsc:main": "tsc --noEmit -p .",
+    "copy:static": "cp -R static/* dist/assets"
   },
   "author": "Mika Kuitunen",
   "license": "MIT License",
@@ -21,18 +22,18 @@
     "@types/react-dom": "^18.0.9",
     "@typescript-eslint/eslint-plugin": "^5.45.0",
     "@typescript-eslint/parser": "^5.45.0",
-    "@vitejs/plugin-react-refresh": "^1.3.6",
     "concurrently": "^7.6.0",
-    "esbuild": "^0.15.18",
+    "esbuild": "^0.17.5",
     "eslint": "^8.29.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.2.1",
     "prettier": "^2.8.0",
-    "typescript": "*",
-    "vite-plugin-singlefile": "^0.13.1"
+    "typescript": "^4.9.3"
   },
   "dependencies": {
+    "@vitejs/plugin-react": "^3.0.1",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "vite": "^4.0.4"
   }
 }
