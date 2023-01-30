@@ -5,7 +5,7 @@
   "main": "code.js",
   "scripts": {
     "start": "npm run dev",
-    "build": "npm run build:ui && npm run build:main:prod -- --minify && npm run copy:static",
+    "build": "rm -rf dist/* && npm run build:ui && npm run build:main:prod -- --minify && npm run copy:static",
     "build:main:prod": "esbuild src/plugin.ts --bundle --outfile=dist/plugin.js",
     "build:main:dev": "esbuild src/plugin.ts --bundle --outfile=dist/plugin.js --define:BASE_URL=\\\"http://localhost:5173/\\\"",
     "build:ui": "vite build --emptyOutDir=false",

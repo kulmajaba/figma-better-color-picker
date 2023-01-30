@@ -15,10 +15,9 @@ import {
 import { createXYData } from '../util/imageData';
 import Picker from './Picker';
 
-import './XYPicker.css';
+import imageDataWorkerUrl from '../util/imageDataWorker?worker&url';
 
-// URL has to be declared outside of a function call to be transformed correctly by Vite
-const imageDataWorkerurl = new URL('../util/imageDataWorker.ts', import.meta.url);
+import './XYPicker.css';
 
 interface Props {
   firstComponentValues: number[];
@@ -36,7 +35,7 @@ const XYPicker: React.FC<Props> = ({ firstComponentValues, firstComponent, value
 
   const { toSRGB } = useColorSpace();
   const { status, job } = useWebWorker<ImageDataWorkerMessage, ImageDataCache>({
-    worker: imageDataWorkerurl,
+    worker: imageDataWorkerUrl,
     workerOptions: { type: 'module' },
     terminateOnNewJob: true
   });
