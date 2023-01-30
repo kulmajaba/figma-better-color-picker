@@ -71,4 +71,4 @@ jobs:
         SSH_HOST: ${{ secrets.SSH_HOST }}
         DEPLOY_PATH: ${{ env.DEPLOY_PATH }}
       run: |
-        scp -r -i $RUNNER_TEMP/private_key -o UserKnownHostsFile=$RUNNER_TEMP/known_hosts ./dist $SSH_USER@$SSH_HOST:/home/$SSH_USER/$DEPLOY_PATH
+        scp -r -i $RUNNER_TEMP/private_key -o UserKnownHostsFile=$RUNNER_TEMP/known_hosts ./dist/* $SSH_USER@$SSH_HOST:/home/$SSH_USER/$DEPLOY_PATH
