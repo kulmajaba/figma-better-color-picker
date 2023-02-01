@@ -13,13 +13,17 @@ const useWebWorker = <MessageType, ReturnType>({
   workerOptions,
   terminateOnNewJob = false
 }: Options) => {
-  const workerFactory = useCallback(() => new Worker(workerScript, workerOptions), [workerScript, workerOptions]);
-  const worker = useRef(workerFactory());
+  // The worker cannot be instantiated here,
+  // otherwise a new worker is created on every render
+  const worker = useRef<Worker>();
 
   const [status, setStatus] = useState<WorkerStatus>(WorkerStatus.Idle);
 
+  const workerFactory = useCallback(() => new Worker(workerScript, workerOptions), [workerScript, workerOptions]);
+
   useEffect(() => {
-    return () => worker.current.terminate();
+    worker.current = workerFactory();
+    return () => worker.current?.terminate();
   }, []);
 
   const handleMessage = useCallback(
@@ -35,7 +39,7 @@ const useWebWorker = <MessageType, ReturnType>({
   const terminate = useCallback(() => {
     console.log('Terminate WebWorker');
     setStatus(WorkerStatus.Idle);
-    worker.current.terminate();
+    worker.current?.terminate();
     worker.current = workerFactory();
   }, [worker.current]);
 
@@ -49,6 +53,10 @@ const useWebWorker = <MessageType, ReturnType>({
 
         if (terminateOnNewJob && status !== WorkerStatus.Idle) {
           terminate();
+        }
+
+        if (worker.current === undefined) {
+          worker.current = workerFactory();
         }
 
         setStatus(WorkerStatus.Working);
