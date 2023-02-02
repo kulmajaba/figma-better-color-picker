@@ -8,6 +8,7 @@
       "./node_modules/@types",
       "./node_modules/@figma"
     ],
+    "types": ["vite/client"],
     "outDir": "dist",
     "allowSyntheticDefaultImports": true,
     "moduleResolution": "node",

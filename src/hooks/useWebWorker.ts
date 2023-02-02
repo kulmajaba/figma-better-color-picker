@@ -3,7 +3,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { WorkerStatus } from '../types';
 
 interface Options {
-  worker: URL;
+  worker: string;
   terminateOnNewJob?: boolean;
   workerOptions?: WorkerOptions;
 }

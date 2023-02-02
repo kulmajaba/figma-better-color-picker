@@ -125,6 +125,7 @@ function App() {
   // eslint-disable-next-line prettier/prettier
   const colorString = `Component: ${roundToFixedPrecision(color[0], 3)}, ${roundToFixedPrecision(color[1], 3)}, ${roundToFixedPrecision(color[2], 3)}, A: ${roundToFixedPrecision(alpha, 3)}<br />
   RGB: ${roundToFixedPrecision(rgb[0], 3)}, ${roundToFixedPrecision(rgb[1], 3)}, ${roundToFixedPrecision(rgb[2], 3)}`;
+  const dev = import.meta.env.DEV;
 
   return (
     <main onMouseUp={onMouseUp} onMouseMove={onMouseMove}>
@@ -132,7 +133,6 @@ function App() {
         <ColorSpaceDropDown />
       </header>
       <section className="pickers">
-        {/* TODO: Indicate if picker is run online or offline */}
         <XYPicker
           firstComponentValues={firstComponentValues}
           firstComponent={firstComponent}
@@ -158,7 +158,7 @@ function App() {
           onChange={onAlphaChange}
           onMouseDown={onAlphaMouseDown}
         />
-        <p dangerouslySetInnerHTML={{ __html: colorString }} />
+        {dev && <p dangerouslySetInnerHTML={{ __html: colorString }} />}
         <div className="main-inputs">
           <Button icon="eyedropper" onClick={onEyeDropper} />
           <div className="main-inputs-color-inputs">

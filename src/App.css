@@ -231,13 +231,12 @@ img {
 
 .main-inputs {
   display: flex;
-  flex: 1;
   flex-direction: row;
   align-items: center;
 }
 
 .main-inputs-color-inputs {
-  flex: 1;
+  display: flex;
   flex-direction: column;
 }
 
