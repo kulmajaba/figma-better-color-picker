@@ -107,7 +107,7 @@ const ColorRow: React.FC<Props> = ({
       }
       return false;
     },
-    [firstComponentLocked, secondComponentLocked, thirdComponentLocked]
+    [firstComponentLocked, secondComponentLocked, thirdComponentLocked, firstComponent, secondComponent, thirdComponent]
   );
 
   const onAlphaChange = useCallback(

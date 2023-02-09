@@ -2,7 +2,7 @@ import React, { useCallback } from 'react';
 
 import { useColorSpace } from '../../hooks/useColorSpace';
 import { Color, InputValue } from '../../types';
-import { clampArrayTo0_1, clampTo0_1, roundArrayTo1Decimals, roundTo1Decimals } from '../../util/mathUtils';
+import { clampTo0_1, roundArrayTo1Decimals, roundTo1Decimals } from '../../util/mathUtils';
 import { inputValueToNumber, inputValueToString } from '../../util/parsingUtils';
 import { hex_to_rgb, rgb_to_hex } from '../../color/general';
 import Input from '../Input';
@@ -31,11 +31,15 @@ const ColorInput: React.FC<Props> = ({
   const handleComponentChange = useCallback(
     (componentIndex: number, value: InputValue) => {
       try {
-        const newComponent = inputValueToNumber(value);
+        const newComponentColor: Color = [0, 0, 0];
+        newComponentColor[componentIndex] = inputValueToNumber(value);
+        const newComponent = clampTo0_1(fromComponentRepresentation(newComponentColor)[componentIndex]);
+
         if (newComponent !== valueProp[componentIndex]) {
           const newValue = valueProp;
           newValue[componentIndex] = newComponent;
-          return onColorChange(clampArrayTo0_1(fromComponentRepresentation(newValue)) as Color) ?? true;
+
+          return onColorChange(newValue) ?? true;
         }
         return false;
       } catch (e) {
@@ -43,7 +47,7 @@ const ColorInput: React.FC<Props> = ({
         return false;
       }
     },
-    [onColorChange, fromComponentRepresentation]
+    [valueProp, onColorChange, fromComponentRepresentation]
   );
 
   const handleFirstComponentChange = useCallback(
