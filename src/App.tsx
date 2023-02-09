@@ -33,7 +33,7 @@ function App() {
   const { fromSRGB, toSRGB, convertFromPrevious } = useColorSpace();
 
   useEffect(() => {
-    window.addEventListener('message', (e) => console.log(e));
+    window.addEventListener('message', (e) => !e.data.source?.includes('react-devtools') && console.log(e));
   }, []);
 
   useEffect(() => {
@@ -52,7 +52,10 @@ function App() {
         return;
       }
 
-      dragging && setMousePos({ x: e.clientX, y: e.clientY });
+      if (dragging) {
+        e.preventDefault();
+        setMousePos({ x: e.clientX, y: e.clientY });
+      }
     },
     [dragging]
   );
@@ -122,72 +125,75 @@ function App() {
   const color: Color = [firstComponent, xyComponent.x, xyComponent.y];
   const rgb = toSRGB(color);
 
-  // eslint-disable-next-line prettier/prettier
-  const colorString = `Component: ${roundToFixedPrecision(color[0], 3)}, ${roundToFixedPrecision(color[1], 3)}, ${roundToFixedPrecision(color[2], 3)}, A: ${roundToFixedPrecision(alpha, 3)}<br />
-  RGB: ${roundToFixedPrecision(rgb[0], 3)}, ${roundToFixedPrecision(rgb[1], 3)}, ${roundToFixedPrecision(rgb[2], 3)}`;
   const dev = import.meta.env.DEV;
+  // eslint-disable-next-line prettier/prettier
+  const colorString = dev ? `Component: ${roundToFixedPrecision(color[0], 3)}, ${roundToFixedPrecision(color[1], 3)}, ${roundToFixedPrecision(color[2], 3)}, A: ${roundToFixedPrecision(alpha, 3)}<br />
+RGB: ${roundToFixedPrecision(rgb[0], 3)}, ${roundToFixedPrecision(rgb[1], 3)}, ${roundToFixedPrecision(rgb[2], 3)}`
+    : '';
 
   return (
-    <main onMouseUp={onMouseUp} onMouseMove={onMouseMove}>
-      <header>
-        <ColorSpaceDropDown />
-      </header>
-      <section className="pickers">
-        <XYPicker
-          firstComponentValues={firstComponentValues}
-          firstComponent={firstComponent}
-          globalValue={mousePos}
-          value={xyComponent}
-          dragging={activePicker === PickerType.XY}
-          onChange={onXyChange}
-          onMouseDown={onXyMouseDown}
-        />
-        <HuePicker
-          globalValue={mousePos}
-          value={firstComponent}
-          dragging={activePicker === PickerType.FirstComponentSlider}
-          onChange={onFirstComponentChange}
-          onMouseDown={onFirstComponentMouseDown}
-          onSizeChange={onFirstComponentPickerSizeChange}
-        />
-        <AlphaPicker
-          color={color}
-          globalValue={mousePos}
-          value={alpha}
-          dragging={activePicker === PickerType.Alpha}
-          onChange={onAlphaChange}
-          onMouseDown={onAlphaMouseDown}
-        />
-        {dev && <p dangerouslySetInnerHTML={{ __html: colorString }} />}
-        <div className="main-inputs">
-          <Button icon="eyedropper" onClick={onEyeDropper} />
-          <div className="main-inputs-color-inputs">
-            <ColorInput
-              type="component"
-              value={color}
-              alpha={alpha}
-              onColorChange={onColorInputChange}
-              onAlphaChange={onAlphaChange}
-            />
-            <ColorInput
-              type="hex"
-              value={color}
-              alpha={alpha}
-              onColorChange={onColorInputChange}
-              onAlphaChange={onAlphaChange}
-            />
+    <div id="mouse-events" onMouseUp={onMouseUp} onMouseMove={onMouseMove}>
+      <main>
+        <header>
+          <ColorSpaceDropDown />
+        </header>
+        <section className="pickers">
+          <XYPicker
+            firstComponentValues={firstComponentValues}
+            firstComponent={firstComponent}
+            globalValue={mousePos}
+            value={xyComponent}
+            dragging={activePicker === PickerType.XY}
+            onChange={onXyChange}
+            onMouseDown={onXyMouseDown}
+          />
+          <HuePicker
+            globalValue={mousePos}
+            value={firstComponent}
+            dragging={activePicker === PickerType.FirstComponentSlider}
+            onChange={onFirstComponentChange}
+            onMouseDown={onFirstComponentMouseDown}
+            onSizeChange={onFirstComponentPickerSizeChange}
+          />
+          <AlphaPicker
+            color={color}
+            globalValue={mousePos}
+            value={alpha}
+            dragging={activePicker === PickerType.Alpha}
+            onChange={onAlphaChange}
+            onMouseDown={onAlphaMouseDown}
+          />
+          {dev && <p dangerouslySetInnerHTML={{ __html: colorString }} />}
+          <div className="main-inputs">
+            <Button icon="eyedropper" onClick={onEyeDropper} />
+            <div className="main-inputs-color-inputs">
+              <ColorInput
+                type="component"
+                value={color}
+                alpha={alpha}
+                onColorChange={onColorInputChange}
+                onAlphaChange={onAlphaChange}
+              />
+              <ColorInput
+                type="hex"
+                value={color}
+                alpha={alpha}
+                onColorChange={onColorInputChange}
+                onAlphaChange={onAlphaChange}
+              />
+            </div>
           </div>
-        </div>
-      </section>
-      <section>
-        <ColorTable
-          firstComponent={firstComponent}
-          secondComponent={xyComponent.x}
-          thirdComponent={xyComponent.y}
-          alpha={alpha}
-        />
-      </section>
-    </main>
+        </section>
+        <section>
+          <ColorTable
+            firstComponent={firstComponent}
+            secondComponent={xyComponent.x}
+            thirdComponent={xyComponent.y}
+            alpha={alpha}
+          />
+        </section>
+      </main>
+    </div>
   );
 }
 

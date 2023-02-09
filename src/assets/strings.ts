@@ -3,7 +3,7 @@ const strings = {
     hex: 'Hex'
   },
   tooltip: {
-    copyColor: 'Copy color to clipboard',
+    copyColor: 'Copy color to clipboard in hex format',
     addColor: 'Add color to your styles'
   },
   label: {

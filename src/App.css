@@ -17,6 +17,7 @@
   --color-border-brand-focus: var(--figma-color-border-selected-strong, #7cc4f8);
 
   --max-size-picker: 300px;
+  --max-width-main: 460px;
   --height-picker: 12px;
   --padding-picker: calc(var(--height-picker) * 1.5);
   --radius-picker: calc(var(--height-picker) / 2);
@@ -60,13 +61,18 @@ body {
   background: var(--color-bg);
   color: var(--color-text);
   margin: 0;
+}
+
+#mouse-events {
   display: flex;
+  width: 100vw;
+  height: 100vh;
   flex-direction: column;
   align-items: center;
 }
 
 main {
-  max-width: 460px;
+  max-width: var(--max-width-main);
   align-items: center;
   display: flex;
   flex-direction: column;
@@ -97,7 +103,7 @@ section > * + *, .main-inputs-color-inputs > * + * {
   margin-top: 0.5rem;
 }
 
-section.pickers {
+.pickers {
   width: 100%;
   box-sizing: border-box;
   padding: var(--padding-picker);
