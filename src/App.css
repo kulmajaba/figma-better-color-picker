@@ -22,12 +22,13 @@
   --padding-picker: calc(var(--height-picker) * 1.5);
   --radius-picker: calc(var(--height-picker) / 2);
   --border-radius-s: 4px;
+  --spacing-color-matrix: 12px;
 
   --font-size: 11px;
   --font-size-button: 12px;
 }
   
-html, body, main {
+html, body {
   height: 100%;
 }
 
@@ -64,18 +65,26 @@ body {
 }
 
 #mouse-events {
-  display: flex;
   width: 100vw;
   height: 100vh;
-  flex-direction: column;
-  align-items: center;
+  justify-content: center;
+  align-items: start;
+  display: grid;
+  grid-template-columns: fit-content(var(--max-width-main)) auto;
+  grid-template-rows: fit-content(100%) auto;
 }
 
 main {
-  max-width: var(--max-width-main);
   align-items: center;
   display: flex;
   flex-direction: column;
+  grid-column: 1;
+  grid-row: 1;
+}
+
+#color-table {
+  grid-column: 1;
+  grid-row: 2;
 }
 
 header {

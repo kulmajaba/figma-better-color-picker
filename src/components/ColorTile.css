@@ -1,0 +1,10 @@
+.color-row-sample {
+  height: auto;
+  width: 100%;
+  aspect-ratio: 1;
+  position: relative;
+  box-sizing: border-box;
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-s);
+  overflow: hidden;
+}

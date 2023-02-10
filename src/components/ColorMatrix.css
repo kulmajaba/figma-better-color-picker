@@ -1,0 +1,12 @@
+#color-matrix {
+  grid-column: 2;
+  grid-row: 2;
+  display: grid;
+  grid-template-columns: repeat(auto-fit);
+}
+
+td, th {
+  width: auto;
+  height: auto;
+  min-width: 24px;
+}
