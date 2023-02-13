@@ -84,7 +84,10 @@ const ColorTable: React.FC<Props> = ({ firstComponent, secondComponent, thirdCom
             A
           </LockButton>
         </div>
-        <Button icon="add" onClick={addRow} />
+        <div className="lock-button-row-end">
+          <Button icon="add" onClick={addRow} />
+          <Button icon="double_arrow" onClick={() => console.log('press')} />
+        </div>
       </div>
       {colorRows}
     </>

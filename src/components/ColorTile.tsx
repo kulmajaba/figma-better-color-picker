@@ -28,13 +28,13 @@ interface Props {
   alpha?: number;
 }
 
-const ColorTile: React.FC<Props> = ({ color, alpha = 1 }) => {
+const ColorTile: React.FC<Props> = ({ color, alpha }) => {
   const { toSRGB } = useColorSpace();
 
   return (
-    <div className="color-row-sample">
-      <PickerCanvas getImageData={(width, height) => createCheckerData(width, height)} />
-      <PickerCanvas getImageData={(width, height) => createColorFill(width, height, color, alpha, toSRGB)} />
+    <div className="color-tile">
+      {alpha !== undefined && <PickerCanvas getImageData={(width, height) => createCheckerData(width, height)} />}
+      <PickerCanvas getImageData={(width, height) => createColorFill(width, height, color, alpha ?? 1, toSRGB)} />
     </div>
   );
 };

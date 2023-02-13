@@ -3,5 +3,15 @@
 }
 
 .lock-button-row {
-  grid-column: 2 / 3;
+  grid-column: 2;
+}
+
+.lock-button-row-end {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  column-gap: 4px;
+}
+
+.lock-button-row-end > :first-child {
+  grid-column: 2;
 }

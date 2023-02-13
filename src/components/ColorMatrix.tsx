@@ -43,7 +43,9 @@ const ColorMatrix: React.FC<Props> = ({ comparisonColors = mockComparisonColors,
           <th />
           {comparisonColors.map((color, index) => (
             <th key={index}>
-              <ColorTile color={color} />
+              <div className="color-tile-container">
+                <ColorTile color={color} />
+              </div>
             </th>
           ))}
         </tr>
@@ -52,10 +54,12 @@ const ColorMatrix: React.FC<Props> = ({ comparisonColors = mockComparisonColors,
         {colors.map((color, index) => (
           <tr key={index}>
             <td>
-              <ColorTile color={color} />
+              <div className="color-tile-container">
+                <ColorTile color={color} />
+              </div>
             </td>
             {comparisonColors.map((ccol, cIndex) => (
-              <td key={`${index}_${cIndex}`}>{floorTo2Decimals(getColorContrast(color, ccol, toSRGB))}</td>
+              <td key={`${index}_${cIndex}`}>{floorTo2Decimals(getColorContrast(color, ccol, toSRGB))} : 1</td>
             ))}
           </tr>
         ))}
