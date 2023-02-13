@@ -18,6 +18,7 @@ interface ColorSpace {
   fromSRGB: ColorConverter;
   /**
    * Converts a color space color to an sRGB value
+   * Values are in range 0..255
    */
   toSRGB: ColorConverter;
   /**
