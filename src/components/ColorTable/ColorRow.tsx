@@ -12,9 +12,7 @@ import ColorTile from '../ColorTile';
 import './ColorRow.css';
 
 interface Props {
-  firstComponent: number;
-  secondComponent: number;
-  thirdComponent: number;
+  color: Color;
   alpha: number;
   firstComponentLocked: boolean;
   secondComponentLocked: boolean;
@@ -24,9 +22,7 @@ interface Props {
 }
 
 const ColorRow: React.FC<Props> = ({
-  firstComponent: firstComponentProp,
-  secondComponent: secondComponentProp,
-  thirdComponent: thirdComponentProp,
+  color: colorProp,
   alpha: alphaProp,
   firstComponentLocked,
   secondComponentLocked,
@@ -34,40 +30,35 @@ const ColorRow: React.FC<Props> = ({
   alphaLocked,
   onDelete
 }) => {
-  const [firstComponent, setFirstComponent] = useState(firstComponentProp);
-  const [secondComponent, setSecondComponent] = useState(secondComponentProp);
-  const [thirdComponent, setThirdComponent] = useState(thirdComponentProp);
+  const [color, setColor] = useState(colorProp);
   const [alpha, setAlpha] = useState(alphaProp);
 
   const { toSRGB, convertFromPrevious } = useColorSpace();
 
   useEffect(() => {
     if (convertFromPrevious) {
-      const prevColor: Color = [firstComponent, secondComponent, thirdComponent];
-      const [first, second, third] = convertFromPrevious(prevColor);
-      !firstComponentLocked && setFirstComponent(first);
-      !secondComponentLocked && setSecondComponent(second);
-      !thirdComponentLocked && setThirdComponent(third);
+      const newColor = convertFromPrevious(color);
+      firstComponentLocked && (newColor[0] = colorProp[0]);
+      secondComponentLocked && (newColor[1] = colorProp[1]);
+      thirdComponentLocked && (newColor[2] = colorProp[2]);
+
+      setColor(newColor);
     }
   }, [convertFromPrevious]);
 
   useEffect(() => {
-    if (firstComponentLocked) {
-      setFirstComponent(firstComponentProp);
-    }
-  }, [firstComponentProp, firstComponentLocked]);
+    if (
+      JSON.stringify(color) !== JSON.stringify(colorProp) &&
+      (firstComponentLocked || secondComponentLocked || thirdComponentLocked)
+    ) {
+      const newColor = color;
+      firstComponentLocked && (newColor[0] = colorProp[0]);
+      secondComponentLocked && (newColor[1] = colorProp[1]);
+      thirdComponentLocked && (newColor[2] = colorProp[2]);
 
-  useEffect(() => {
-    if (secondComponentLocked) {
-      setSecondComponent(secondComponentProp);
+      setColor(newColor);
     }
-  }, [secondComponentProp, secondComponentLocked]);
-
-  useEffect(() => {
-    if (thirdComponentLocked) {
-      setThirdComponent(thirdComponentProp);
-    }
-  }, [thirdComponentProp, thirdComponentLocked]);
+  }, [colorProp, firstComponentLocked, secondComponentLocked, thirdComponentLocked]);
 
   useEffect(() => {
     if (alphaLocked) {
@@ -76,21 +67,23 @@ const ColorRow: React.FC<Props> = ({
   }, [alphaProp, alphaLocked]);
 
   const onColorChange = useCallback(
-    (color: Color) => {
-      const shouldChangeFirst = !firstComponentLocked && color[0] !== firstComponent;
-      const shouldChangeSecond = !secondComponentLocked && color[1] !== secondComponent;
-      const shouldChangeThird = !thirdComponentLocked && color[2] !== thirdComponent;
+    (newColor: Color) => {
+      if (
+        JSON.stringify(color) !== JSON.stringify(newColor) &&
+        (!firstComponentLocked || !secondComponentLocked || !thirdComponentLocked)
+      ) {
+        const changedColor = newColor;
+        firstComponentLocked && (changedColor[0] = colorProp[0]);
+        secondComponentLocked && (changedColor[1] = colorProp[1]);
+        thirdComponentLocked && (changedColor[2] = colorProp[2]);
 
-      shouldChangeFirst && setFirstComponent(color[0]);
-      shouldChangeSecond && setSecondComponent(color[1]);
-      shouldChangeThird && setThirdComponent(color[2]);
-
-      if (shouldChangeFirst || shouldChangeSecond || shouldChangeThird) {
+        setColor(newColor);
         return true;
       }
+
       return false;
     },
-    [firstComponentLocked, secondComponentLocked, thirdComponentLocked, firstComponent, secondComponent, thirdComponent]
+    [color, firstComponentLocked, secondComponentLocked, thirdComponentLocked]
   );
 
   const onAlphaChange = useCallback(
@@ -109,7 +102,7 @@ const ColorRow: React.FC<Props> = ({
     console.log('copy');
     if (navigator.clipboard) {
       try {
-        await navigator.clipboard.writeText(rgb_to_hex(toSRGB([firstComponent, secondComponent, thirdComponent])));
+        await navigator.clipboard.writeText(rgb_to_hex(toSRGB(color)));
         console.log('copy successful');
       } catch (e) {
         console.error(e);
@@ -117,9 +110,7 @@ const ColorRow: React.FC<Props> = ({
     } else {
       console.warn('Clipboard API not available');
     }
-  }, [firstComponent, secondComponent, thirdComponent]);
-
-  const color: Color = [firstComponent, secondComponent, thirdComponent];
+  }, [color]);
 
   return (
     <div className="color-row">
@@ -138,12 +129,7 @@ const ColorRow: React.FC<Props> = ({
           tooltip={strings.tooltip.copyColor}
           onClick={onCopy}
         />
-        <ColorRowAddButton
-          firstComponent={firstComponent}
-          secondComponent={secondComponent}
-          thirdComponent={thirdComponent}
-          alpha={alpha}
-        />
+        <ColorRowAddButton color={color} alpha={alpha} />
         <Button className="small border-none" icon="delete" onClick={onDelete} />
       </div>
     </div>

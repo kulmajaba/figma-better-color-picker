@@ -8,20 +8,17 @@ import { Color, PluginMessageType } from '../../types';
 import Button from '../Button';
 
 interface Props {
-  firstComponent: number;
-  secondComponent: number;
-  thirdComponent: number;
+  color: Color;
   alpha: number;
 }
 
-const ColorRowAddButton: React.FC<Props> = ({ firstComponent, secondComponent, thirdComponent, alpha }) => {
+const ColorRowAddButton: React.FC<Props> = ({ color, alpha }) => {
   const isPlugin = useIsPlugin();
   const { toSRGB, toComponentRepresentation, name } = useColorSpace();
 
   // TODO: use a popup input to set the name
   const addColor = () => {
     console.log('Add color');
-    const color: Color = [firstComponent, secondComponent, thirdComponent];
     pluginPostMessage({
       type: PluginMessageType.AddColor,
       payload: {

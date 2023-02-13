@@ -6,15 +6,9 @@ import { useColorSpace } from '../../hooks/useColorSpace';
 import Button from '../Button';
 
 import './ColorTable.css';
+import { useColorState } from '../../hooks/useColorState';
 
-interface Props {
-  firstComponent: number;
-  secondComponent: number;
-  thirdComponent: number;
-  alpha: number;
-}
-
-const ColorTable: React.FC<Props> = ({ firstComponent, secondComponent, thirdComponent, alpha }) => {
+const ColorTable: React.FC = () => {
   const [firstComponentLocked, setFirstComponentLocked] = useState(true);
   const [secondComponentLocked, setSecondComponentLocked] = useState(true);
   const [thirdComponentLocked, setThirdComponentLocked] = useState(true);
@@ -22,6 +16,7 @@ const ColorTable: React.FC<Props> = ({ firstComponent, secondComponent, thirdCom
   const [rows, setRows] = useState([0]);
 
   const { componentShortNames } = useColorSpace();
+  const { mainColor, mainAlpha } = useColorState();
 
   const toggleFirstComponentLocked = useCallback(() => {
     setFirstComponentLocked(!firstComponentLocked);
@@ -55,10 +50,8 @@ const ColorTable: React.FC<Props> = ({ firstComponent, secondComponent, thirdCom
   const colorRows = rows.map((key) => (
     <ColorRow
       key={key}
-      firstComponent={firstComponent}
-      secondComponent={secondComponent}
-      thirdComponent={thirdComponent}
-      alpha={alpha}
+      color={mainColor}
+      alpha={mainAlpha}
       firstComponentLocked={firstComponentLocked}
       secondComponentLocked={secondComponentLocked}
       thirdComponentLocked={thirdComponentLocked}

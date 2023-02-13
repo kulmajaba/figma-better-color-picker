@@ -14,6 +14,7 @@ import Button from './components/Button';
 
 import './App.css';
 import ColorMatrix from './components/ColorMatrix';
+import { useColorState } from './hooks/useColorState';
 
 enum PickerType {
   FirstComponentSlider = 'FIRST_COMPONENT_SLIDER',
@@ -27,9 +28,8 @@ function App() {
   const [mousePos, setMousePos] = useState(XYZero);
 
   const [firstComponentValues, setFirstComponentValues] = useState<number[]>([]);
-  const [firstComponent, setFirstComponent] = useState(0);
-  const [xyComponent, setXyComponent] = useState(XYZero);
-  const [alpha, setAlpha] = useState(1);
+
+  const { mainColor, setMainColor, mainAlpha, setMainAlpha } = useColorState();
 
   const { fromSRGB, toSRGB, convertFromPrevious } = useColorSpace();
 
@@ -39,10 +39,8 @@ function App() {
 
   useEffect(() => {
     if (convertFromPrevious) {
-      const prevColor: Color = [firstComponent, xyComponent.x, xyComponent.y];
-      const [first, x, y] = convertFromPrevious(prevColor);
-      setFirstComponent(first);
-      setXyComponent({ x, y });
+      const newColor = convertFromPrevious(mainColor);
+      setMainColor(newColor);
     }
   }, [convertFromPrevious]);
 
@@ -78,7 +76,7 @@ function App() {
   }, []);
 
   const onXyChange = useCallback((val: XY) => {
-    setXyComponent(val);
+    setMainColor([mainColor[0], val.x, val.y]);
   }, []);
 
   const onXyMouseDown = useCallback(
@@ -87,7 +85,7 @@ function App() {
   );
 
   const onFirstComponentChange = useCallback((val: number) => {
-    setFirstComponent(val);
+    setMainColor([val, mainColor[1], mainColor[2]]);
   }, []);
 
   const onFirstComponentMouseDown = useCallback(
@@ -96,7 +94,7 @@ function App() {
   );
 
   const onAlphaChange = useCallback((val: number) => {
-    setAlpha(val);
+    setMainAlpha(val);
   }, []);
 
   const onAlphaMouseDown = useCallback(
@@ -105,8 +103,7 @@ function App() {
   );
 
   const onColorInputChange = useCallback((color: Color) => {
-    setFirstComponent(color[0]);
-    setXyComponent({ x: color[1], y: color[2] });
+    setMainColor(color);
   }, []);
 
   const onEyeDropper = useCallback(async () => {
@@ -115,20 +112,18 @@ function App() {
         const res = await new EyeDropper().open();
         console.log('Eyedropper color', res.sRGBHex);
         const color = fromSRGB(hex_to_rgb(res.sRGBHex));
-        setFirstComponent(color[0]);
-        setXyComponent({ x: color[1], y: color[2] });
+        setMainColor(color);
       } catch (e) {
         console.log(e);
       }
     }
   }, []);
 
-  const color: Color = [firstComponent, xyComponent.x, xyComponent.y];
-  const rgb = toSRGB(color);
+  const rgb = toSRGB(mainColor);
 
   const dev = import.meta.env.DEV;
   // eslint-disable-next-line prettier/prettier
-  const colorString = dev ? `Component: ${roundToFixedPrecision(color[0], 3)}, ${roundToFixedPrecision(color[1], 3)}, ${roundToFixedPrecision(color[2], 3)}, A: ${roundToFixedPrecision(alpha, 3)}<br />
+  const colorString = dev ? `Component: ${roundToFixedPrecision(mainColor[0], 3)}, ${roundToFixedPrecision(mainColor[1], 3)}, ${roundToFixedPrecision(mainColor[2], 3)}, A: ${roundToFixedPrecision(mainAlpha, 3)}<br />
 RGB: ${roundToFixedPrecision(rgb[0], 3)}, ${roundToFixedPrecision(rgb[1], 3)}, ${roundToFixedPrecision(rgb[2], 3)}`
     : '';
 
@@ -141,25 +136,25 @@ RGB: ${roundToFixedPrecision(rgb[0], 3)}, ${roundToFixedPrecision(rgb[1], 3)}, $
         <section className="pickers">
           <XYPicker
             firstComponentValues={firstComponentValues}
-            firstComponent={firstComponent}
+            firstComponent={mainColor[0]}
             globalValue={mousePos}
-            value={xyComponent}
+            value={{ x: mainColor[1], y: mainColor[2] }}
             dragging={activePicker === PickerType.XY}
             onChange={onXyChange}
             onMouseDown={onXyMouseDown}
           />
           <HuePicker
             globalValue={mousePos}
-            value={firstComponent}
+            value={mainColor[0]}
             dragging={activePicker === PickerType.FirstComponentSlider}
             onChange={onFirstComponentChange}
             onMouseDown={onFirstComponentMouseDown}
             onSizeChange={onFirstComponentPickerSizeChange}
           />
           <AlphaPicker
-            color={color}
+            color={mainColor}
             globalValue={mousePos}
-            value={alpha}
+            value={mainAlpha}
             dragging={activePicker === PickerType.Alpha}
             onChange={onAlphaChange}
             onMouseDown={onAlphaMouseDown}
@@ -170,15 +165,15 @@ RGB: ${roundToFixedPrecision(rgb[0], 3)}, ${roundToFixedPrecision(rgb[1], 3)}, $
             <div className="main-inputs-color-inputs">
               <ColorInput
                 type="component"
-                value={color}
-                alpha={alpha}
+                value={mainColor}
+                alpha={mainAlpha}
                 onColorChange={onColorInputChange}
                 onAlphaChange={onAlphaChange}
               />
               <ColorInput
                 type="hex"
-                value={color}
-                alpha={alpha}
+                value={mainColor}
+                alpha={mainAlpha}
                 onColorChange={onColorInputChange}
                 onAlphaChange={onAlphaChange}
               />
@@ -187,12 +182,7 @@ RGB: ${roundToFixedPrecision(rgb[0], 3)}, ${roundToFixedPrecision(rgb[1], 3)}, $
         </section>
       </main>
       <section id="color-table">
-        <ColorTable
-          firstComponent={firstComponent}
-          secondComponent={xyComponent.x}
-          thirdComponent={xyComponent.y}
-          alpha={alpha}
-        />
+        <ColorTable />
       </section>
       <ColorMatrix />
     </div>
