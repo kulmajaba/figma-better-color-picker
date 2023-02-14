@@ -23,34 +23,17 @@ const ColorTable: React.FC<Props> = ({ firstComponent, secondComponent, thirdCom
 
   const { componentShortNames } = useColorSpace();
 
-  const toggleFirstComponentLocked = useCallback(() => {
-    setFirstComponentLocked(!firstComponentLocked);
-  }, [firstComponentLocked]);
+  const toggleFirstComponentLocked = useCallback(() => setFirstComponentLocked((locked) => !locked), []);
 
-  const toggleSecondComponentLocked = useCallback(() => {
-    setSecondComponentLocked(!secondComponentLocked);
-  }, [secondComponentLocked]);
+  const toggleSecondComponentLocked = useCallback(() => setSecondComponentLocked((locked) => !locked), []);
 
-  const toggleThirdComponentLocked = useCallback(() => {
-    setThirdComponentLocked(!thirdComponentLocked);
-  }, [thirdComponentLocked]);
+  const toggleThirdComponentLocked = useCallback(() => setThirdComponentLocked((locked) => !locked), []);
 
-  const toggleAlphaLocked = useCallback(() => {
-    setAlphaLocked(!alphaLocked);
-  }, [alphaLocked]);
+  const toggleAlphaLocked = useCallback(() => setAlphaLocked((locked) => !locked), []);
 
-  const addRow = useCallback(() => {
-    const newRows = rows.concat(Math.max(...rows) + 1);
-    setRows(newRows);
-  }, [rows]);
+  const addRow = useCallback(() => setRows((rows) => rows.concat(Math.max(...rows) + 1)), []);
 
-  const deleteRow = useCallback(
-    (key: number) => {
-      const newRows = rows.filter((k) => k !== key);
-      setRows(newRows);
-    },
-    [rows]
-  );
+  const deleteRow = useCallback((key: number) => setRows((rows) => rows.filter((k) => k !== key)), []);
 
   const colorRows = rows.map((key) => (
     <ColorRow
