@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 
 import { useColorSpace } from '../hooks/useColorSpace';
 import { Color } from '../types';
@@ -31,10 +31,15 @@ interface Props {
 const ColorTile: React.FC<Props> = ({ color, alpha }) => {
   const { toSRGB } = useColorSpace();
 
+  const createFill = useCallback(
+    (width: number, height: number) => createColorFill(width, height, color, alpha ?? 1, toSRGB),
+    [color, alpha, toSRGB]
+  );
+
   return (
     <div className="color-tile">
-      {alpha !== undefined && <PickerCanvas getImageData={(width, height) => createCheckerData(width, height)} />}
-      <PickerCanvas getImageData={(width, height) => createColorFill(width, height, color, alpha ?? 1, toSRGB)} />
+      {alpha !== undefined && <PickerCanvas getImageData={createCheckerData} />}
+      <PickerCanvas getImageData={createFill} />
     </div>
   );
 };

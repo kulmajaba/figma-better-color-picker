@@ -55,7 +55,7 @@ const Picker: React.FC<Props> = ({
             : 1 - clampTo0_1(y / (height - 1));
 
         const newVal = { x: scaledX, y: scaledY };
-        // console.log(`Picker value change x: ${newVal.x} (${x}), y: ${newVal.y} (${y})`);
+
         onChange(newVal);
       }
     }
