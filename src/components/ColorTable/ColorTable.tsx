@@ -4,6 +4,8 @@ import ColorRow from './ColorRow';
 import LockButton from './LockButton';
 import { useColorSpace } from '../../hooks/useColorSpace';
 import Button from '../Button';
+import { useComparisonColors } from '../../hooks/useComparisonColors';
+import ColorTile from '../ColorTile';
 
 import './ColorTable.css';
 
@@ -22,6 +24,7 @@ const ColorTable: React.FC<Props> = ({ firstComponent, secondComponent, thirdCom
   const [rows, setRows] = useState([0]);
 
   const { componentShortNames } = useColorSpace();
+  const { comparisonColors } = useComparisonColors();
 
   const toggleFirstComponentLocked = useCallback(() => setFirstComponentLocked((locked) => !locked), []);
 
@@ -72,6 +75,13 @@ const ColorTable: React.FC<Props> = ({ firstComponent, secondComponent, thirdCom
           <Button icon="double_arrow" onClick={() => console.log('press')} />
         </div>
       </div>
+      {comparisonColors.length > 0 && (
+        <div className="color-comparison-header">
+          {comparisonColors.map((comparisonColor) => (
+            <ColorTile color={comparisonColor} />
+          ))}
+        </div>
+      )}
       {colorRows}
     </>
   );

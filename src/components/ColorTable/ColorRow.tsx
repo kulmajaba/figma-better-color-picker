@@ -8,6 +8,8 @@ import ColorInput from '../ColorInput/ColorInput';
 import ColorRowAddButton from './ColorRowAddButton';
 import Button from '../Button';
 import ColorTile from '../ColorTile';
+import { useComparisonColors } from '../../hooks/useComparisonColors';
+import ColorComparisonCell from './ColorComparisonCell';
 
 import './ColorRow.css';
 
@@ -40,6 +42,7 @@ const ColorRow: React.FC<Props> = ({
   const [alpha, setAlpha] = useState(alphaProp);
 
   const { toSRGB, convertFromPrevious } = useColorSpace();
+  const { comparisonColors } = useComparisonColors();
 
   useEffect(() => {
     if (convertFromPrevious) {
@@ -122,31 +125,40 @@ const ColorRow: React.FC<Props> = ({
   const color: Color = [firstComponent, secondComponent, thirdComponent];
 
   return (
-    <div className="color-row">
-      <ColorTile color={color} alpha={alpha} />
-      <ColorInput
-        type="component"
-        value={color}
-        alpha={alpha}
-        onColorChange={onColorChange}
-        onAlphaChange={onAlphaChange}
-      />
-      <div className="color-row-buttons">
-        <Button
-          className="small border-none"
-          icon="content_copy"
-          tooltip={strings.tooltip.copyColor}
-          onClick={onCopy}
-        />
-        <ColorRowAddButton
-          firstComponent={firstComponent}
-          secondComponent={secondComponent}
-          thirdComponent={thirdComponent}
+    <>
+      <div className="color-row-main">
+        <ColorTile color={color} alpha={alpha} />
+        <ColorInput
+          type="component"
+          value={color}
           alpha={alpha}
+          onColorChange={onColorChange}
+          onAlphaChange={onAlphaChange}
         />
-        <Button className="small border-none" icon="delete" onClick={onDelete} />
+        <div className="color-row-buttons">
+          <Button
+            className="small border-none"
+            icon="content_copy"
+            tooltip={strings.tooltip.copyColor}
+            onClick={onCopy}
+          />
+          <ColorRowAddButton
+            firstComponent={firstComponent}
+            secondComponent={secondComponent}
+            thirdComponent={thirdComponent}
+            alpha={alpha}
+          />
+          <Button className="small border-none" icon="delete" onClick={onDelete} />
+        </div>
       </div>
-    </div>
+      {comparisonColors.length > 0 && (
+        <div className="color-row-comparison">
+          {comparisonColors.map((comparisonColor, i) => (
+            <ColorComparisonCell key={i} color={color} comparisonColor={comparisonColor} />
+          ))}
+        </div>
+      )}
+    </>
   );
 };
 

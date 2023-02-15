@@ -13,7 +13,6 @@ import ColorSpaceDropDown from './components/ColorSpaceDropDown';
 import Button from './components/Button';
 
 import './App.css';
-import ColorMatrix from './components/ColorMatrix';
 
 enum PickerType {
   FirstComponentSlider = 'FIRST_COMPONENT_SLIDER',
@@ -194,7 +193,6 @@ RGB: ${roundToFixedPrecision(rgb[0], 3)}, ${roundToFixedPrecision(rgb[1], 3)}, $
           alpha={alpha}
         />
       </section>
-      <ColorMatrix />
     </div>
   );
 }

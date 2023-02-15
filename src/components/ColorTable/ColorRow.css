@@ -4,7 +4,7 @@
   aspect-ratio: 1;
   position: relative;
   box-sizing: border-box;
-  border: 1px solid var(--color-border);
+  border: var(--border-1px);
   border-radius: var(--border-radius-s);
   overflow: hidden;
 }
