@@ -43,7 +43,6 @@ export const ColorTableProvider: React.FC<{ children?: React.ReactNode }> = ({ c
   );
 
   const setterContextValue = useMemo(() => {
-    console.log('setter context changed');
     return {
       addOrUpdateColor,
       deleteColor,

@@ -293,5 +293,7 @@ img {
 }
 
 .color-comparison-header > div {
+  display: flex;
+  flex-direction: column;
   width: var(--size-color-tile);
 }

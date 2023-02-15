@@ -42,7 +42,7 @@ const ColorRow: React.FC<Props> = ({
   const [alpha, setAlpha] = useState(alphaProp);
 
   const { toSRGB, convertFromPrevious } = useColorSpace();
-  const { comparisonColors } = useComparisonColors();
+  const { comparisonColors, addComparisonColor } = useComparisonColors();
 
   useEffect(() => {
     if (convertFromPrevious) {
@@ -108,11 +108,13 @@ const ColorRow: React.FC<Props> = ({
     [alphaLocked]
   );
 
+  const color: Color = [firstComponent, secondComponent, thirdComponent];
+
   const onCopy = useCallback(async () => {
     console.log('copy');
     if (navigator.clipboard) {
       try {
-        await navigator.clipboard.writeText(rgb_to_hex(toSRGB([firstComponent, secondComponent, thirdComponent])));
+        await navigator.clipboard.writeText(rgb_to_hex(toSRGB(color)));
         console.log('copy successful');
       } catch (e) {
         console.error(e);
@@ -120,9 +122,11 @@ const ColorRow: React.FC<Props> = ({
     } else {
       console.warn('Clipboard API not available');
     }
-  }, [firstComponent, secondComponent, thirdComponent]);
+  }, [color]);
 
-  const color: Color = [firstComponent, secondComponent, thirdComponent];
+  const onPushToComparison = useCallback(() => {
+    addComparisonColor(color);
+  }, [color]);
 
   return (
     <>
@@ -149,6 +153,12 @@ const ColorRow: React.FC<Props> = ({
             alpha={alpha}
           />
           <Button className="small border-none" icon="delete" onClick={onDelete} />
+          <Button
+            className="small border-none"
+            icon="double_arrow"
+            onClick={onPushToComparison}
+            tooltip={strings.tooltip.addColorToComparison}
+          />
         </div>
       </div>
       {comparisonColors.length > 0 && (

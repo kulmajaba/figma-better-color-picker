@@ -8,6 +8,9 @@ import { useComparisonColors } from '../../hooks/useComparisonColors';
 import ColorTile from '../ColorTile';
 
 import './ColorTable.css';
+import strings from '../../assets/strings';
+import ToolTip from '../ToolTip';
+import { rgb_to_hex } from '../../color/general';
 
 interface Props {
   firstComponent: number;
@@ -23,8 +26,8 @@ const ColorTable: React.FC<Props> = ({ firstComponent, secondComponent, thirdCom
   const [alphaLocked, setAlphaLocked] = useState(true);
   const [rows, setRows] = useState([0]);
 
-  const { componentShortNames } = useColorSpace();
-  const { comparisonColors } = useComparisonColors();
+  const { componentShortNames, toSRGB } = useColorSpace();
+  const { comparisonColors, deleteComparisonColor } = useComparisonColors();
 
   const toggleFirstComponentLocked = useCallback(() => setFirstComponentLocked((locked) => !locked), []);
 
@@ -72,13 +75,22 @@ const ColorTable: React.FC<Props> = ({ firstComponent, secondComponent, thirdCom
         </div>
         <div className="lock-button-row-end">
           <Button icon="add" onClick={addRow} />
-          <Button icon="double_arrow" onClick={() => console.log('press')} />
         </div>
       </div>
       {comparisonColors.length > 0 && (
         <div className="color-comparison-header">
-          {comparisonColors.map((comparisonColor) => (
-            <ColorTile color={comparisonColor} />
+          {comparisonColors.map((comparisonColor, i) => (
+            <div key={i}>
+              <Button
+                className="small border-none"
+                icon="delete"
+                tooltip={strings.tooltip.deleteColorFromComparison}
+                onClick={() => deleteComparisonColor(i)}
+              />
+              <ToolTip immediate tooltip={rgb_to_hex(toSRGB(comparisonColor))}>
+                <ColorTile color={comparisonColor} />
+              </ToolTip>
+            </div>
           ))}
         </div>
       )}
