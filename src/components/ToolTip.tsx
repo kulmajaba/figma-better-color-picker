@@ -8,6 +8,14 @@ interface Props {
   tooltip?: string;
   immediate?: boolean;
   children: React.ReactNode;
+  /**
+   * Set any props that should trigger a re-render of the tooltip
+   * This is a hacky way of working around the limitation of re-rendering:
+   * this component should recalculate position on any layout change, but its own re-render
+   * also triggers this leading to an endless loop.
+   * Instead we can at least trigger the recalculation when some props change.
+   */
+  triggerProps?: unknown;
 }
 
 const minOffset = 4;
@@ -54,7 +62,7 @@ const getDelta = (
   return 0;
 };
 
-const ToolTip: React.FC<Props> = ({ tooltip, immediate, children }) => {
+const ToolTip: React.FC<Props> = ({ tooltip, immediate, children, triggerProps }) => {
   const [offset, setOffset] = useState<XY>({ x: 0, y: 0 });
 
   const tipRef = useRef<HTMLSpanElement>(null);
@@ -75,13 +83,14 @@ const ToolTip: React.FC<Props> = ({ tooltip, immediate, children }) => {
   }, [tipRef.current, setOffset]);
 
   useEffect(() => {
-    handleResize();
-    // TODO: the layout reacts to window resizing but not layout changes within the React app,
-    // i.e. adding or removing color comparison columns.
     window.addEventListener('resize', () => handleResize());
 
     return window.removeEventListener('resize', () => handleResize());
   }, []);
+
+  useEffect(() => {
+    handleResize();
+  }, [triggerProps]);
 
   const transform = `translate(50%) translate(${offset.x}px, ${offset.y}px)`;
 

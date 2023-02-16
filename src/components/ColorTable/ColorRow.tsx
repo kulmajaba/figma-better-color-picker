@@ -158,6 +158,7 @@ const ColorRow: React.FC<Props> = ({
             icon="double_arrow"
             onClick={onPushToComparison}
             tooltip={strings.tooltip.addColorToComparison}
+            triggerProps={comparisonColors}
           />
         </div>
       </div>
