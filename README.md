@@ -27,6 +27,10 @@ Things that have been tried:
   - Using figma.clientStorage: aborts after timeout due to large size (apparently window.postMessage does send the data?)
   - Saving the data as static JSON file and bundling it with the plugin: big-json does not work in browser out of the box and it sucks to download that much data that could be calculated and saved locally
 
+### Better ToolTip component
+
+Currently the tooltip repositions itself on window resizes and when certain props (given to the tooltip) change. it would be nicer to have the tooltip automatically reposition when the page layout changes, but `useLayoutEffect` causes and endless loop that is difficult to stop as the repositioning of the tooltip is a layout change in itself.
+
 ## Development
 
 The plugin is based on Node.js, ensure you have a modern LTS version on your computer.
