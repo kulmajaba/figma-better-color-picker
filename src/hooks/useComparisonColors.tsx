@@ -1,23 +1,31 @@
 import React, { createContext, useCallback, useContext, useMemo, useState } from 'react';
 
 import { Color } from '../types';
+import useIsPlugin from './useIsPlugin';
 
 interface ComparisonContext {
   comparisonColors: Color[];
+  comparisonColorsVisible: boolean;
   setComparisonColors: (colors: Color[]) => void;
   addComparisonColor: (color: Color) => void;
   deleteComparisonColor: (index: number) => void;
+  toggleComparisonColorsVisible: () => void;
 }
 
 const ComparisonColorContext = createContext<ComparisonContext>({
   comparisonColors: [],
+  comparisonColorsVisible: true,
   setComparisonColors: () => undefined,
   addComparisonColor: () => undefined,
-  deleteComparisonColor: () => undefined
+  deleteComparisonColor: () => undefined,
+  toggleComparisonColorsVisible: () => undefined
 });
 
 export const ComparisonColorProvider: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
   const [comparisonColors, setComparisonColors] = useState<Color[]>([]);
+
+  const isPlugin = useIsPlugin();
+  const [comparisonColorsVisible, setComparisonColorsVisible] = useState(!isPlugin);
 
   const addComparisonColor = useCallback(
     (color: Color) => setComparisonColors((colors) => colors.concat([color])),
@@ -29,14 +37,28 @@ export const ComparisonColorProvider: React.FC<{ children?: React.ReactNode }> =
     [setComparisonColors]
   );
 
+  const toggleComparisonColorsVisible = useCallback(
+    () => setComparisonColorsVisible((visible) => !visible),
+    [setComparisonColorsVisible]
+  );
+
   const contextValue = useMemo(
     () => ({
       comparisonColors,
+      comparisonColorsVisible,
       setComparisonColors,
       addComparisonColor,
-      deleteComparisonColor
+      deleteComparisonColor,
+      toggleComparisonColorsVisible
     }),
-    [comparisonColors, setComparisonColors, addComparisonColor, deleteComparisonColor]
+    [
+      comparisonColors,
+      comparisonColorsVisible,
+      setComparisonColors,
+      addComparisonColor,
+      deleteComparisonColor,
+      toggleComparisonColorsVisible
+    ]
   );
 
   return <ComparisonColorContext.Provider value={contextValue}>{children}</ComparisonColorContext.Provider>;

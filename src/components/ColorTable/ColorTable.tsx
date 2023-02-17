@@ -27,7 +27,7 @@ const ColorTable: React.FC<Props> = ({ firstComponent, secondComponent, thirdCom
   const [rows, setRows] = useState([0]);
 
   const { componentShortNames, toSRGB } = useColorSpace();
-  const { comparisonColors, deleteComparisonColor } = useComparisonColors();
+  const { comparisonColors, comparisonColorsVisible, deleteComparisonColor } = useComparisonColors();
 
   const toggleFirstComponentLocked = useCallback(() => setFirstComponentLocked((locked) => !locked), []);
 
@@ -77,7 +77,7 @@ const ColorTable: React.FC<Props> = ({ firstComponent, secondComponent, thirdCom
           <Button icon="add" onClick={addRow} />
         </div>
       </div>
-      {comparisonColors.length > 0 && (
+      {comparisonColorsVisible && comparisonColors.length > 0 && (
         <div className="color-comparison-header">
           {comparisonColors.map((comparisonColor, i) => (
             <div key={i}>

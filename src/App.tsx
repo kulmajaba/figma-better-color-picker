@@ -11,6 +11,7 @@ import { useColorSpace } from './hooks/useColorSpace';
 import { hex_to_rgb } from './color/general';
 import ColorSpaceDropDown from './components/ColorSpaceDropDown';
 import Button from './components/Lib/Button';
+import ColorComparisonSwitch from './components/ColorComparisonSwitch';
 
 import './App.css';
 
@@ -136,6 +137,7 @@ RGB: ${roundToFixedPrecision(rgb[0], 3)}, ${roundToFixedPrecision(rgb[1], 3)}, $
       <main>
         <header>
           <ColorSpaceDropDown />
+          <ColorComparisonSwitch />
         </header>
         <section className="pickers">
           <XYPicker

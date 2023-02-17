@@ -17,7 +17,7 @@ const Button: React.FC<Props> = ({ icon, tooltip, triggerProps, ...buttonProps }
       <button {...buttonProps}>{icon && <Icon icon={icon} />}</button>
     </ToolTip>
   ) : (
-    <button className="focus-border" {...buttonProps}>
+    <button className="focus-border" type="button" {...buttonProps}>
       {icon && <Icon icon={icon} />}
     </button>
   );

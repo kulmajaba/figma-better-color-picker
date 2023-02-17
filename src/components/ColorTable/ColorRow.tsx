@@ -42,7 +42,7 @@ const ColorRow: React.FC<Props> = ({
   const [alpha, setAlpha] = useState(alphaProp);
 
   const { toSRGB, convertFromPrevious } = useColorSpace();
-  const { comparisonColors, addComparisonColor } = useComparisonColors();
+  const { comparisonColors, comparisonColorsVisible, addComparisonColor } = useComparisonColors();
 
   useEffect(() => {
     if (convertFromPrevious) {
@@ -153,16 +153,18 @@ const ColorRow: React.FC<Props> = ({
             alpha={alpha}
           />
           <Button className="small border-none" icon="delete" onClick={onDelete} />
-          <Button
-            className="small border-none"
-            icon="double_arrow"
-            onClick={onPushToComparison}
-            tooltip={strings.tooltip.addColorToComparison}
-            triggerProps={comparisonColors}
-          />
+          {comparisonColorsVisible && (
+            <Button
+              className="small border-none"
+              icon="double_arrow"
+              onClick={onPushToComparison}
+              tooltip={strings.tooltip.addColorToComparison}
+              triggerProps={comparisonColors}
+            />
+          )}
         </div>
       </div>
-      {comparisonColors.length > 0 && (
+      {comparisonColorsVisible && comparisonColors.length > 0 && (
         <div className="color-row-comparison">
           {comparisonColors.map((comparisonColor, i) => (
             <ColorComparisonCell key={i} color={color} comparisonColor={comparisonColor} />

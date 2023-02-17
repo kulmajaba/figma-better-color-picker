@@ -15,6 +15,7 @@
   --color-text-onbrand: var(--figma-color-text-onbrand, rgba(255, 255, 255, 1));
   --color-border-brand: var(--figma-color-border-brand, #105cad);
   --color-border-brand-focus: var(--figma-color-border-selected-strong, #7cc4f8);
+  --color-switch-off: var(--figma-color-icon-tertiary, #fff6);
 
   --max-size-picker: 300px;
   --max-width-main: 460px;
@@ -28,7 +29,7 @@
 
   --font-size: 11px;
   --font-size-button: 12px;
-  --font-size-select: 14px;
+  --font-size-label: 12px;
 
   --spacing-s: 0.3rem;
   --spacing-m: 0.5rem;
@@ -51,6 +52,17 @@ p, input, button, span, div {
   font-size: var(--font-size);
 }
 
+label {
+  font-size: var(--font-size-label);
+}
+
+.label-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--spacing-m);
+}
+
 body {
   background: var(--color-bg);
   color: var(--color-text);
@@ -63,7 +75,7 @@ body {
   justify-content: center;
   align-items: start;
   display: grid;
-  grid-template-columns: fit-content(var(--max-width-main)) auto;
+  grid-template-columns: fit-content(var(--max-width-main)) fit-content(100%);
   grid-template-rows: fit-content(100%) auto;
 }
 
@@ -80,7 +92,8 @@ header {
   width: 100%;
   display: flex;
   flex-direction: row;
-  justify-content: flex-start;
+  justify-content: space-between;
+  align-items: center;
   padding: var(--spacing-m);
   border-bottom: var(--border-1px);
 }

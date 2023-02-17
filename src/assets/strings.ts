@@ -9,7 +9,8 @@ const strings = {
     deleteColorFromComparison: 'Delete color from contrast comparison'
   },
   label: {
-    colorSpace: 'Color space'
+    colorSpace: 'Color space',
+    showContrastComparison: 'Show contrast comparison'
   }
 };
 

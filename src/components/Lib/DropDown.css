@@ -4,10 +4,5 @@ select {
   color: var(--color-text);
   cursor: pointer;
   border: var(--border-1px);
-  font-size: var(--font-size-select);
-}
-
-.dropdown > label {
-  margin-right: var(--spacing-m);
-  font-size: var(--font-size-select);
+  font-size: var(--font-size-label);
 }

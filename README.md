@@ -2,10 +2,15 @@
 
 ## TODO
 
-- Show color comparison only in standalone mode (or resize plugin window, sounds like a hassle)
-- Add a switch for showing color comparison and a dropdown for comparison method select
+- Show color comparison in plugin mode?
+- In plugin mode, some weird CSS behavior causes `main` to shift left
+- Spavcing the lock buttons in grid causes the m to drift out of alignment with the color input fields
 
 ## Roadmap
+
+### Undo history???
+
+Would be nice if you accidentally delete a color row etc.
 
 ### URL parameters
 
