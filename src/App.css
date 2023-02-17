@@ -18,15 +18,17 @@
 
   --max-size-picker: 300px;
   --max-width-main: 460px;
+  --size-color-tile: 24px;
+
   --height-picker: 12px;
   --padding-picker: calc(var(--height-picker) * 1.5);
   --radius-picker: calc(var(--height-picker) / 2);
+
   --border-radius-s: 4px;
-  --spacing-color-matrix: 12px;
-  --size-color-tile: 24px;
 
   --font-size: 11px;
   --font-size-button: 12px;
+  --font-size-select: 14px;
 
   --spacing-s: 0.3rem;
   --spacing-m: 0.5rem;
@@ -34,35 +36,19 @@
 
   --border-1px: 1px solid var(--color-border);
 }
+
+* {
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+}
   
 html, body {
   height: 100%;
 }
 
-body, input, button, h1, h2, h3, h4, h5, h6, p, span, label, select {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
-    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
-}
-
 p, input, button, span, div {
   font-size: var(--font-size);
-}
-
-label, select {
-  font-size: 14px;
-}
-
-select {
-  border-radius: var(--border-radius-s);
-  background: var(--color-bg);
-  color: var(--color-text);
-  cursor: pointer;
-  border: var(--border-1px);
-}
-
-input, button {
-  box-sizing: border-box;
-  text-align: center;
 }
 
 body {
@@ -87,35 +73,16 @@ main {
   flex-direction: column;
   grid-column: 1;
   grid-row: 1;
-}
-
-#color-table {
-  grid-column: 1 / 3;
-  grid-row: 2;
-  display: grid;
-  grid-template-columns: fit-content(var(--max-width-main)) auto;
-  grid-template-rows: fit-content(100%) auto;
+  border-bottom: var(--border-1px);
 }
 
 header {
   width: 100%;
   display: flex;
-  box-sizing: border-box;
   flex-direction: row;
   justify-content: flex-start;
   padding: var(--spacing-m);
-}
-
-section {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-section:not(:first-child) {
-  border-top: var(--border-1px);
+  border-bottom: var(--border-1px);
 }
 
 main > section > * + *, .main-inputs-color-inputs > * + * {
@@ -124,121 +91,20 @@ main > section > * + *, .main-inputs-color-inputs > * + * {
 
 .pickers {
   width: 100%;
-  box-sizing: border-box;
   padding: var(--padding-picker);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
-footer > * + *, .main-inputs > * + * {
+.main-inputs > * + * {
   margin-left: var(--spacing-m);
 }
 
-button {
-  display: flex;
-  position: relative;
-  width: fit-content;
-  height: fit-content;
-  line-height: 0;
-  border-radius: var(--border-radius-s);
-  background: var(--color-bg);
-  color: var(--color-text);
-  cursor: pointer;
-  border: var(--border-1px);
-  padding: var(--spacing-m);
-}
-
-button.small {
-  padding: 0.3rem;
-}
-
-button:hover {
-  background-color: var(--color-bg-hover);
-}
-
-button:active {
-  background-color: var(--color-bg-active);
-}
-
-button:focus-visible {
-  border: none;
-  outline-color: var(--color-border-focus);
-}
-
-button.brand {
-  --color-bg: var(--color-bg-brand);
-  --color-text: var(--color-text-brand);
-  --color-bg-hover: var(--color-bg-brand-hover);
-  --color-bg-active: var(--color-bg-brand-active);
-  --color-border: transparent;
-  --color-border-focus: var(--color-border-brand-focus);
-}
-
-button svg {
-  width: 18px;
-  height: 18px;
-  margin: 0;
-  padding: 0;
-}
-
-button.small svg {
-  width: 14px;
-  height: 14px;
-}
-
-button .tooltip {
-  visibility: hidden;
-  pointer-events: none;
-  white-space: nowrap;
-  max-width: 160px;
-  background-color: var(--color-bg-brand-transparent);
-  color: var(--color-text-onbrand);
-  text-align: center;
-  border-radius: var(--border-radius-s);
-  padding: var(--spacing-m);
-
-  position: absolute;
-  z-index: 1;
-  bottom: 100%;
-  margin-bottom: 0.25rem;
-  right: 0;
-  transform: translate(5%, 0);
-
-  opacity: 0;
-  /* For now tabbing to the button with a tooltip will outline the invisible tooltip.
-  Animating display will eventually be supported according to CSSWG.
-  https://github.com/w3c/csswg-drafts/issues/6429#issuecomment-1332439874 */
-  transition: opacity 0.3s ease-in-out;
-  transition-delay: 0s
-}
-
-button:hover .tooltip, button:focus-visible .tooltip {
-  visibility: visible;
-  opacity: 1;
-  transition-delay: 1.25s
-}
-
-input {
-  width: 100%;
-  background: 1px solid var(--color-bg);
-  border: var(--border-1px);
-  color: var(--color-text);
-  padding: 0.4rem 0.5rem;
-}
-
-input:focus-visible, select:focus-visible {
+.focus-border:focus-visible {
   border-color: var(--color-border-focus);
   outline-color: var(--color-border-focus);
-}
-
-/* Chrome, Safari, Edge, Opera */
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
-/* Firefox */
-input[type=number] {
-  -moz-appearance: textfield;
 }
 
 svg {
@@ -266,7 +132,7 @@ img {
 }
 
 .color-row-main, .lock-button-row-container {
-  width: calc(100% - var(--spacing-m) * 2);
+  width: 100%;
   padding: var(--spacing-m) var(--spacing-m) 0;
   display: grid;
   grid-template-columns: var(--size-color-tile) 4.5fr 1.8fr;
@@ -290,10 +156,4 @@ img {
   grid-auto-flow: column;
   grid-auto-columns: minmax(calc(var(--font-size) * 4 + 2px), 1fr);
   grid-column-gap: var(--spacing-m);
-}
-
-.color-comparison-header > div {
-  display: flex;
-  flex-direction: column;
-  width: var(--size-color-tile);
 }

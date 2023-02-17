@@ -10,7 +10,7 @@ import ColorTable from './components/ColorTable/ColorTable';
 import { useColorSpace } from './hooks/useColorSpace';
 import { hex_to_rgb } from './color/general';
 import ColorSpaceDropDown from './components/ColorSpaceDropDown';
-import Button from './components/Button';
+import Button from './components/Lib/Button';
 
 import './App.css';
 
@@ -185,14 +185,12 @@ RGB: ${roundToFixedPrecision(rgb[0], 3)}, ${roundToFixedPrecision(rgb[1], 3)}, $
           </div>
         </section>
       </main>
-      <section id="color-table">
-        <ColorTable
-          firstComponent={firstComponent}
-          secondComponent={xyComponent.x}
-          thirdComponent={xyComponent.y}
-          alpha={alpha}
-        />
-      </section>
+      <ColorTable
+        firstComponent={firstComponent}
+        secondComponent={xyComponent.x}
+        thirdComponent={xyComponent.y}
+        alpha={alpha}
+      />
     </div>
   );
 }

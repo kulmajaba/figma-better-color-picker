@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 
-import { XY } from '../types';
+import { XY } from '../../types';
 
 import './ToolTip.css';
 

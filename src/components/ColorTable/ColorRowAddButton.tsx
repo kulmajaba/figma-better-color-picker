@@ -5,7 +5,7 @@ import { useColorSpace } from '../../hooks/useColorSpace';
 import useIsPlugin from '../../hooks/useIsPlugin';
 import { pluginPostMessage } from '../../pluginApi';
 import { Color, PluginMessageType } from '../../types';
-import Button from '../Button';
+import Button from '../Lib/Button';
 
 interface Props {
   firstComponent: number;

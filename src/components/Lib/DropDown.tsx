@@ -21,7 +21,7 @@ const DropDown = <T extends string>({ name, label, options, value, onChange: onC
   return (
     <div className="dropdown">
       <label htmlFor={name}>{label}:</label>
-      <select name={name} value={value} onChange={onChange}>
+      <select className="focus-border" name={name} value={value} onChange={onChange}>
         {options.map((o) => (
           <option key={o}>{o}</option>
         ))}

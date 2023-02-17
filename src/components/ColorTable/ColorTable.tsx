@@ -3,14 +3,14 @@ import React, { useCallback, useState } from 'react';
 import ColorRow from './ColorRow';
 import LockButton from './LockButton';
 import { useColorSpace } from '../../hooks/useColorSpace';
-import Button from '../Button';
+import Button from '../Lib/Button';
 import { useComparisonColors } from '../../hooks/useComparisonColors';
 import ColorTile from '../ColorTile';
+import strings from '../../assets/strings';
+import ToolTip from '../Lib/ToolTip';
+import { rgb_to_hex } from '../../color/general';
 
 import './ColorTable.css';
-import strings from '../../assets/strings';
-import ToolTip from '../ToolTip';
-import { rgb_to_hex } from '../../color/general';
 
 interface Props {
   firstComponent: number;
@@ -57,7 +57,7 @@ const ColorTable: React.FC<Props> = ({ firstComponent, secondComponent, thirdCom
   ));
 
   return (
-    <>
+    <section id="color-table">
       <div className="lock-button-row-container">
         <div className="lock-button-row">
           <LockButton locked={firstComponentLocked} onClick={toggleFirstComponentLocked}>
@@ -95,7 +95,7 @@ const ColorTable: React.FC<Props> = ({ firstComponent, secondComponent, thirdCom
         </div>
       )}
       {colorRows}
-    </>
+    </section>
   );
 };
 

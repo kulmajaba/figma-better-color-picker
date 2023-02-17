@@ -6,7 +6,7 @@ import { Color } from '../../types';
 import { rgb_to_hex } from '../../color/general';
 import ColorInput from '../ColorInput/ColorInput';
 import ColorRowAddButton from './ColorRowAddButton';
-import Button from '../Button';
+import Button from '../Lib/Button';
 import ColorTile from '../ColorTile';
 import { useComparisonColors } from '../../hooks/useComparisonColors';
 import ColorComparisonCell from './ColorComparisonCell';

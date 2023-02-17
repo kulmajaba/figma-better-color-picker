@@ -1,0 +1,13 @@
+select {
+  border-radius: var(--border-radius-s);
+  background: var(--color-bg);
+  color: var(--color-text);
+  cursor: pointer;
+  border: var(--border-1px);
+  font-size: var(--font-size-select);
+}
+
+.dropdown > label {
+  margin-right: var(--spacing-m);
+  font-size: var(--font-size-select);
+}
