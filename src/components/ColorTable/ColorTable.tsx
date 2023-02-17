@@ -87,7 +87,7 @@ const ColorTable: React.FC<Props> = ({ firstComponent, secondComponent, thirdCom
                 tooltip={strings.tooltip.deleteColorFromComparison}
                 onClick={() => deleteComparisonColor(i)}
               />
-              <ToolTip immediate tooltip={rgb_to_hex(toSRGB(comparisonColor))}>
+              <ToolTip className="tooltip-immediate" tooltip={rgb_to_hex(toSRGB(comparisonColor))}>
                 <ColorTile color={comparisonColor} />
               </ToolTip>
             </div>

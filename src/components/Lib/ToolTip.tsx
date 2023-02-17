@@ -1,12 +1,14 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 
+import classNames from 'classnames';
+
 import { XY } from '../../types';
 
 import './ToolTip.css';
 
 interface Props {
   tooltip?: string;
-  immediate?: boolean;
+  className?: string;
   children: React.ReactNode;
   /**
    * Set any props that should trigger a re-render of the tooltip
@@ -62,7 +64,7 @@ const getDelta = (
   return 0;
 };
 
-const ToolTip: React.FC<Props> = ({ tooltip, immediate, children, triggerProps }) => {
+const ToolTip: React.FC<Props> = ({ tooltip, children, triggerProps, className }) => {
   const [offset, setOffset] = useState<XY>({ x: 0, y: 0 });
 
   const tipRef = useRef<HTMLSpanElement>(null);
@@ -94,10 +96,12 @@ const ToolTip: React.FC<Props> = ({ tooltip, immediate, children, triggerProps }
 
   const transform = `translate(50%) translate(${offset.x}px, ${offset.y}px)`;
 
+  const spanClassNames = classNames('tooltip', className);
+
   return (
     <div className="tooltip-container">
       {children}
-      <span ref={tipRef} className={`tooltip${immediate ? ' tooltip-immediate' : ''}`} style={{ transform }}>
+      <span ref={tipRef} className={spanClassNames} style={{ transform }}>
         {tooltip}
       </span>
     </div>
