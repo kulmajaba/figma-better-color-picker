@@ -1,0 +1,37 @@
+.tooltip-container {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip {
+  visibility: hidden;
+  pointer-events: none;
+  background-color: var(--color-bg-brand-transparent);
+  color: var(--color-text-onbrand);
+  text-align: center;
+  border-radius: var(--border-radius-s);
+  padding: var(--spacing-m);
+
+  position: absolute;
+  width: max-content;
+  max-width: 140px;
+  z-index: 1;
+  bottom: 100%;
+  margin-bottom: var(--spacing-s);
+  right: 50%;
+  transform: translateX(50%);
+
+  opacity: 0;
+  transition: all 0.3s ease-in-out;
+  transition-delay: 0s;
+}
+
+.tooltip-container > *:focus-visible + .tooltip, .tooltip-container > *:hover + .tooltip {
+  visibility: visible;
+  opacity: 1;
+  transition-delay: 1s
+}
+
+.tooltip-container > *:focus-visible + .tooltip.tooltip-immediate, .tooltip-container > *:hover + .tooltip.tooltip-immediate {
+  transition-delay: 0s
+}

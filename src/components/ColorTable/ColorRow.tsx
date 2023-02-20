@@ -3,30 +3,15 @@ import React, { useCallback, useEffect, useState } from 'react';
 import strings from '../../assets/strings';
 import { useColorSpace } from '../../hooks/useColorSpace';
 import { Color } from '../../types';
-import { createCheckerData } from '../../util/imageData';
 import { rgb_to_hex } from '../../color/general';
 import ColorInput from '../ColorInput/ColorInput';
-import PickerCanvas from '../PickerCanvas';
 import ColorRowAddButton from './ColorRowAddButton';
-import Button from '../Button';
+import Button from '../Lib/Button';
+import ColorTile from '../ColorTile';
+import { useComparisonColors } from '../../hooks/useComparisonColors';
+import ColorComparisonCell from './ColorComparisonCell';
 
 import './ColorRow.css';
-
-const createColorFill = (width: number, height: number, color: Color, alpha: number, toSRGB: (val: Color) => Color) => {
-  const [r, g, b] = toSRGB(color);
-  alpha = Math.round(alpha * 255);
-  const data = new Uint8ClampedArray(width * height * 4);
-
-  for (let i = 0; i < width * height; i++) {
-    const index = i * 4;
-    data[index + 0] = r;
-    data[index + 1] = g;
-    data[index + 2] = b;
-    data[index + 3] = alpha;
-  }
-
-  return new ImageData(data, width);
-};
 
 interface Props {
   firstComponent: number;
@@ -57,6 +42,7 @@ const ColorRow: React.FC<Props> = ({
   const [alpha, setAlpha] = useState(alphaProp);
 
   const { toSRGB, convertFromPrevious } = useColorSpace();
+  const { comparisonColors, comparisonColorsVisible, addComparisonColor } = useComparisonColors();
 
   useEffect(() => {
     if (convertFromPrevious) {
@@ -122,11 +108,13 @@ const ColorRow: React.FC<Props> = ({
     [alphaLocked]
   );
 
+  const color: Color = [firstComponent, secondComponent, thirdComponent];
+
   const onCopy = useCallback(async () => {
     console.log('copy');
     if (navigator.clipboard) {
       try {
-        await navigator.clipboard.writeText(rgb_to_hex(toSRGB([firstComponent, secondComponent, thirdComponent])));
+        await navigator.clipboard.writeText(rgb_to_hex(toSRGB(color)));
         console.log('copy successful');
       } catch (e) {
         console.error(e);
@@ -134,39 +122,56 @@ const ColorRow: React.FC<Props> = ({
     } else {
       console.warn('Clipboard API not available');
     }
-  }, [firstComponent, secondComponent, thirdComponent]);
+  }, [color]);
 
-  const color: Color = [firstComponent, secondComponent, thirdComponent];
+  const onPushToComparison = useCallback(() => {
+    addComparisonColor(color);
+  }, [color]);
 
   return (
-    <div className="color-row">
-      <div className="color-row-sample">
-        <PickerCanvas getImageData={(width, height) => createCheckerData(width, height)} />
-        <PickerCanvas getImageData={(width, height) => createColorFill(width, height, color, alpha, toSRGB)} />
-      </div>
-      <ColorInput
-        type="component"
-        value={color}
-        alpha={alpha}
-        onColorChange={onColorChange}
-        onAlphaChange={onAlphaChange}
-      />
-      <div className="color-row-buttons">
-        <Button
-          className="small border-none"
-          icon="content_copy"
-          tooltip={strings.tooltip.copyColor}
-          onClick={onCopy}
-        />
-        <ColorRowAddButton
-          firstComponent={firstComponent}
-          secondComponent={secondComponent}
-          thirdComponent={thirdComponent}
+    <>
+      <div className="color-row-main">
+        <ColorTile color={color} alpha={alpha} />
+        <ColorInput
+          type="component"
+          value={color}
           alpha={alpha}
+          onColorChange={onColorChange}
+          onAlphaChange={onAlphaChange}
         />
-        <Button className="small border-none" icon="delete" onClick={onDelete} />
+        <div className="color-row-buttons">
+          <Button
+            className="small border-none"
+            icon="content_copy"
+            tooltip={strings.tooltip.copyColor}
+            onClick={onCopy}
+          />
+          <ColorRowAddButton
+            firstComponent={firstComponent}
+            secondComponent={secondComponent}
+            thirdComponent={thirdComponent}
+            alpha={alpha}
+          />
+          <Button className="small border-none" icon="delete" onClick={onDelete} />
+          {comparisonColorsVisible && (
+            <Button
+              className="small border-none"
+              icon="double_arrow"
+              onClick={onPushToComparison}
+              tooltip={strings.tooltip.addColorToComparison}
+              triggerProps={comparisonColors}
+            />
+          )}
+        </div>
       </div>
-    </div>
+      {comparisonColorsVisible && comparisonColors.length > 0 && (
+        <div className="color-row-comparison">
+          {comparisonColors.map((comparisonColor, i) => (
+            <ColorComparisonCell key={i} color={color} comparisonColor={comparisonColor} />
+          ))}
+        </div>
+      )}
+    </>
   );
 };
 

@@ -1,6 +1,8 @@
 import React from 'react';
 
-import Icon from '../Icon';
+import classNames from 'classnames';
+
+import Icon from '../Lib/Icon';
 
 import './LockButton.css';
 
@@ -11,9 +13,10 @@ interface Props {
 }
 
 const LockButton: React.FC<Props> = ({ children, locked, onClick }) => {
-  const buttonClassNames = 'small border-none lock-button';
+  const buttonClassNames = classNames('small', 'border-none', 'lock-button', { locked });
+
   return (
-    <button className={locked ? buttonClassNames + ' locked' : buttonClassNames} onClick={onClick}>
+    <button className={buttonClassNames} onClick={onClick}>
       <span>{children}</span>
       <Icon icon={locked ? 'link' : 'link_off'} />
     </button>

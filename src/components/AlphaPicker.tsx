@@ -52,7 +52,7 @@ const AlphaPicker: React.FC<Props> = ({ color, value, onChange, ...otherProps })
 
   return (
     <div className="alpha-container">
-      <PickerCanvas getImageData={(width, height) => createCheckerData(width, height)} />
+      <PickerCanvas getImageData={createCheckerData} />
       <Picker getImageData={getAlphaData} value={pickerValue} onChange={(val) => onChange(val.x)} {...otherProps} />
     </div>
   );

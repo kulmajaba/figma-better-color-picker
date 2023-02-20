@@ -5,7 +5,7 @@ import { Color, InputValue } from '../../types';
 import { clampTo0_1, roundArrayTo1Decimals, roundTo1Decimals } from '../../util/mathUtils';
 import { inputValueToNumber, inputValueToString } from '../../util/parsingUtils';
 import { hex_to_rgb, rgb_to_hex } from '../../color/general';
-import Input from '../Input';
+import Input from '../Lib/Input';
 
 import './ColorInput.css';
 

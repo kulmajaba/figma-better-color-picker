@@ -10,9 +10,11 @@ import ColorTable from './components/ColorTable/ColorTable';
 import { useColorSpace } from './hooks/useColorSpace';
 import { hex_to_rgb } from './color/general';
 import ColorSpaceDropDown from './components/ColorSpaceDropDown';
-import Button from './components/Button';
+import Button from './components/Lib/Button';
+import ColorComparisonSwitch from './components/ColorComparisonSwitch';
 
 import './App.css';
+import InfoModal from './components/InfoModal';
 
 enum PickerType {
   FirstComponentSlider = 'FIRST_COMPONENT_SLIDER',
@@ -29,6 +31,8 @@ function App() {
   const [firstComponent, setFirstComponent] = useState(0);
   const [xyComponent, setXyComponent] = useState(XYZero);
   const [alpha, setAlpha] = useState(1);
+
+  const [infoModalVisible, setInfoModalVisible] = useState(false);
 
   const { fromSRGB, toSRGB, convertFromPrevious } = useColorSpace();
 
@@ -122,6 +126,9 @@ function App() {
     }
   }, []);
 
+  const onShowInfoModal = useCallback(() => setInfoModalVisible(true), []);
+  const onCloseInfoModal = useCallback(() => setInfoModalVisible(false), []);
+
   const color: Color = [firstComponent, xyComponent.x, xyComponent.y];
   const rgb = toSRGB(color);
 
@@ -136,6 +143,10 @@ RGB: ${roundToFixedPrecision(rgb[0], 3)}, ${roundToFixedPrecision(rgb[1], 3)}, $
       <main>
         <header>
           <ColorSpaceDropDown />
+          <div>
+            <ColorComparisonSwitch />
+            <Button className="borderless-icon" icon="help_outline" onClick={onShowInfoModal} />
+          </div>
         </header>
         <section className="pickers">
           <XYPicker
@@ -184,15 +195,14 @@ RGB: ${roundToFixedPrecision(rgb[0], 3)}, ${roundToFixedPrecision(rgb[1], 3)}, $
             </div>
           </div>
         </section>
-        <section>
-          <ColorTable
-            firstComponent={firstComponent}
-            secondComponent={xyComponent.x}
-            thirdComponent={xyComponent.y}
-            alpha={alpha}
-          />
-        </section>
       </main>
+      <ColorTable
+        firstComponent={firstComponent}
+        secondComponent={xyComponent.x}
+        thirdComponent={xyComponent.y}
+        alpha={alpha}
+      />
+      <InfoModal visible={infoModalVisible} onClose={onCloseInfoModal} />
     </div>
   );
 }

@@ -1,0 +1,58 @@
+button {
+  box-sizing: border-box;
+  text-align: center;
+  display: flex;
+  position: relative;
+  width: fit-content;
+  height: fit-content;
+  line-height: 0;
+  border-radius: var(--border-radius-s);
+  background: var(--color-bg);
+  color: var(--color-text);
+  cursor: pointer;
+  border: var(--border-1px);
+  padding: var(--spacing-m);
+}
+
+button.small {
+  padding: 0.3rem;
+}
+
+button:hover {
+  background-color: var(--color-bg-hover);
+}
+
+button:active {
+  background-color: var(--color-bg-active);
+}
+
+button.brand {
+  --color-bg: var(--color-bg-brand);
+  --color-text: var(--color-text-brand);
+  --color-bg-hover: var(--color-bg-brand-hover);
+  --color-bg-active: var(--color-bg-brand-active);
+  --color-border: transparent;
+  --color-border-focus: var(--color-border-brand-focus);
+}
+
+button svg {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  padding: 0;
+}
+
+button.small svg {
+  width: 14px;
+  height: 14px;
+}
+
+button.borderless-icon {
+  border: none;
+  padding: 0;
+}
+
+button.borderless-icon svg {
+  width: 24px;
+  height: 24px;
+}

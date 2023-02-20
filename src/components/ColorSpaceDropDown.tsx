@@ -3,7 +3,7 @@ import React from 'react';
 import strings from '../assets/strings';
 
 import { useColorSpace, colorSpaceNames } from '../hooks/useColorSpace';
-import DropDown from './DropDown';
+import DropDown from './Lib/DropDown';
 
 const ColorSpaceDropDown: React.FC = () => {
   const { name, setColorSpace } = useColorSpace();

@@ -1,6 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react';
 
-import { InputValue } from '../types';
+import { InputValue } from '../../types';
+
+import './Input.css';
 
 interface Props
   extends Omit<React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>, 'onChange'> {
@@ -55,7 +57,15 @@ const Input: React.FC<Props> = ({
   }, [onChangeProp, value, valueProp]);
 
   return (
-    <input value={value} onFocus={onFocus} onChange={onChange} onKeyDown={onKeyDown} onBlur={onBlur} {...inputProps} />
+    <input
+      className="focus-border"
+      value={value}
+      onFocus={onFocus}
+      onChange={onChange}
+      onKeyDown={onKeyDown}
+      onBlur={onBlur}
+      {...inputProps}
+    />
   );
 };
 

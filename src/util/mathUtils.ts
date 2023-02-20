@@ -17,3 +17,8 @@ export const roundArrayToPrecision = (arr: number[], decimals: number) =>
   arr.map((val) => roundToFixedPrecision(val, decimals));
 
 export const roundArrayTo1Decimals = (arr: number[]) => roundArrayToPrecision(arr, 1);
+
+export const floor = (value: number, decimals: number) =>
+  Math.floor(value * Math.pow(10, decimals)) / Math.pow(10, decimals);
+
+export const floorTo2Decimals = (value: number) => floor(value, 2);

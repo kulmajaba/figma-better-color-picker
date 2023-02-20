@@ -1,4 +1,4 @@
-import React, { useState, useContext, createContext, useCallback } from 'react';
+import React, { useState, useContext, createContext, useCallback, useMemo } from 'react';
 
 import { hslvfloat_to_hslv, hslv_to_hslvfloat } from '../color/general';
 import { okhsl_to_srgb, okhsv_to_srgb, srgb_to_okhsl, srgb_to_okhsv } from '../color/oklab';
@@ -18,6 +18,7 @@ interface ColorSpace {
   fromSRGB: ColorConverter;
   /**
    * Converts a color space color to an sRGB value
+   * Values are in range 0..255
    */
   toSRGB: ColorConverter;
   /**
@@ -87,7 +88,7 @@ const ColorSpaceContext = createContext<SpaceContext>({
   convertFromPrevious: undefined
 });
 
-export const ColorSpaceProvider = ({ children }: { children: React.ReactNode }) => {
+export const ColorSpaceProvider: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
   const [colorSpace, _setColorSpace] = useState(colorSpaces.OKHSV);
   const [colorSpaceName, setColorSpaceName] = useState<ColorSpaceName>('OKHSV');
   const [convertFromPrevious, setConvertFromPrevious] = useState<ColorConverter | undefined>(undefined);
@@ -103,11 +104,17 @@ export const ColorSpaceProvider = ({ children }: { children: React.ReactNode }) 
     [colorSpace]
   );
 
-  return (
-    <ColorSpaceContext.Provider value={{ ...colorSpace, setColorSpace, name: colorSpaceName, convertFromPrevious }}>
-      {children}
-    </ColorSpaceContext.Provider>
+  const contextValue = useMemo(
+    () => ({
+      ...colorSpace,
+      setColorSpace,
+      name: colorSpaceName,
+      convertFromPrevious
+    }),
+    [colorSpace, setColorSpace, colorSpaceName, convertFromPrevious]
   );
+
+  return <ColorSpaceContext.Provider value={contextValue}>{children}</ColorSpaceContext.Provider>;
 };
 
 export const useColorSpace = () => useContext(ColorSpaceContext);

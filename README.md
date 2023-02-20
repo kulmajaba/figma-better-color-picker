@@ -1,45 +1,28 @@
 # Better Color Picker
 
+## TODO
+
+- Spacing the lock buttons in grid causes them to drift out of alignment with the color input fields
+
 ## Roadmap
 
-### WCAG Color contrast checks
+### Undo history???
 
-Possibilities
-1. A UI to check if the color meets contrast requirements with a manually set color
-2. Another list of colors to test contrast against
-3. Calculate the grayscale values needed to fulfill a certain contrast ratio for a given color
+Would be nice if you accidentally delete a color row etc.
 
-[WCAG 2.1 success criterion 1.4.3](https://www.w3.org/TR/WCAG21/#contrast-minimum) defines the minimum contrast ratios for accessible web content color usage. They are as follows:
-- 4,5:1 for text and 3:1 for large text and icons (AA)
-- 7:1 for text and 4,5:1 for large text and icons (AAA)
+### URL parameters
 
-Contrast ratio is calculated as
+Adding URL parameters (or storing some parameters locally) would allow the user to continue where they left off, or create a permalink with their color palette for quick contrast checks with new colors.
 
-> (L1 + 0.05) / (L2 + 0.05), where
+Parameters would include color space, current colors and comparison colors.
 
-L1 is the relative luminance of the lighter of the colors, and
-L2 is the relative luminance of the darker of the colors.
-[Source](https://www.w3.org/TR/WCAG21/#dfn-contrast-ratio)
+### Coloring contrast check results
 
-Relative luminance is the relative brightness of any point in a colorspace, normalized to 0 for darkest black and 1 for lightest white.
+WCAG 2.1 has two different passing grades, AA and AAA and the required contrast differs for different elements such as small text, large text, icons and UI elements. It would be nice to color code the contrast results in some way but it might be too difficult and confusing to the user.
 
-For the sRGB colorspace, the relative luminance of a color is defined as L = 0.2126 * R + 0.7152 * G + 0.0722 * B where R, G and B are defined as:
+### WCAG 3 Color contrast checks
 
->if RsRGB <= 0.03928 then R = RsRGB/12.92 else R = ((RsRGB+0.055)/1.055) ^ 2.4
->
->if GsRGB <= 0.03928 then G = GsRGB/12.92 else G = ((GsRGB+0.055)/1.055) ^ 2.4
->
->if BsRGB <= 0.03928 then B = BsRGB/12.92 else B = ((BsRGB+0.055)/1.055) ^ 2.4
-
-and RsRGB, GsRGB, and BsRGB are defined as:
-
->RsRGB = R8bit/255
->
->GsRGB = G8bit/255
->
->BsRGB = B8bit/255
-
-The "^" character is the exponentiation operator. (Formula taken from [sRGB] and [IEC-4WD]). [Source](https://www.w3.org/TR/WCAG21/#dfn-relative-luminance)
+The current implementation is WCAG 2.1 and is useful on its own, but could support multiple options.
 
 ### Caching XY picker imagedata
 
@@ -50,6 +33,10 @@ This is non-trivial to cache due to the architecture of the plugins and the size
 Things that have been tried:
   - Using figma.clientStorage: aborts after timeout due to large size (apparently window.postMessage does send the data?)
   - Saving the data as static JSON file and bundling it with the plugin: big-json does not work in browser out of the box and it sucks to download that much data that could be calculated and saved locally
+
+### Better ToolTip component
+
+Currently the tooltip repositions itself on window resizes and when certain props (given to the tooltip) change. it would be nicer to have the tooltip automatically reposition when the page layout changes, but `useLayoutEffect` causes and endless loop that is difficult to stop as the repositioning of the tooltip is a layout change in itself.
 
 ## Development
 

@@ -1,4 +1,4 @@
-.color-row-sample {
+.color-tile {
   height: auto;
   width: 100%;
   aspect-ratio: 1;
@@ -7,11 +7,4 @@
   border: var(--border-1px);
   border-radius: var(--border-radius-s);
   overflow: hidden;
-}
-
-.color-row-buttons {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  column-gap: 4px;
-  justify-items: center;
 }
