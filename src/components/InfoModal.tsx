@@ -2,6 +2,7 @@ import React from 'react';
 import strings from '../assets/strings';
 
 import useIsPlugin from '../hooks/useIsPlugin';
+import Icon from './Lib/Icon';
 import Modal, { Props as Modalprops } from './Lib/Modal';
 
 type Props = Omit<Modalprops, 'title|children'>;
@@ -17,6 +18,9 @@ const InfoModal: React.FC<Props> = (props) => {
   return (
     <Modal {...props} title="Help">
       <p dangerouslySetInnerHTML={{ __html: infoMessage }} />
+      <a href="https://github.com/kulmajaba/figma-better-color-picker" target="_blank" rel="noreferrer noopener">
+        <Icon icon="github_mark" />
+      </a>
     </Modal>
   );
 };

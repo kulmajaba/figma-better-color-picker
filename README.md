@@ -2,7 +2,6 @@
 
 ## TODO
 
-- Show color comparison in plugin mode?
 - Spacing the lock buttons in grid causes them to drift out of alignment with the color input fields
 
 ## Roadmap
@@ -16,6 +15,10 @@ Would be nice if you accidentally delete a color row etc.
 Adding URL parameters (or storing some parameters locally) would allow the user to continue where they left off, or create a permalink with their color palette for quick contrast checks with new colors.
 
 Parameters would include color space, current colors and comparison colors.
+
+### Coloring contrast check results
+
+WCAG 2.1 has two different passing grades, AA and AAA and the required contrast differs for different elements such as small text, large text, icons and UI elements. It would be nice to color code the contrast results in some way but it might be too difficult and confusing to the user.
 
 ### WCAG 3 Color contrast checks
 
