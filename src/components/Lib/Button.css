@@ -46,3 +46,13 @@ button.small svg {
   width: 14px;
   height: 14px;
 }
+
+button.borderless-icon {
+  border: none;
+  padding: 0;
+}
+
+button.borderless-icon svg {
+  width: 24px;
+  height: 24px;
+}

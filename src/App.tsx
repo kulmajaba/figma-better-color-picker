@@ -14,7 +14,7 @@ import Button from './components/Lib/Button';
 import ColorComparisonSwitch from './components/ColorComparisonSwitch';
 
 import './App.css';
-import Modal from './components/Lib/Modal';
+import InfoModal from './components/InfoModal';
 
 enum PickerType {
   FirstComponentSlider = 'FIRST_COMPONENT_SLIDER',
@@ -31,6 +31,8 @@ function App() {
   const [firstComponent, setFirstComponent] = useState(0);
   const [xyComponent, setXyComponent] = useState(XYZero);
   const [alpha, setAlpha] = useState(1);
+
+  const [infoModalVisible, setInfoModalVisible] = useState(false);
 
   const { fromSRGB, toSRGB, convertFromPrevious } = useColorSpace();
 
@@ -124,6 +126,9 @@ function App() {
     }
   }, []);
 
+  const onShowInfoModal = useCallback(() => setInfoModalVisible(true), []);
+  const onCloseInfoModal = useCallback(() => setInfoModalVisible(false), []);
+
   const color: Color = [firstComponent, xyComponent.x, xyComponent.y];
   const rgb = toSRGB(color);
 
@@ -138,7 +143,10 @@ RGB: ${roundToFixedPrecision(rgb[0], 3)}, ${roundToFixedPrecision(rgb[1], 3)}, $
       <main>
         <header>
           <ColorSpaceDropDown />
-          <ColorComparisonSwitch />
+          <div>
+            <ColorComparisonSwitch />
+            <Button className="borderless-icon" icon="help_outline" onClick={onShowInfoModal} />
+          </div>
         </header>
         <section className="pickers">
           <XYPicker
@@ -194,9 +202,7 @@ RGB: ${roundToFixedPrecision(rgb[0], 3)}, ${roundToFixedPrecision(rgb[1], 3)}, $
         thirdComponent={xyComponent.y}
         alpha={alpha}
       />
-      <Modal visible onClose={() => undefined}>
-        <p>This is a test Modal</p>
-      </Modal>
+      <InfoModal visible={infoModalVisible} onClose={onCloseInfoModal} />
     </div>
   );
 }

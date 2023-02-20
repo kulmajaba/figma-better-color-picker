@@ -1,6 +1,6 @@
 :root {
   --color-bg: var(--figma-color-bg, #2c2c2c);
-  --color-bg-transparent: #14141499; /* TODO: find Figma equivalent */
+  --color-bg-transparent: rgba(0, 0, 0, 0.6);
   --color-bg-hover: var(--figma-color-bg-hover, #383838);
   --color-bg-active: var(--figma-color-bg-pressed, #383838);
   --color-bg-brand: var(--figma-color-bg-brand, #0c8ce9);
@@ -20,6 +20,7 @@
 
   --max-size-picker: 300px;
   --max-width-main: 460px;
+  --max-width-modal: calc(var(--max-width-main) * 0.8);
   --size-color-tile: 24px;
 
   --height-picker: 12px;
@@ -54,8 +55,24 @@ p, input, button, span, div {
   font-size: var(--font-size);
 }
 
+a {
+  color: var(--color-text-brand);
+}
+
+h1 {
+  font-size: 1.8em;
+}
+
+h2 {
+  font-size: 1.4em;
+}
+
 label {
   font-size: var(--font-size-label);
+}
+
+ul, ol {
+  padding-inline-start: 2em;
 }
 
 .label-container {
@@ -98,6 +115,12 @@ header {
   align-items: center;
   padding: var(--spacing-m);
   border-bottom: var(--border-1px);
+}
+
+header > div {
+  display: flex;
+  flex-direction: row;
+  gap: var(--spacing-l);
 }
 
 main > section > * + *, .main-inputs-color-inputs > * + * {
