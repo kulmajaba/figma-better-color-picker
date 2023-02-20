@@ -3,8 +3,7 @@
 ## TODO
 
 - Show color comparison in plugin mode?
-- In plugin mode, some weird CSS behavior causes `main` to shift left
-- Spavcing the lock buttons in grid causes the m to drift out of alignment with the color input fields
+- Spacing the lock buttons in grid causes them to drift out of alignment with the color input fields
 
 ## Roadmap
 

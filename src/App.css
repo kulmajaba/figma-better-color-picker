@@ -75,7 +75,7 @@ body {
   justify-content: center;
   align-items: start;
   display: grid;
-  grid-template-columns: fit-content(var(--max-width-main)) fit-content(100%);
+  grid-template-columns: fit-content(var(--max-width-main)) minmax(0, 1fr);
   grid-template-rows: fit-content(100%) auto;
 }
 
