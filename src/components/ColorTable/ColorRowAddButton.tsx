@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 
 import strings from '../../assets/strings';
 import { useColorSpace } from '../../hooks/useColorSpace';
@@ -15,11 +15,11 @@ interface Props {
 }
 
 const ColorRowAddButton: React.FC<Props> = ({ firstComponent, secondComponent, thirdComponent, alpha }) => {
-  const isPlugin = useIsPlugin();
+  const { isFigma } = useIsPlugin();
   const { toSRGB, toComponentRepresentation, name } = useColorSpace();
 
   // TODO: use a popup input to set the name
-  const addColor = () => {
+  const addColor = useCallback(() => {
     console.log('Add color');
     const color: Color = [firstComponent, secondComponent, thirdComponent];
     pluginPostMessage({
@@ -31,13 +31,13 @@ const ColorRowAddButton: React.FC<Props> = ({ firstComponent, secondComponent, t
         componentRepresentation: toComponentRepresentation(color)
       }
     });
-  };
+  }, [toSRGB, toComponentRepresentation, name]);
 
-  if (isPlugin) {
-    return <Button className="small border-none" icon="add" tooltip={strings.tooltip.addColor} onClick={addColor} />;
-  } else {
+  if (!isFigma) {
     return null;
   }
+
+  return <Button className="small border-none" icon="add" tooltip={strings.tooltip.addColor} onClick={addColor} />;
 };
 
 export default ColorRowAddButton;

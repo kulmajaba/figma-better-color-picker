@@ -7,7 +7,7 @@ import Switch from './Lib/Switch';
 
 const ColorComparisonSwitch: React.FC = () => {
   const { comparisonColorsVisible, toggleComparisonColorsVisible } = useComparisonColors();
-  const isPlugin = useIsPlugin();
+  const { isPlugin } = useIsPlugin();
 
   if (isPlugin) {
     return null;

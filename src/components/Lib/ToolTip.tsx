@@ -82,7 +82,7 @@ const ToolTip: React.FC<Props> = ({ tooltip, children, triggerProps, className }
         };
       });
     }
-  }, [tipRef.current, setOffset]);
+  }, [tipRef.current]);
 
   useEffect(() => {
     window.addEventListener('resize', () => handleResize());

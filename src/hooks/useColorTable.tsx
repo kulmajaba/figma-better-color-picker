@@ -19,28 +19,22 @@ const ColorTableSetterContext = createContext<SetterContext>({
 export const ColorTableProvider: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
   const [colors, setColors] = useState<{ [key: number]: Color }>({ 0: [0, 0, 0] });
 
-  const addOrUpdateColor = useCallback(
-    (key: number, color: Color) => {
-      setColors((prevColors) => {
-        return {
-          ...prevColors,
-          [key]: color
-        };
-      });
-    },
-    [setColors]
-  );
+  const addOrUpdateColor = useCallback((key: number, color: Color) => {
+    setColors((prevColors) => {
+      return {
+        ...prevColors,
+        [key]: color
+      };
+    });
+  }, []);
 
-  const deleteColor = useCallback(
-    (key: number) => {
-      setColors((prevColors) => {
-        const newColors = prevColors;
-        delete newColors[key];
-        return newColors;
-      });
-    },
-    [setColors]
-  );
+  const deleteColor = useCallback((key: number) => {
+    setColors((prevColors) => {
+      const newColors = prevColors;
+      delete newColors[key];
+      return newColors;
+    });
+  }, []);
 
   const setterContextValue = useMemo(() => {
     return {
@@ -48,7 +42,7 @@ export const ColorTableProvider: React.FC<{ children?: React.ReactNode }> = ({ c
       deleteColor,
       setColors
     };
-  }, [setColors]);
+  }, []);
 
   return (
     <ColorTableContext.Provider value={colors}>

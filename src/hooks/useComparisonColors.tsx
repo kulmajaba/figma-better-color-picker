@@ -24,23 +24,17 @@ const ComparisonColorContext = createContext<ComparisonContext>({
 export const ComparisonColorProvider: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
   const [comparisonColors, setComparisonColors] = useState<Color[]>([]);
 
-  const isPlugin = useIsPlugin();
+  const { isPlugin } = useIsPlugin();
   const [comparisonColorsVisible, setComparisonColorsVisible] = useState(!isPlugin);
 
-  const addComparisonColor = useCallback(
-    (color: Color) => setComparisonColors((colors) => colors.concat([color])),
-    [setComparisonColors]
-  );
+  const addComparisonColor = useCallback((color: Color) => setComparisonColors((colors) => colors.concat([color])), []);
 
   const deleteComparisonColor = useCallback(
     (index: number) => setComparisonColors((colors) => colors.filter((_, i) => i !== index)),
-    [setComparisonColors]
+    []
   );
 
-  const toggleComparisonColorsVisible = useCallback(
-    () => setComparisonColorsVisible((visible) => !visible),
-    [setComparisonColorsVisible]
-  );
+  const toggleComparisonColorsVisible = useCallback(() => setComparisonColorsVisible((visible) => !visible), []);
 
   const contextValue = useMemo(
     () => ({
