@@ -14,6 +14,7 @@ import Button from './components/Lib/Button';
 import ColorComparisonSwitch from './components/ColorComparisonSwitch';
 
 import './App.css';
+import Modal from './components/Lib/Modal';
 
 enum PickerType {
   FirstComponentSlider = 'FIRST_COMPONENT_SLIDER',
@@ -193,6 +194,9 @@ RGB: ${roundToFixedPrecision(rgb[0], 3)}, ${roundToFixedPrecision(rgb[1], 3)}, $
         thirdComponent={xyComponent.y}
         alpha={alpha}
       />
+      <Modal visible onClose={() => undefined}>
+        <p>This is a test Modal</p>
+      </Modal>
     </div>
   );
 }

@@ -1,5 +1,6 @@
 :root {
   --color-bg: var(--figma-color-bg, #2c2c2c);
+  --color-bg-transparent: #14141499; /* TODO: find Figma equivalent */
   --color-bg-hover: var(--figma-color-bg-hover, #383838);
   --color-bg-active: var(--figma-color-bg-pressed, #383838);
   --color-bg-brand: var(--figma-color-bg-brand, #0c8ce9);
@@ -26,6 +27,7 @@
   --radius-picker: calc(var(--height-picker) / 2);
 
   --border-radius-s: 4px;
+  --border-radius-m: 8px;
 
   --font-size: 11px;
   --font-size-button: 12px;
