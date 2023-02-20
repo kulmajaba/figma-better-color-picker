@@ -1,21 +1,28 @@
 import classNames from 'classnames';
-import React from 'react';
+import React, { useCallback } from 'react';
+import Button from './Button';
 
 import './Modal.css';
 
-interface Props {
+export interface Props {
   visible: boolean;
   onClose: () => void;
+  title?: string;
   children?: React.ReactNode;
 }
 
-const Modal: React.FC<Props> = ({ visible, onClose, children }) => {
+const Modal: React.FC<Props> = ({ visible, onClose, title, children }) => {
   const containerClassNames = classNames('modal-container', { 'modal-container--visible': visible });
+
+  const onContentClick = useCallback((e: React.MouseEvent<HTMLDivElement, MouseEvent>) => e.stopPropagation(), []);
 
   return (
     <div className={containerClassNames} onClick={onClose} aria-hidden={!visible}>
-      <div className="modal-content">
-        {/* TODO: close button */}
+      <div className="modal-content" onClick={onContentClick}>
+        <div className="modal-header">
+          <Button className="borderless-icon" icon="close" onClick={onClose} />
+          {title && <h2>{title}</h2>}
+        </div>
         {children}
       </div>
     </div>
