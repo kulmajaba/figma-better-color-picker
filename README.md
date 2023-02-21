@@ -1,8 +1,15 @@
 # Better Color Picker
 
-## TODO
+The same thing, just a bit better.
 
-- Spacing the lock buttons in grid causes them to drift out of alignment with the color input fields
+This is a Figma plugin and a standalone website for color picking with some added features:
+1. OKLab color spaces for more accurate control
+2. Ability to create color palettes by locking some of the color values and editing others individually
+3. Color contrast checks based on WCAG 2.1 guidelines
+
+If you want to ask a question about the picker, head over to [Discussions](https://github.com/kulmajaba/figma-better-color-picker/discussions)!
+
+If you encountered a bug you'd like to report, check the [Issues](https://github.com/kulmajaba/figma-better-color-picker/issues) to see if someone has already reported it, or create a new issue if you can't find one that matches your description.
 
 ## Roadmap
 
