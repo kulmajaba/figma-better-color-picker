@@ -1,4 +1,5 @@
 :root {
+  /* As a hosted plugin, the Figma colors will always be undefined and fallback colors are used */
   --color-bg: var(--figma-color-bg, #2c2c2c);
   --color-bg-transparent: rgba(0, 0, 0, 0.6);
   --color-bg-hover: var(--figma-color-bg-hover, #383838);
