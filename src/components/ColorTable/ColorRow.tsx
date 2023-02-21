@@ -12,6 +12,7 @@ import { useComparisonColors } from '../../hooks/useComparisonColors';
 import ColorComparisonCell from './ColorComparisonCell';
 
 import './ColorRow.css';
+import classNames from 'classnames';
 
 interface Props {
   firstComponent: number;
@@ -22,7 +23,9 @@ interface Props {
   secondComponentLocked: boolean;
   thirdComponentLocked: boolean;
   alphaLocked: boolean;
+  editing: boolean;
   onDelete: () => void;
+  onSetEditing: (color: Color, alpha: number) => void;
 }
 
 const ColorRow: React.FC<Props> = ({
@@ -34,7 +37,9 @@ const ColorRow: React.FC<Props> = ({
   secondComponentLocked,
   thirdComponentLocked,
   alphaLocked,
-  onDelete
+  editing,
+  onDelete,
+  onSetEditing: onSetEditingProp
 }) => {
   const [firstComponent, setFirstComponent] = useState(firstComponentProp);
   const [secondComponent, setSecondComponent] = useState(secondComponentProp);
@@ -128,10 +133,18 @@ const ColorRow: React.FC<Props> = ({
     addComparisonColor(color);
   }, [color]);
 
+  const onSetEditing = useCallback(() => {
+    onSetEditingProp(color, alpha);
+  }, [color, alpha]);
+
+  const buttonClassNames = classNames('color-tile-button focus-border', { 'color-tile-button--active': editing });
+
   return (
     <>
       <div className="color-row-main">
-        <ColorTile color={color} alpha={alpha} />
+        <button className={buttonClassNames} type="button" onClick={onSetEditing}>
+          <ColorTile color={color} alpha={alpha} />
+        </button>
         <ColorInput
           type="component"
           value={color}

@@ -1,12 +1,11 @@
-.color-row-sample {
-  height: auto;
+.color-tile-button {
+  padding: 0;
   width: 100%;
-  aspect-ratio: 1;
-  position: relative;
-  box-sizing: border-box;
-  border: var(--border-1px);
-  border-radius: var(--border-radius-s);
-  overflow: hidden;
+}
+
+.color-tile-button--active {
+  border-color: var(--color-border-focus);
+  outline-color: var(--color-border-focus);
 }
 
 .color-row-buttons {

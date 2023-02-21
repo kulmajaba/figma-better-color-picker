@@ -126,6 +126,10 @@ function App() {
     }
   }, []);
 
+  const onSetEditing = useCallback((color: Color, alpha: number) => {
+    console.log('onSetEditing', color, alpha);
+  }, []);
+
   const onShowInfoModal = useCallback(() => setInfoModalVisible(true), []);
   const onCloseInfoModal = useCallback(() => setInfoModalVisible(false), []);
 
@@ -201,6 +205,7 @@ RGB: ${roundToFixedPrecision(rgb[0], 3)}, ${roundToFixedPrecision(rgb[1], 3)}, $
         secondComponent={xyComponent.x}
         thirdComponent={xyComponent.y}
         alpha={alpha}
+        onSetEditing={onSetEditing}
       />
       <InfoModal visible={infoModalVisible} onClose={onCloseInfoModal} />
     </div>

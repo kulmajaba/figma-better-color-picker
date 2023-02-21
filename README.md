@@ -21,7 +21,7 @@ If you encountered a bug you'd like to report, check the [Issues](https://github
 - Rename contrast comparison to contrast checker
 - Hide copy button from Figma
 - Heading for contrast table
-  - Mention WCAG somewhere in there (build support for other contrast calculations)
+  - Mention WCAG somewhere in there (build support for other contrast calculations) 
 - Mobile wraps header labels and looks bad
 - Labels for main inputs
   - Label color input components when there is enough space

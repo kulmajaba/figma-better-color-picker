@@ -11,20 +11,30 @@ import ToolTip from '../Lib/ToolTip';
 import { rgb_to_hex } from '../../color/general';
 
 import './ColorTable.css';
+import { Color } from '../../types';
 
 interface Props {
   firstComponent: number;
   secondComponent: number;
   thirdComponent: number;
   alpha: number;
+  onSetEditing: (color: Color, alpha: number) => void;
 }
 
-const ColorTable: React.FC<Props> = ({ firstComponent, secondComponent, thirdComponent, alpha }) => {
+// TODO: move comparisoncolors here as well? Then it would be just one component selecting what is being edited
+const ColorTable: React.FC<Props> = ({
+  firstComponent,
+  secondComponent,
+  thirdComponent,
+  alpha,
+  onSetEditing: onSetEditingProp
+}) => {
   const [firstComponentLocked, setFirstComponentLocked] = useState(true);
   const [secondComponentLocked, setSecondComponentLocked] = useState(true);
   const [thirdComponentLocked, setThirdComponentLocked] = useState(true);
   const [alphaLocked, setAlphaLocked] = useState(true);
   const [rows, setRows] = useState([0]);
+  const [editingRow, setEditingRow] = useState(0);
 
   const { componentShortNames, toSRGB } = useColorSpace();
   const { comparisonColors, comparisonColorsVisible, deleteComparisonColor } = useComparisonColors();
@@ -41,6 +51,11 @@ const ColorTable: React.FC<Props> = ({ firstComponent, secondComponent, thirdCom
 
   const deleteRow = useCallback((key: number) => setRows((rows) => rows.filter((k) => k !== key)), []);
 
+  const onSetEditing = useCallback((key: number, color: Color, alpha: number) => {
+    setEditingRow(key);
+    onSetEditingProp(color, alpha);
+  }, []);
+
   const colorRows = rows.map((key) => (
     <ColorRow
       key={key}
@@ -52,7 +67,9 @@ const ColorTable: React.FC<Props> = ({ firstComponent, secondComponent, thirdCom
       secondComponentLocked={secondComponentLocked}
       thirdComponentLocked={thirdComponentLocked}
       alphaLocked={alphaLocked}
+      editing={key === editingRow}
       onDelete={() => deleteRow(key)}
+      onSetEditing={(color, alpha) => onSetEditing(key, color, alpha)}
     />
   ));
 
