@@ -75,3 +75,5 @@ export enum WorkerStatus {
   Idle = 0,
   Working
 }
+
+export type HMTLButtonProps = React.DetailedHTMLProps<React.ButtonHTMLAttributes<HTMLButtonElement>, HTMLButtonElement>;
