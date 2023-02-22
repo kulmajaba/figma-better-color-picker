@@ -1,0 +1,17 @@
+name: Deploy UI to prod
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-deploy:
+    uses: kulmajaba/figma-better-color-picker/.github/workflows/deploy-ui.yml@main
+    with:
+      node-version: '18.x'
+      deploy-path: 'sites/colorpicker'
+    secrets: inherit

@@ -15,12 +15,13 @@ If you encountered a bug you'd like to report, check the [Issues](https://github
 
 - Dropdown for selecting copy format
   - Change copy button tooltip
-- Touchscreen support for pickers
 - Rename contrast comparison to contrast checker
 - Hide copy button from Figma
 - Heading for contrast table
   - Mention WCAG somewhere in there (build support for other contrast calculations) 
 - Mobile wraps header labels and looks bad
+- Fix horizontal overflow on mobile
+  - This might be the tooltip not updating its position in certain situations?
 - Labels for main inputs
   - Label color input components when there is enough space
 - Pressed button on mobile: tooltip should not be shown
