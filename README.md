@@ -13,8 +13,6 @@ If you encountered a bug you'd like to report, check the [Issues](https://github
 
 ## Roadmap
 
-- Allow the user to select which row the main inputs are editing
-  - This includes the contrast colors as well
 - Dropdown for selecting copy format
   - Change copy button tooltip
 - Touchscreen support for pickers
@@ -26,6 +24,7 @@ If you encountered a bug you'd like to report, check the [Issues](https://github
 - Labels for main inputs
   - Label color input components when there is enough space
 - Pressed button on mobile: tooltip should not be shown
+- Show disabled alpha picker when editing contrast color
 
 ### Undo history???
 

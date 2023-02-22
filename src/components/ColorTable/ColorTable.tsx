@@ -30,7 +30,7 @@ const ColorTable: React.FC<Props> = ({
   firstComponent: firstComponentProp,
   secondComponent: secondComponentProp,
   thirdComponent: thirdComponentProp,
-  alpha,
+  alpha: alphaProp,
   onSetEditing: onSetEditingProp
 }) => {
   const [firstComponentLocked, setFirstComponentLocked] = useState(true);
@@ -40,6 +40,7 @@ const ColorTable: React.FC<Props> = ({
   const [firstComponent, setFirstComponent] = useState(firstComponentProp);
   const [secondComponent, setSecondComponent] = useState(secondComponentProp);
   const [thirdComponent, setThirdComponent] = useState(thirdComponentProp);
+  const [alpha, setAlpha] = useState(alphaProp);
 
   const [rows, setRows] = useState([0]);
   const [comparisonColors, setComparisonColors] = useState<Color[]>([[0, 0, 0]]);
@@ -59,8 +60,9 @@ const ColorTable: React.FC<Props> = ({
       setFirstComponent(firstComponentProp);
       setSecondComponent(secondComponentProp);
       setThirdComponent(thirdComponentProp);
+      setAlpha(alphaProp);
     }
-  }, [firstComponentProp, secondComponentProp, thirdComponentProp, editingRow, editingTarget]);
+  }, [firstComponentProp, secondComponentProp, thirdComponentProp, alphaProp, editingRow, editingTarget]);
 
   const toggleFirstComponentLocked = useCallback(() => setFirstComponentLocked((locked) => !locked), []);
 
