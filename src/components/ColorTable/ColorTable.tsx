@@ -1,17 +1,22 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import ColorRow from './ColorRow';
 import LockButton from './LockButton';
 import { useColorSpace } from '../../hooks/useColorSpace';
 import Button from '../Lib/Button';
 import { useComparisonColors } from '../../hooks/useComparisonColors';
-import ColorTile from '../ColorTile';
 import strings from '../../assets/strings';
 import ToolTip from '../Lib/ToolTip';
 import { rgb_to_hex } from '../../color/general';
+import { Color } from '../../types';
+import ColorTileButton from './ColorTileButton';
 
 import './ColorTable.css';
-import { Color } from '../../types';
+
+enum EditingTarget {
+  Rows = 0,
+  ComparisonColors
+}
 
 interface Props {
   firstComponent: number;
@@ -21,11 +26,10 @@ interface Props {
   onSetEditing: (color: Color, alpha: number) => void;
 }
 
-// TODO: move comparisoncolors here as well? Then it would be just one component selecting what is being edited
 const ColorTable: React.FC<Props> = ({
-  firstComponent,
-  secondComponent,
-  thirdComponent,
+  firstComponent: firstComponentProp,
+  secondComponent: secondComponentProp,
+  thirdComponent: thirdComponentProp,
   alpha,
   onSetEditing: onSetEditingProp
 }) => {
@@ -33,11 +37,30 @@ const ColorTable: React.FC<Props> = ({
   const [secondComponentLocked, setSecondComponentLocked] = useState(true);
   const [thirdComponentLocked, setThirdComponentLocked] = useState(true);
   const [alphaLocked, setAlphaLocked] = useState(true);
+  const [firstComponent, setFirstComponent] = useState(firstComponentProp);
+  const [secondComponent, setSecondComponent] = useState(secondComponentProp);
+  const [thirdComponent, setThirdComponent] = useState(thirdComponentProp);
+
   const [rows, setRows] = useState([0]);
-  const [editingRow, setEditingRow] = useState(0);
+  const [comparisonColors, setComparisonColors] = useState<Color[]>([[0, 0, 0]]);
+  const [[editingRow, editingTarget], setEditingRow] = useState([0, EditingTarget.Rows]);
 
   const { componentShortNames, toSRGB } = useColorSpace();
-  const { comparisonColors, comparisonColorsVisible, deleteComparisonColor } = useComparisonColors();
+  const { comparisonColorsVisible } = useComparisonColors();
+
+  useEffect(() => {
+    if (editingTarget === EditingTarget.ComparisonColors) {
+      setComparisonColors((colors) => {
+        const newColors = colors.slice();
+        newColors[editingRow] = [firstComponentProp, secondComponentProp, thirdComponentProp];
+        return newColors;
+      });
+    } else {
+      setFirstComponent(firstComponentProp);
+      setSecondComponent(secondComponentProp);
+      setThirdComponent(thirdComponentProp);
+    }
+  }, [firstComponentProp, secondComponentProp, thirdComponentProp, editingRow, editingTarget]);
 
   const toggleFirstComponentLocked = useCallback(() => setFirstComponentLocked((locked) => !locked), []);
 
@@ -52,11 +75,23 @@ const ColorTable: React.FC<Props> = ({
   const deleteRow = useCallback((key: number) => setRows((rows) => rows.filter((k) => k !== key)), []);
 
   const onSetEditing = useCallback(
-    (key: number, color: Color, alpha: number) => {
-      setEditingRow(key);
+    (key: number, editingTarget: EditingTarget, color: Color, alpha: number) => {
+      console.log('onSetEditingRow, key, editingTarget, color, alpha', key, editingTarget, color, alpha);
+      setEditingRow([key, editingTarget]);
       onSetEditingProp(color, alpha);
     },
     [onSetEditingProp]
+  );
+
+  const addComparisonColor = useCallback(
+    () =>
+      setComparisonColors((colors) => colors.concat([[firstComponentProp, secondComponentProp, thirdComponentProp]])),
+    [firstComponentProp, secondComponentProp, thirdComponentProp]
+  );
+
+  const deleteComparisonColor = useCallback(
+    (index: number) => setComparisonColors((colors) => colors.filter((_, i) => i !== index)),
+    []
   );
 
   const colorRows = rows.map((key) => (
@@ -70,9 +105,10 @@ const ColorTable: React.FC<Props> = ({
       secondComponentLocked={secondComponentLocked}
       thirdComponentLocked={thirdComponentLocked}
       alphaLocked={alphaLocked}
-      editing={key === editingRow}
+      editing={key === editingRow && editingTarget === EditingTarget.Rows}
+      comparisonColors={comparisonColors}
       onDelete={() => deleteRow(key)}
-      onSetEditing={(color, alpha) => onSetEditing(key, color, alpha)}
+      onSetEditing={(color, alpha) => onSetEditing(key, EditingTarget.Rows, color, alpha)}
     />
   ));
 
@@ -94,7 +130,8 @@ const ColorTable: React.FC<Props> = ({
           </LockButton>
         </div>
         <div className="lock-button-row-end">
-          <Button icon="add" onClick={addRow} />
+          <Button icon="double_arrow" rotateIconDeg={90} onClick={addRow} tooltip={strings.tooltip.addColorRow} />
+          <Button icon="double_arrow" onClick={addComparisonColor} tooltip={strings.tooltip.addColorToComparison} />
         </div>
       </div>
       {comparisonColorsVisible && comparisonColors.length > 0 && (
@@ -108,7 +145,11 @@ const ColorTable: React.FC<Props> = ({
                 onClick={() => deleteComparisonColor(i)}
               />
               <ToolTip className="tooltip-immediate" tooltip={rgb_to_hex(toSRGB(comparisonColor))}>
-                <ColorTile color={comparisonColor} />
+                <ColorTileButton
+                  color={comparisonColor}
+                  selected={i === editingRow && editingTarget === EditingTarget.ComparisonColors}
+                  onClick={() => onSetEditing(i, EditingTarget.ComparisonColors, comparisonColor, 1)}
+                />
               </ToolTip>
             </div>
           ))}

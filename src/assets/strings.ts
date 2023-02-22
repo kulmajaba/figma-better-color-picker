@@ -4,7 +4,8 @@ const strings = {
   },
   tooltip: {
     copyColor: 'Copy color to clipboard in hex format',
-    addColor: 'Add color to your styles',
+    addColorRow: 'Add a color row',
+    addColorToStyles: 'Add color to your styles',
     addColorToComparison: 'Add color to contrast comparison',
     deleteColorFromComparison: 'Delete color from contrast comparison'
   },

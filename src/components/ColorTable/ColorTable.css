@@ -29,5 +29,5 @@
 }
 
 .lock-button-row-end > :first-child {
-  grid-column: 3;
+  grid-column-start: 2;
 }

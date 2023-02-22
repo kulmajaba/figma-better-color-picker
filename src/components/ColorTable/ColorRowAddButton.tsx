@@ -37,7 +37,9 @@ const ColorRowAddButton: React.FC<Props> = ({ firstComponent, secondComponent, t
     return null;
   }
 
-  return <Button className="small border-none" icon="add" tooltip={strings.tooltip.addColor} onClick={addColor} />;
+  return (
+    <Button className="small border-none" icon="add" tooltip={strings.tooltip.addColorToStyles} onClick={addColor} />
+  );
 };
 
 export default ColorRowAddButton;

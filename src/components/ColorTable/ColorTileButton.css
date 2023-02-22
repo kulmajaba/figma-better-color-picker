@@ -1,0 +1,10 @@
+.color-tile-button {
+  padding: 0;
+  width: 100%;
+  border: none
+}
+
+.color-tile-button--active {
+  border: 1px solid var(--color-border-focus);
+  outline-color: var(--color-border-focus);
+}

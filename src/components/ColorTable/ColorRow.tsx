@@ -7,12 +7,11 @@ import { rgb_to_hex } from '../../color/general';
 import ColorInput from '../ColorInput/ColorInput';
 import ColorRowAddButton from './ColorRowAddButton';
 import Button from '../Lib/Button';
-import ColorTile from '../ColorTile';
 import { useComparisonColors } from '../../hooks/useComparisonColors';
 import ColorComparisonCell from './ColorComparisonCell';
+import ColorTileButton from './ColorTileButton';
 
 import './ColorRow.css';
-import classNames from 'classnames';
 
 interface Props {
   firstComponent: number;
@@ -24,6 +23,7 @@ interface Props {
   thirdComponentLocked: boolean;
   alphaLocked: boolean;
   editing: boolean;
+  comparisonColors: Color[];
   onDelete: () => void;
   onSetEditing: (color: Color, alpha: number) => void;
 }
@@ -38,6 +38,7 @@ const ColorRow: React.FC<Props> = ({
   thirdComponentLocked,
   alphaLocked,
   editing,
+  comparisonColors,
   onDelete,
   onSetEditing: onSetEditingProp
 }) => {
@@ -47,7 +48,7 @@ const ColorRow: React.FC<Props> = ({
   const [alpha, setAlpha] = useState(alphaProp);
 
   const { toSRGB, convertFromPrevious } = useColorSpace();
-  const { comparisonColors, comparisonColorsVisible, addComparisonColor } = useComparisonColors();
+  const { comparisonColorsVisible } = useComparisonColors();
 
   useEffect(() => {
     if (convertFromPrevious) {
@@ -130,22 +131,14 @@ const ColorRow: React.FC<Props> = ({
     }
   }, [color]);
 
-  const onPushToComparison = useCallback(() => {
-    addComparisonColor(color);
-  }, [color]);
-
   const onSetEditing = useCallback(() => {
     onSetEditingProp(color, alpha);
   }, [color, alpha]);
 
-  const buttonClassNames = classNames('color-tile-button focus-border', { 'color-tile-button--active': editing });
-
   return (
     <>
       <div className="color-row-main">
-        <button className={buttonClassNames} type="button" onClick={onSetEditing}>
-          <ColorTile color={color} alpha={alpha} />
-        </button>
+        <ColorTileButton color={color} alpha={alpha} selected={editing} onClick={onSetEditing} />
         <ColorInput
           type="component"
           value={color}
@@ -167,15 +160,6 @@ const ColorRow: React.FC<Props> = ({
             alpha={alpha}
           />
           <Button className="small border-none" icon="delete" onClick={onDelete} />
-          {comparisonColorsVisible && (
-            <Button
-              className="small border-none"
-              icon="double_arrow"
-              onClick={onPushToComparison}
-              tooltip={strings.tooltip.addColorToComparison}
-              triggerProps={comparisonColors}
-            />
-          )}
         </div>
       </div>
       {comparisonColorsVisible && comparisonColors.length > 0 && (
