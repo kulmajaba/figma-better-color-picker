@@ -69,4 +69,5 @@ jobs:
         SSH_HOST: ${{ secrets.SSH_HOST }}
         DEPLOY_PATH: ${{ env.DEPLOY_PATH }}
       run: |
+        ls -la $RUNNER_TEMP
         rsync -vr --mkpath -e 'ssh -i $RUNNER_TEMP/private_key -o UserKnownHostsFile=$RUNNER_TEMP/known_hosts' ./dist/* $SSH_USER@$SSH_HOST:/home/$SSH_USER/$DEPLOY_PATH
