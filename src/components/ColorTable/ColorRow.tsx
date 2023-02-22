@@ -60,29 +60,30 @@ const ColorRow: React.FC<Props> = ({
   }, [convertFromPrevious]);
 
   useEffect(() => {
-    if (firstComponentLocked) {
+    if (firstComponentLocked || editing) {
       setFirstComponent(firstComponentProp);
     }
-  }, [firstComponentProp, firstComponentLocked]);
+  }, [firstComponentProp, firstComponentLocked, editing]);
 
   useEffect(() => {
-    if (secondComponentLocked) {
+    if (secondComponentLocked || editing) {
       setSecondComponent(secondComponentProp);
     }
-  }, [secondComponentProp, secondComponentLocked]);
+  }, [secondComponentProp, secondComponentLocked, editing]);
 
   useEffect(() => {
-    if (thirdComponentLocked) {
+    if (thirdComponentLocked || editing) {
       setThirdComponent(thirdComponentProp);
     }
-  }, [thirdComponentProp, thirdComponentLocked]);
+  }, [thirdComponentProp, thirdComponentLocked, editing]);
 
   useEffect(() => {
-    if (alphaLocked) {
+    if (alphaLocked || editing) {
       setAlpha(alphaProp);
     }
-  }, [alphaProp, alphaLocked]);
+  }, [alphaProp, alphaLocked, editing]);
 
+  // TODO: call onSetEditing if needed
   const onColorChange = useCallback(
     (color: Color) => {
       const shouldChangeFirst = !firstComponentLocked && color[0] !== firstComponent;

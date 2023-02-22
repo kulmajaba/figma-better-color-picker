@@ -51,10 +51,13 @@ const ColorTable: React.FC<Props> = ({
 
   const deleteRow = useCallback((key: number) => setRows((rows) => rows.filter((k) => k !== key)), []);
 
-  const onSetEditing = useCallback((key: number, color: Color, alpha: number) => {
-    setEditingRow(key);
-    onSetEditingProp(color, alpha);
-  }, []);
+  const onSetEditing = useCallback(
+    (key: number, color: Color, alpha: number) => {
+      setEditingRow(key);
+      onSetEditingProp(color, alpha);
+    },
+    [onSetEditingProp]
+  );
 
   const colorRows = rows.map((key) => (
     <ColorRow

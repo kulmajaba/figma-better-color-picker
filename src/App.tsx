@@ -127,7 +127,9 @@ function App() {
   }, []);
 
   const onSetEditing = useCallback((color: Color, alpha: number) => {
-    console.log('onSetEditing', color, alpha);
+    setFirstComponent(color[0]);
+    setXyComponent({ x: color[1], y: color[2] });
+    setAlpha(alpha);
   }, []);
 
   const onShowInfoModal = useCallback(() => setInfoModalVisible(true), []);
