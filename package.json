@@ -5,8 +5,8 @@
   "main": "code.js",
   "scripts": {
     "start": "npm run dev",
-    "build": "rm -rf dist/* && npm run build:ui && npm run build:main:prod -- --minify",
-    "build:main:prod": "esbuild src/plugin.ts --bundle --outfile=dist/plugin.js --define:BASE_URL=\\\"https://colorpicker.kulmajaba.com/\\\"",
+    "build": "rm -rf dist/* && npm run build:ui && npm run build:main:prod",
+    "build:main:prod": "esbuild src/plugin.ts --bundle --minify --outfile=dist/plugin.js --define:BASE_URL=\\\"https://colorpicker.kulmajaba.com/\\\"",
     "build:main:dev": "esbuild src/plugin.ts --bundle --outfile=dist/plugin.js --define:BASE_URL=\\\"http://localhost:5173/\\\"",
     "build:ui": "vite build --emptyOutDir=false --minify=false",
     "build:watch": "npm run build:main:dev -- --watch",
