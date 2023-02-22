@@ -78,7 +78,6 @@ const ColorTable: React.FC<Props> = ({
 
   const onSetEditing = useCallback(
     (key: number, editingTarget: EditingTarget, color: Color, alpha: number) => {
-      console.log('onSetEditingRow, key, editingTarget, color, alpha', key, editingTarget, color, alpha);
       setEditingRow([key, editingTarget]);
       onSetEditingProp(color, alpha);
     },

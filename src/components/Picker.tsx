@@ -1,10 +1,11 @@
-import React, { MouseEventHandler, useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 
 import PickerCanvas from './PickerCanvas';
 import PickerBall from './PickerBall';
 import {
   HorizontalChangeDirection,
   ImageDataCreator,
+  MouseOrTouchEventHandler,
   Size,
   VerticalChangeDirection,
   XY,
@@ -18,7 +19,7 @@ interface Props {
   globalValue: XY;
   dragging: boolean;
   onChange: XYChangeHandler;
-  onMouseDown: MouseEventHandler<HTMLElement>;
+  onMouseDownOrTouchStart: MouseOrTouchEventHandler;
   onSizeChange?: (size: Size) => void;
   horizontalChangeDirection?: HorizontalChangeDirection;
   verticalChangeDirection?: VerticalChangeDirection;
@@ -30,7 +31,7 @@ const Picker: React.FC<Props> = ({
   globalValue,
   dragging,
   onChange,
-  onMouseDown,
+  onMouseDownOrTouchStart,
   onSizeChange,
   horizontalChangeDirection = HorizontalChangeDirection.LeftToRight,
   verticalChangeDirection = VerticalChangeDirection.TopToBottom
@@ -63,7 +64,12 @@ const Picker: React.FC<Props> = ({
 
   return (
     <>
-      <PickerCanvas ref={canvasRef} onSizeChange={onSizeChange} getImageData={getImageData} onMouseDown={onMouseDown} />
+      <PickerCanvas
+        ref={canvasRef}
+        onSizeChange={onSizeChange}
+        getImageData={getImageData}
+        onMouseDownOrTouchStart={onMouseDownOrTouchStart}
+      />
       <PickerBall
         value={value}
         horizontalChangeDirection={horizontalChangeDirection}

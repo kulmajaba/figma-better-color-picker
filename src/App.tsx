@@ -1,6 +1,6 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { MouseEvent, TouchEvent, useCallback, useEffect, useState } from 'react';
 
-import { Color, Size, XY, XYZero } from './types';
+import { Color, isMouseEvent, MouseOrTouchEventHandler, Size, XY, XYZero } from './types';
 import HuePicker from './components/SliderPicker';
 import XYPicker from './components/XYPicker';
 import AlphaPicker from './components/AlphaPicker';
@@ -49,28 +49,32 @@ function App() {
     }
   }, [convertFromPrevious]);
 
-  const onMouseMove = useCallback(
-    (e: React.MouseEvent<HTMLElement>) => {
-      if (dragging && e.buttons === 0) {
+  const onMouseMoveOrTouchMove: MouseOrTouchEventHandler = useCallback(
+    (e) => {
+      if (isMouseEvent(e) && dragging && e.buttons === 0) {
         setDragging(false);
         return;
       }
 
       if (dragging) {
-        e.preventDefault();
-        setMousePos({ x: e.clientX, y: e.clientY });
+        isMouseEvent(e) && e.preventDefault();
+        // Touch screen support is very rudimentary, multi touch is not handled
+        const clientPos = isMouseEvent(e) ? e : e.touches[0];
+        setMousePos({ x: clientPos.clientX, y: clientPos.clientY });
       }
     },
     [dragging]
   );
 
-  const onMouseDown = useCallback((e: React.MouseEvent<HTMLElement>, picker: PickerType) => {
+  const onMouseDownOrTouchStart = useCallback((e: MouseEvent | TouchEvent, picker: PickerType) => {
     setActivePicker(picker);
     setDragging(true);
-    setMousePos({ x: e.clientX, y: e.clientY });
+    // Touch screen support is very rudimentary, multi touch is not handled
+    const clientPos = isMouseEvent(e) ? e : e.touches[0];
+    setMousePos({ x: clientPos.clientX, y: clientPos.clientY });
   }, []);
 
-  const onMouseUp = useCallback(() => {
+  const onMouseUpOrTouchEnd = useCallback(() => {
     setDragging(false);
     setActivePicker(undefined);
   }, []);
@@ -84,27 +88,27 @@ function App() {
     setXyComponent(val);
   }, []);
 
-  const onXyMouseDown = useCallback(
-    (e: React.MouseEvent<HTMLElement, MouseEvent>) => onMouseDown(e, PickerType.XY),
-    [onMouseDown]
+  const onXyMouseDownOrTouchStart: MouseOrTouchEventHandler = useCallback(
+    (e) => onMouseDownOrTouchStart(e, PickerType.XY),
+    [onMouseDownOrTouchStart]
   );
 
   const onFirstComponentChange = useCallback((val: number) => {
     setFirstComponent(val);
   }, []);
 
-  const onFirstComponentMouseDown = useCallback(
-    (e: React.MouseEvent<HTMLElement, MouseEvent>) => onMouseDown(e, PickerType.FirstComponentSlider),
-    [onMouseDown]
+  const onFirstComponentMouseDownOrTouchStart: MouseOrTouchEventHandler = useCallback(
+    (e) => onMouseDownOrTouchStart(e, PickerType.FirstComponentSlider),
+    [onMouseDownOrTouchStart]
   );
 
   const onAlphaChange = useCallback((val: number) => {
     setAlpha(val);
   }, []);
 
-  const onAlphaMouseDown = useCallback(
-    (e: React.MouseEvent<HTMLElement, MouseEvent>) => onMouseDown(e, PickerType.Alpha),
-    [onMouseDown]
+  const onAlphaMouseDownOrTouchStart: MouseOrTouchEventHandler = useCallback(
+    (e) => onMouseDownOrTouchStart(e, PickerType.Alpha),
+    [onMouseDownOrTouchStart]
   );
 
   const onColorInputChange = useCallback((color: Color) => {
@@ -145,7 +149,14 @@ RGB: ${roundToFixedPrecision(rgb[0], 3)}, ${roundToFixedPrecision(rgb[1], 3)}, $
     : '';
 
   return (
-    <div id="mouse-events" onMouseUp={onMouseUp} onMouseMove={onMouseMove}>
+    <div
+      id="mouse-events"
+      onMouseUp={onMouseUpOrTouchEnd}
+      onTouchEnd={onMouseUpOrTouchEnd}
+      onTouchCancel={onMouseUpOrTouchEnd}
+      onMouseMove={onMouseMoveOrTouchMove}
+      onTouchMove={onMouseMoveOrTouchMove}
+    >
       <main>
         <header>
           <ColorSpaceDropDown />
@@ -162,14 +173,14 @@ RGB: ${roundToFixedPrecision(rgb[0], 3)}, ${roundToFixedPrecision(rgb[1], 3)}, $
             value={xyComponent}
             dragging={activePicker === PickerType.XY}
             onChange={onXyChange}
-            onMouseDown={onXyMouseDown}
+            onMouseDownOrTouchStart={onXyMouseDownOrTouchStart}
           />
           <HuePicker
             globalValue={mousePos}
             value={firstComponent}
             dragging={activePicker === PickerType.FirstComponentSlider}
             onChange={onFirstComponentChange}
-            onMouseDown={onFirstComponentMouseDown}
+            onMouseDownOrTouchStart={onFirstComponentMouseDownOrTouchStart}
             onSizeChange={onFirstComponentPickerSizeChange}
           />
           <AlphaPicker
@@ -178,7 +189,7 @@ RGB: ${roundToFixedPrecision(rgb[0], 3)}, ${roundToFixedPrecision(rgb[1], 3)}, $
             value={alpha}
             dragging={activePicker === PickerType.Alpha}
             onChange={onAlphaChange}
-            onMouseDown={onAlphaMouseDown}
+            onMouseDownOrTouchStart={onAlphaMouseDownOrTouchStart}
           />
           {dev && <p dangerouslySetInnerHTML={{ __html: colorString }} />}
           <div className="main-inputs">

@@ -1,6 +1,6 @@
-import React, { MouseEventHandler, useCallback } from 'react';
+import React, { useCallback } from 'react';
 
-import { Color, ColorConverter, Direction, XY } from '../types';
+import { Color, ColorConverter, Direction, MouseOrTouchEventHandler, XY } from '../types';
 import Picker from './Picker';
 import PickerCanvas from './PickerCanvas';
 import { createCheckerData } from '../util/imageData';
@@ -38,7 +38,7 @@ interface Props {
   globalValue: XY;
   dragging: boolean;
   onChange: (val: number) => void;
-  onMouseDown: MouseEventHandler<HTMLElement>;
+  onMouseDownOrTouchStart: MouseOrTouchEventHandler;
 }
 
 const AlphaPicker: React.FC<Props> = ({ color, value, onChange, ...otherProps }) => {

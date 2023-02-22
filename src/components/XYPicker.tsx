@@ -1,10 +1,11 @@
-import React, { MouseEventHandler, useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import { useColorSpace } from '../hooks/useColorSpace';
 import useWebWorker from '../hooks/useWebWorker';
 import {
   ImageDataCache,
   ImageDataWorkerMessage,
+  MouseOrTouchEventHandler,
   Size,
   SizeZero,
   ToSRGBFuncName,
@@ -26,7 +27,7 @@ interface Props {
   globalValue: XY;
   dragging: boolean;
   onChange: (val: XY) => void;
-  onMouseDown: MouseEventHandler<HTMLElement>;
+  onMouseDownOrTouchStart: MouseOrTouchEventHandler;
 }
 
 const XYPicker: React.FC<Props> = ({ firstComponentValues, firstComponent, value, onChange, ...otherProps }) => {
@@ -103,6 +104,6 @@ const areEqual = (prevProps: Props, nextProps: Props) =>
   prevProps.dragging === nextProps.dragging &&
   !prevProps.dragging &&
   prevProps.onChange === nextProps.onChange &&
-  prevProps.onMouseDown === nextProps.onMouseDown;
+  prevProps.onMouseDownOrTouchStart === nextProps.onMouseDownOrTouchStart;
 
 export default React.memo(XYPicker, areEqual);
