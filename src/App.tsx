@@ -13,6 +13,7 @@ import ColorSpaceDropDown from './components/ColorSpaceDropDown';
 import Button from './components/Lib/Button';
 import ColorComparisonSwitch from './components/ColorComparisonSwitch';
 import InfoModal from './components/InfoModal';
+import CopyFormatDropDown from './components/CopyFormatDropDown';
 
 import './App.css';
 
@@ -159,8 +160,11 @@ RGB: ${roundToFixedPrecision(rgb[0], 3)}, ${roundToFixedPrecision(rgb[1], 3)}, $
     >
       <main>
         <header>
-          <ColorSpaceDropDown />
-          <div>
+          <div className="header-left">
+            <ColorSpaceDropDown />
+            <CopyFormatDropDown />
+          </div>
+          <div className="header-right">
             <ColorComparisonSwitch />
             <Button className="borderless-icon" icon="help_outline" onClick={onShowInfoModal} />
           </div>

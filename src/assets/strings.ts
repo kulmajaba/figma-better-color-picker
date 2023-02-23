@@ -1,9 +1,11 @@
 const strings = {
   color: {
-    hex: 'Hex'
+    hex: 'Hex',
+    hexWithAlpha: 'Hex with alpha',
+    rgba: 'RGBA'
   },
   tooltip: {
-    copyColor: 'Copy color to clipboard in hex format',
+    copyColor: 'Copy color to clipboard',
     addColorRow: 'Add a color row',
     addColorToStyles: 'Add color to your styles',
     addColorToComparison: 'Add color to contrast comparison',
@@ -11,6 +13,7 @@ const strings = {
   },
   label: {
     colorSpace: 'Color space',
+    copyFormat: 'Copy format',
     showContrastComparison: 'Show contrast comparison'
   },
   info: {

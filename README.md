@@ -13,10 +13,7 @@ If you encountered a bug you'd like to report, check the [Issues](https://github
 
 ## Roadmap
 
-- Dropdown for selecting copy format
-  - Change copy button tooltip
 - Rename contrast comparison to contrast checker
-- Hide copy button from Figma
 - Heading for contrast table
   - Mention WCAG somewhere in there (build support for other contrast calculations) 
 - Mobile wraps header labels and looks bad

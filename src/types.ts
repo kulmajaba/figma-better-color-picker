@@ -3,6 +3,7 @@ import { MouseEvent, TouchEvent } from 'react';
 import * as colorSpace from './color';
 
 export type Color = [number, number, number];
+export type ColorWithAlpha = [number, number, number, number];
 
 export type ColorConverter = (color: Color) => Color;
 

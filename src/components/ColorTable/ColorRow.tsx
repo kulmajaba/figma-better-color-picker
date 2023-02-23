@@ -1,9 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 
-import strings from '../../assets/strings';
 import { useColorSpace } from '../../hooks/useColorSpace';
 import { Color } from '../../types';
-import { rgb_to_hex } from '../../color/general';
 import ColorInput from '../ColorInput/ColorInput';
 import ColorRowAddButton from './ColorRowAddButton';
 import Button from '../Lib/Button';
@@ -55,9 +53,9 @@ const ColorRow: React.FC<Props> = ({
     if (convertFromPrevious) {
       const prevColor: Color = [firstComponent, secondComponent, thirdComponent];
       const [first, second, third] = convertFromPrevious(prevColor);
-      !firstComponentLocked && setFirstComponent(first);
-      !secondComponentLocked && setSecondComponent(second);
-      !thirdComponentLocked && setThirdComponent(third);
+      setFirstComponent(first);
+      setSecondComponent(second);
+      setThirdComponent(third);
     }
   }, [convertFromPrevious]);
 
