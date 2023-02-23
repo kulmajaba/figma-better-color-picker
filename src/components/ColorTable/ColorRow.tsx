@@ -12,6 +12,7 @@ import ColorComparisonCell from './ColorComparisonCell';
 import ColorTileButton from './ColorTileButton';
 
 import './ColorRow.css';
+import ColorRowCopyButton from './ColorRowCopyButton';
 
 interface Props {
   firstComponent: number;
@@ -47,7 +48,7 @@ const ColorRow: React.FC<Props> = ({
   const [thirdComponent, setThirdComponent] = useState(thirdComponentProp);
   const [alpha, setAlpha] = useState(alphaProp);
 
-  const { toSRGB, convertFromPrevious } = useColorSpace();
+  const { convertFromPrevious } = useColorSpace();
   const { comparisonColorsVisible } = useComparisonColors();
 
   useEffect(() => {
@@ -117,20 +118,6 @@ const ColorRow: React.FC<Props> = ({
 
   const color: Color = [firstComponent, secondComponent, thirdComponent];
 
-  const onCopy = useCallback(async () => {
-    console.log('copy');
-    if (navigator.clipboard) {
-      try {
-        await navigator.clipboard.writeText(rgb_to_hex(toSRGB(color)));
-        console.log('copy successful');
-      } catch (e) {
-        console.error(e);
-      }
-    } else {
-      console.warn('Clipboard API not available');
-    }
-  }, [color]);
-
   const onSetEditing = useCallback(() => {
     onSetEditingProp(color, alpha);
   }, [color, alpha]);
@@ -147,18 +134,8 @@ const ColorRow: React.FC<Props> = ({
           onAlphaChange={onAlphaChange}
         />
         <div className="color-row-buttons">
-          <Button
-            className="small border-none"
-            icon="content_copy"
-            tooltip={strings.tooltip.copyColor}
-            onClick={onCopy}
-          />
-          <ColorRowAddButton
-            firstComponent={firstComponent}
-            secondComponent={secondComponent}
-            thirdComponent={thirdComponent}
-            alpha={alpha}
-          />
+          <ColorRowCopyButton color={color} alpha={alpha} />
+          <ColorRowAddButton color={color} alpha={alpha} />
           <Button className="small border-none" icon="delete" onClick={onDelete} />
         </div>
       </div>

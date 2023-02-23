@@ -12,9 +12,9 @@ import { hex_to_rgb } from './color/general';
 import ColorSpaceDropDown from './components/ColorSpaceDropDown';
 import Button from './components/Lib/Button';
 import ColorComparisonSwitch from './components/ColorComparisonSwitch';
+import InfoModal from './components/InfoModal';
 
 import './App.css';
-import InfoModal from './components/InfoModal';
 
 enum PickerType {
   FirstComponentSlider = 'FIRST_COMPONENT_SLIDER',

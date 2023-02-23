@@ -46,7 +46,7 @@ const ColorTable: React.FC<Props> = ({
   const [comparisonColors, setComparisonColors] = useState<Color[]>([[0, 0, 0]]);
   const [[editingRow, editingTarget], setEditingRow] = useState([0, EditingTarget.Rows]);
 
-  const { componentShortNames, toSRGB } = useColorSpace();
+  const { componentShortNames, toSRGB, convertFromPrevious } = useColorSpace();
   const { comparisonColorsVisible } = useComparisonColors();
 
   useEffect(() => {
@@ -63,6 +63,12 @@ const ColorTable: React.FC<Props> = ({
       setAlpha(alphaProp);
     }
   }, [firstComponentProp, secondComponentProp, thirdComponentProp, alphaProp, editingRow, editingTarget]);
+
+  useEffect(() => {
+    if (convertFromPrevious) {
+      setComparisonColors((colors) => colors.map(convertFromPrevious));
+    }
+  }, [convertFromPrevious]);
 
   const toggleFirstComponentLocked = useCallback(() => setFirstComponentLocked((locked) => !locked), []);
 
