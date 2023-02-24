@@ -138,7 +138,9 @@ const ColorTable: React.FC<Props> = ({
         </div>
         <div className="lock-button-row-end">
           <Button icon="double_arrow" rotateIconDeg={90} onClick={addRow} tooltip={strings.tooltip.addColorRow} />
-          <Button icon="double_arrow" onClick={addComparisonColor} tooltip={strings.tooltip.addColorToComparison} />
+          {comparisonColorsVisible && (
+            <Button icon="double_arrow" onClick={addComparisonColor} tooltip={strings.tooltip.addColorToComparison} />
+          )}
         </div>
       </div>
       {comparisonColorsVisible && comparisonColors.length > 0 && (

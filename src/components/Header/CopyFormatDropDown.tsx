@@ -1,9 +1,9 @@
 import React, { useMemo } from 'react';
 
-import strings from '../assets/strings';
-import { CopyFormat, CopyFormatName, copyFormats, useCopyFormat } from '../hooks/useCopyFormat';
-import useIsPlugin from '../hooks/useIsPlugin';
-import DropDown from './Lib/DropDown';
+import strings from '../../assets/strings';
+import { CopyFormat, CopyFormatName, copyFormats, useCopyFormat } from '../../hooks/useCopyFormat';
+import useIsPlugin from '../../hooks/useIsPlugin';
+import DropDown from '../Lib/DropDown';
 
 const CopyFormatDropDown: React.FC = () => {
   const { name, setCopyFormat } = useCopyFormat();

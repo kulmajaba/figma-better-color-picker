@@ -1,9 +1,9 @@
 import React from 'react';
 
-import strings from '../assets/strings';
-import { useComparisonColors } from '../hooks/useComparisonColors';
-import useIsPlugin from '../hooks/useIsPlugin';
-import Switch from './Lib/Switch';
+import strings from '../../assets/strings';
+import { useComparisonColors } from '../../hooks/useComparisonColors';
+import useIsPlugin from '../../hooks/useIsPlugin';
+import Switch from '../Lib/Switch';
 
 const ColorComparisonSwitch: React.FC = () => {
   const { comparisonColorsVisible, toggleComparisonColorsVisible } = useComparisonColors();

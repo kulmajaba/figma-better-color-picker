@@ -1,8 +1,8 @@
 import React, { useMemo } from 'react';
 
-import strings from '../assets/strings';
-import { useColorSpace, colorSpaces, ColorSpaceName, ColorSpace } from '../hooks/useColorSpace';
-import DropDown from './Lib/DropDown';
+import strings from '../../assets/strings';
+import { useColorSpace, colorSpaces, ColorSpaceName, ColorSpace } from '../../hooks/useColorSpace';
+import DropDown from '../Lib/DropDown';
 
 const ColorSpaceDropDown: React.FC = () => {
   const { name, setColorSpace } = useColorSpace();

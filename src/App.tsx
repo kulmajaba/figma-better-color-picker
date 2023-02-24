@@ -9,11 +9,11 @@ import ColorInput from './components/ColorInput/ColorInput';
 import ColorTable from './components/ColorTable/ColorTable';
 import { useColorSpace } from './hooks/useColorSpace';
 import { hex_to_rgb } from './color/general';
-import ColorSpaceDropDown from './components/ColorSpaceDropDown';
+import ColorSpaceDropDown from './components/Header/ColorSpaceDropDown';
 import Button from './components/Lib/Button';
-import ColorComparisonSwitch from './components/ColorComparisonSwitch';
+import ColorComparisonSwitch from './components/Header/ColorComparisonSwitch';
 import InfoModal from './components/InfoModal';
-import CopyFormatDropDown from './components/CopyFormatDropDown';
+import CopyFormatDropDown from './components/Header/CopyFormatDropDown';
 
 import './App.css';
 

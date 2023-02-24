@@ -28,6 +28,10 @@
   column-gap: 4px;
 }
 
-.lock-button-row-end > :first-child {
+.lock-button-row-end > :nth-last-child(2) {
   grid-column-start: 2;
+}
+
+.lock-button-row-end > :last-child {
+  grid-column-start: 3;
 }
