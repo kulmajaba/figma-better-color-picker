@@ -11,7 +11,8 @@ import { Color, ColorConverter } from '../types';
  * and the third as the Y axis.
  * All values should be in range 0..1
  */
-interface ColorSpace {
+export interface ColorSpace {
+  label: string;
   /**
    * Converts an sRGB color to a color space value
    */
@@ -42,7 +43,8 @@ interface ColorSpace {
   componentShortNames: [string, string, string];
 }
 
-const OKHSV: ColorSpace = {
+const okhsv: ColorSpace = {
+  label: 'OKHSV',
   fromSRGB: srgb_to_okhsv,
   toSRGB: okhsv_to_srgb,
   toComponentRepresentation: hslvfloat_to_hslv,
@@ -51,7 +53,8 @@ const OKHSV: ColorSpace = {
   componentShortNames: ['H', 'S', 'V']
 };
 
-const OKHSL: ColorSpace = {
+const okhsl: ColorSpace = {
+  label: 'OKHSL',
   fromSRGB: srgb_to_okhsl,
   toSRGB: okhsl_to_srgb,
   toComponentRepresentation: hslvfloat_to_hslv,
@@ -60,12 +63,12 @@ const OKHSL: ColorSpace = {
   componentShortNames: ['H', 'S', 'L']
 };
 
-const colorSpaces = {
-  OKHSV,
-  OKHSL
+export const colorSpaces = {
+  okhsv,
+  okhsl
 };
 
-type ColorSpaceName = keyof typeof colorSpaces;
+export type ColorSpaceName = keyof typeof colorSpaces;
 type ColorSpaceSetter = (name: ColorSpaceName) => void;
 
 export const colorSpaceNames = Object.keys(colorSpaces) as ColorSpaceName[];
@@ -82,15 +85,15 @@ interface SpaceContext extends ColorSpace {
 }
 
 const ColorSpaceContext = createContext<SpaceContext>({
-  ...colorSpaces.OKHSV,
+  ...okhsv,
   setColorSpace: () => undefined,
-  name: 'OKHSV',
+  name: 'okhsv',
   convertFromPrevious: undefined
 });
 
 export const ColorSpaceProvider: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
-  const [colorSpace, _setColorSpace] = useState(colorSpaces.OKHSV);
-  const [colorSpaceName, setColorSpaceName] = useState<ColorSpaceName>('OKHSV');
+  const [colorSpace, _setColorSpace] = useState(okhsv);
+  const [colorSpaceName, setColorSpaceName] = useState<ColorSpaceName>('okhsv');
   const [convertFromPrevious, setConvertFromPrevious] = useState<ColorConverter | undefined>(undefined);
 
   const setColorSpace: ColorSpaceSetter = useCallback(

@@ -8,20 +8,17 @@ import { Color, PluginMessageType } from '../../types';
 import Button from '../Lib/Button';
 
 interface Props {
-  firstComponent: number;
-  secondComponent: number;
-  thirdComponent: number;
+  color: Color;
   alpha: number;
 }
 
-const ColorRowAddButton: React.FC<Props> = ({ firstComponent, secondComponent, thirdComponent, alpha }) => {
+const ColorRowAddButton: React.FC<Props> = ({ color, alpha }) => {
   const { isFigma } = useIsPlugin();
   const { toSRGB, toComponentRepresentation, name } = useColorSpace();
 
   // TODO: use a popup input to set the name
   const addColor = useCallback(() => {
     console.log('Add color');
-    const color: Color = [firstComponent, secondComponent, thirdComponent];
     pluginPostMessage({
       type: PluginMessageType.AddColor,
       payload: {
@@ -31,13 +28,16 @@ const ColorRowAddButton: React.FC<Props> = ({ firstComponent, secondComponent, t
         componentRepresentation: toComponentRepresentation(color)
       }
     });
-  }, [toSRGB, toComponentRepresentation, name]);
+  }, [color, alpha, toSRGB, toComponentRepresentation, name]);
 
+  // Clipboard permissions have to be explicitly allowed for iframes and Figma does not currently do so
   if (!isFigma) {
     return null;
   }
 
-  return <Button className="small border-none" icon="add" tooltip={strings.tooltip.addColor} onClick={addColor} />;
+  return (
+    <Button className="small border-none" icon="add" tooltip={strings.tooltip.addColorToStyles} onClick={addColor} />
+  );
 };
 
 export default ColorRowAddButton;

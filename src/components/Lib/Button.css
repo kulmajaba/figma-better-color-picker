@@ -5,7 +5,6 @@ button {
   position: relative;
   width: fit-content;
   height: fit-content;
-  line-height: 0;
   border-radius: var(--border-radius-s);
   background: var(--color-bg);
   color: var(--color-text);

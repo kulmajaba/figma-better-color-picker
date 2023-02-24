@@ -1,14 +1,3 @@
-.color-row-sample {
-  height: auto;
-  width: 100%;
-  aspect-ratio: 1;
-  position: relative;
-  box-sizing: border-box;
-  border: var(--border-1px);
-  border-radius: var(--border-radius-s);
-  overflow: hidden;
-}
-
 .color-row-buttons {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;

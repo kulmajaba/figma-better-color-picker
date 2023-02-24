@@ -1,8 +1,9 @@
 // Copyright (c) 2021 Björn Ottosson
 // Copyright (c) 2022 Mika Kuitunen
 
-import { Color } from '../types';
+import { Color, ColorWithAlpha } from '../types';
 import { InvalidArgumentError } from '../util/errors';
+import { roundTo2Decimals } from '../util/mathUtils';
 
 /**
  * Convert a HSL/HSV value with ranges 0..360, 0..100, 0..100 to range 0..1
@@ -188,8 +189,19 @@ const componentToHex = (x: number): string => {
   return hex.length == 1 ? '0' + hex : hex;
 };
 
-export const rgb_to_hex = (rgb: Color): string => {
+export const rgb_to_hex = (rgb: Color | ColorWithAlpha): string => {
   const [r, g, b] = rgb;
 
   return '#' + componentToHex(r) + componentToHex(g) + componentToHex(b);
+};
+
+export const rgba_to_hex = (rgba: ColorWithAlpha): string => {
+  const [r, g, b, a] = rgba;
+
+  return '#' + componentToHex(r) + componentToHex(g) + componentToHex(b) + componentToHex(a * 255);
+};
+
+export const rgba_to_rgba_string = (rgba: ColorWithAlpha): string => {
+  const [r, g, b, a] = rgba;
+  return `rgba(${Math.round(r)}, ${Math.round(g)}, ${Math.round(b)}, ${roundTo2Decimals(a)})`;
 };

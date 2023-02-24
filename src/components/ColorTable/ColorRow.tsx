@@ -1,17 +1,16 @@
 import React, { useCallback, useEffect, useState } from 'react';
 
-import strings from '../../assets/strings';
 import { useColorSpace } from '../../hooks/useColorSpace';
 import { Color } from '../../types';
-import { rgb_to_hex } from '../../color/general';
 import ColorInput from '../ColorInput/ColorInput';
 import ColorRowAddButton from './ColorRowAddButton';
 import Button from '../Lib/Button';
-import ColorTile from '../ColorTile';
 import { useComparisonColors } from '../../hooks/useComparisonColors';
 import ColorComparisonCell from './ColorComparisonCell';
+import ColorTileButton from './ColorTileButton';
 
 import './ColorRow.css';
+import ColorRowCopyButton from './ColorRowCopyButton';
 
 interface Props {
   firstComponent: number;
@@ -22,7 +21,10 @@ interface Props {
   secondComponentLocked: boolean;
   thirdComponentLocked: boolean;
   alphaLocked: boolean;
+  editing: boolean;
+  comparisonColors: Color[];
   onDelete: () => void;
+  onSetEditing: (color: Color, alpha: number) => void;
 }
 
 const ColorRow: React.FC<Props> = ({
@@ -34,50 +36,54 @@ const ColorRow: React.FC<Props> = ({
   secondComponentLocked,
   thirdComponentLocked,
   alphaLocked,
-  onDelete
+  editing,
+  comparisonColors,
+  onDelete,
+  onSetEditing: onSetEditingProp
 }) => {
   const [firstComponent, setFirstComponent] = useState(firstComponentProp);
   const [secondComponent, setSecondComponent] = useState(secondComponentProp);
   const [thirdComponent, setThirdComponent] = useState(thirdComponentProp);
   const [alpha, setAlpha] = useState(alphaProp);
 
-  const { toSRGB, convertFromPrevious } = useColorSpace();
-  const { comparisonColors, comparisonColorsVisible, addComparisonColor } = useComparisonColors();
+  const { convertFromPrevious } = useColorSpace();
+  const { comparisonColorsVisible } = useComparisonColors();
 
   useEffect(() => {
     if (convertFromPrevious) {
       const prevColor: Color = [firstComponent, secondComponent, thirdComponent];
       const [first, second, third] = convertFromPrevious(prevColor);
-      !firstComponentLocked && setFirstComponent(first);
-      !secondComponentLocked && setSecondComponent(second);
-      !thirdComponentLocked && setThirdComponent(third);
+      setFirstComponent(first);
+      setSecondComponent(second);
+      setThirdComponent(third);
     }
   }, [convertFromPrevious]);
 
   useEffect(() => {
-    if (firstComponentLocked) {
+    if (firstComponentLocked || editing) {
       setFirstComponent(firstComponentProp);
     }
-  }, [firstComponentProp, firstComponentLocked]);
+  }, [firstComponentProp, firstComponentLocked, editing]);
 
   useEffect(() => {
-    if (secondComponentLocked) {
+    if (secondComponentLocked || editing) {
       setSecondComponent(secondComponentProp);
     }
-  }, [secondComponentProp, secondComponentLocked]);
+  }, [secondComponentProp, secondComponentLocked, editing]);
 
   useEffect(() => {
-    if (thirdComponentLocked) {
+    if (thirdComponentLocked || editing) {
       setThirdComponent(thirdComponentProp);
     }
-  }, [thirdComponentProp, thirdComponentLocked]);
+  }, [thirdComponentProp, thirdComponentLocked, editing]);
 
   useEffect(() => {
-    if (alphaLocked) {
+    if (alphaLocked || editing) {
       setAlpha(alphaProp);
     }
-  }, [alphaProp, alphaLocked]);
+  }, [alphaProp, alphaLocked, editing]);
 
+  // TODO: call onSetEditing if needed
   const onColorChange = useCallback(
     (color: Color) => {
       const shouldChangeFirst = !firstComponentLocked && color[0] !== firstComponent;
@@ -110,28 +116,14 @@ const ColorRow: React.FC<Props> = ({
 
   const color: Color = [firstComponent, secondComponent, thirdComponent];
 
-  const onCopy = useCallback(async () => {
-    console.log('copy');
-    if (navigator.clipboard) {
-      try {
-        await navigator.clipboard.writeText(rgb_to_hex(toSRGB(color)));
-        console.log('copy successful');
-      } catch (e) {
-        console.error(e);
-      }
-    } else {
-      console.warn('Clipboard API not available');
-    }
-  }, [color]);
-
-  const onPushToComparison = useCallback(() => {
-    addComparisonColor(color);
-  }, [color]);
+  const onSetEditing = useCallback(() => {
+    onSetEditingProp(color, alpha);
+  }, [color, alpha]);
 
   return (
     <>
       <div className="color-row-main">
-        <ColorTile color={color} alpha={alpha} />
+        <ColorTileButton color={color} alpha={alpha} selected={editing} onClick={onSetEditing} />
         <ColorInput
           type="component"
           value={color}
@@ -140,28 +132,9 @@ const ColorRow: React.FC<Props> = ({
           onAlphaChange={onAlphaChange}
         />
         <div className="color-row-buttons">
-          <Button
-            className="small border-none"
-            icon="content_copy"
-            tooltip={strings.tooltip.copyColor}
-            onClick={onCopy}
-          />
-          <ColorRowAddButton
-            firstComponent={firstComponent}
-            secondComponent={secondComponent}
-            thirdComponent={thirdComponent}
-            alpha={alpha}
-          />
+          <ColorRowCopyButton color={color} alpha={alpha} />
+          <ColorRowAddButton color={color} alpha={alpha} />
           <Button className="small border-none" icon="delete" onClick={onDelete} />
-          {comparisonColorsVisible && (
-            <Button
-              className="small border-none"
-              icon="double_arrow"
-              onClick={onPushToComparison}
-              tooltip={strings.tooltip.addColorToComparison}
-              triggerProps={comparisonColors}
-            />
-          )}
         </div>
       </div>
       {comparisonColorsVisible && comparisonColors.length > 0 && (

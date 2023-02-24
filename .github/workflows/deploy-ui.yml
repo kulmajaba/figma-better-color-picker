@@ -1,16 +1,22 @@
 # This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
 
-name: Node.js CI
+name: Build and deploy UI
 
 on:
-  push:
-    branches: [ "main" ]
-  workflow_dispatch:
+  workflow_call:
+    inputs:
+      node-version:
+        required: true
+        type: string
+      deploy-path:
+        required: true
+        type: string
+        description: 'Used as /home/<user>/<deploy-path>, where <user> is fetched from a secret'
 
 env:
-  NODE_VERSION: '18.x'
-  DEPLOY_PATH: sites/colorpicker # Used as /home/<user>/sites/colorpicker
+  NODE_VERSION: ${{ inputs.node-version }}
+  DEPLOY_PATH: ${{ inputs.deploy-path }}
 
 permissions:
   contents: read

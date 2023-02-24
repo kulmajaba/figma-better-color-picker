@@ -5,9 +5,9 @@ import './DropDown.css';
 interface Props<T> {
   name: string;
   label: string;
-  options: T[];
+  options: { label: string; value: T }[];
   value: T;
-  onChange: (val: T) => void;
+  onChange: (value: T) => void;
 }
 
 const DropDown = <T extends string>({ name, label, options, value, onChange: onChangeProp }: Props<T>) => {
@@ -23,7 +23,9 @@ const DropDown = <T extends string>({ name, label, options, value, onChange: onC
       <label htmlFor={name}>{label}</label>
       <select className="focus-border" name={name} value={value} onChange={onChange}>
         {options.map((o) => (
-          <option key={o}>{o}</option>
+          <option key={o.value} value={o.value}>
+            {o.label}
+          </option>
         ))}
       </select>
     </div>

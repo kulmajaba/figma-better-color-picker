@@ -1,15 +1,19 @@
 const strings = {
   color: {
-    hex: 'Hex'
+    hex: 'Hex',
+    hexWithAlpha: 'Hex with alpha',
+    rgba: 'RGBA'
   },
   tooltip: {
-    copyColor: 'Copy color to clipboard in hex format',
-    addColor: 'Add color to your styles',
+    copyColor: 'Copy color to clipboard',
+    addColorRow: 'Add a color row',
+    addColorToStyles: 'Add color to your styles',
     addColorToComparison: 'Add color to contrast comparison',
     deleteColorFromComparison: 'Delete color from contrast comparison'
   },
   label: {
     colorSpace: 'Color space',
+    copyFormat: 'Copy format',
     showContrastComparison: 'Show contrast comparison'
   },
   info: {

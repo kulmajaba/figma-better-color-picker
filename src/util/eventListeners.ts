@@ -1,10 +1,10 @@
 import { PluginMessage } from '../types';
 
-export const waitForMessage = (timeoutMs = 60000): Promise<PluginMessage> => {
+export const waitForMessage = (timeoutMs = 5000): Promise<PluginMessage> => {
   const result = new Promise<PluginMessage>((resolve) => {
     const handleEvent = (e: MessageEvent<{ pluginMessage: PluginMessage; pluginId: string }>) => {
       if (e.data.pluginMessage.fromFigma) {
-        console.log('UI: message received:');
+        console.log('UI message received:');
         console.log(e.data.pluginMessage);
         resolve(e.data.pluginMessage);
         window.removeEventListener('message', handleEvent);
@@ -14,7 +14,7 @@ export const waitForMessage = (timeoutMs = 60000): Promise<PluginMessage> => {
     window.addEventListener('message', handleEvent);
   });
   const timeout = new Promise<PluginMessage>((_, reject) => {
-    setTimeout(() => reject('Timeout'), timeoutMs);
+    setTimeout(() => reject('waitForMessage timeout'), timeoutMs);
   });
   return Promise.race([result, timeout]);
 };

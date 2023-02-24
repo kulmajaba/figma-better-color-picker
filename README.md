@@ -13,6 +13,17 @@ If you encountered a bug you'd like to report, check the [Issues](https://github
 
 ## Roadmap
 
+- Rename contrast comparison to contrast checker
+- Heading for contrast table
+  - Mention WCAG somewhere in there (build support for other contrast calculations) 
+- Mobile wraps header labels and looks bad
+- Fix horizontal overflow on mobile
+  - This might be the tooltip not updating its position in certain situations?
+- Labels for main inputs
+  - Label color input components when there is enough space
+- Pressed button on mobile: tooltip should not be shown
+- Show disabled alpha picker when editing contrast color
+
 ### Undo history???
 
 Would be nice if you accidentally delete a color row etc.
@@ -47,9 +58,10 @@ Currently the tooltip repositions itself on window resizes and when certain prop
 
 ## Development
 
-The plugin is based on Node.js, ensure you have a modern LTS version on your computer.
+The plugin is based on Node.js, ensure you have a modern LTS version on your computer or use nvm to manage your Node versions:
 
 ```bash
+nvm use
 npm install
 npm start
 ```
@@ -59,7 +71,7 @@ npm start
 Build Figma plugin code and UI code:
 
 ```bash
-npm run build:prod
+npm run build
 ```
 
 The UI deploy is done with GitHub Actions, set the repository secrets to match your production environment.

@@ -10,8 +10,8 @@ const relativeLuminance = (sRGB: Color) =>
 const L_MAX = relativeLuminance([255, 255, 255]);
 
 /**
- * Calculate the contrast of colours based on WCAG 2.1
- * https://www.w3.org/TR/WCAG21/#dfn-contrast-ratio
+ * Calculate the contrast of colours based on WCAG 2.1:
+ * https://www.w3.org/TR/WCAG21/#dfn-contrast-ratio.
  * The WCAG contrast values should be treated as threshold values,
  * so the result should be floored, not rounded
  */
