@@ -78,7 +78,7 @@ const ColorTable: React.FC<Props> = ({
 
   const toggleAlphaLocked = useCallback(() => setAlphaLocked((locked) => !locked), []);
 
-  const addRow = useCallback(() => setRows((rows) => rows.concat(Math.max(...rows) + 1)), []);
+  const addRow = useCallback(() => setRows((rows) => rows.concat(rows.length > 0 ? Math.max(...rows) + 1 : 0)), []);
 
   const deleteRow = useCallback((key: number) => setRows((rows) => rows.filter((k) => k !== key)), []);
 
