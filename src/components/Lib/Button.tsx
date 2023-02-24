@@ -10,12 +10,11 @@ interface Props extends HMTLButtonProps {
   icon?: IconKey;
   rotateIconDeg?: number;
   tooltip?: string;
-  triggerProps?: unknown;
 }
 
-const Button: React.FC<Props> = ({ icon, rotateIconDeg, tooltip, triggerProps, ...buttonProps }) =>
+const Button: React.FC<Props> = ({ icon, rotateIconDeg, tooltip, ...buttonProps }) =>
   tooltip ? (
-    <ToolTip tooltip={tooltip} triggerProps={triggerProps}>
+    <ToolTip tooltip={tooltip}>
       <button {...buttonProps}>{icon && <Icon icon={icon} rotateDeg={rotateIconDeg} />}</button>
     </ToolTip>
   ) : (

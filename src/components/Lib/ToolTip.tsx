@@ -10,14 +10,6 @@ interface Props {
   tooltip?: string;
   className?: string;
   children: React.ReactNode;
-  /**
-   * Set any props that should trigger a re-render of the tooltip
-   * This is a hacky way of working around the limitation of re-rendering:
-   * this component should recalculate position on any layout change, but its own re-render
-   * also triggers this leading to an endless loop.
-   * Instead we can at least trigger the recalculation when some props change.
-   */
-  triggerProps?: unknown;
 }
 
 const minOffset = 4;
@@ -51,55 +43,51 @@ const getDelta = (
 
   // Low side of the element is within boundaries but offset is still applied,
   // calculate the minimum possible offset to achieve the result
-  if (lowerValue > lowerBoundary + minOffset && currentDelta > 0) {
+  if (lowerValue >= lowerBoundary + minOffset && currentDelta > 0) {
     return currentDelta - Math.min(lowerValue - (lowerBoundary + minOffset), currentDelta);
   }
 
   // High side of the element is within boundaries but offset is still applied,
   // calculate the minimum possible offset to achieve the result
-  if (upperValue < upperBoundary - minOffset && currentDelta < 0) {
+  if (upperValue <= upperBoundary - minOffset && currentDelta < 0) {
     return currentDelta + Math.min(upperBoundary - minOffset - upperValue, -currentDelta);
   }
 
   return 0;
 };
 
-const ToolTip: React.FC<Props> = ({ tooltip, children, triggerProps, className }) => {
+const ToolTip: React.FC<Props> = ({ tooltip, children, className }) => {
   const [offset, setOffset] = useState<XY>({ x: 0, y: 0 });
 
   const tipRef = useRef<HTMLSpanElement>(null);
 
-  const handleResize = useCallback(() => {
+  const reposition = useCallback(() => {
     if (tipRef.current) {
       const boundingRect = tipRef.current?.getBoundingClientRect();
       const { top, bottom, left, right } = boundingRect;
       const { clientWidth, clientHeight } = document.body;
 
       setOffset((currentOffset) => {
+        const dx = getDelta(0, clientWidth, left, right, currentOffset.x);
+        const dy = getDelta(0, clientHeight, top, bottom, currentOffset.y);
         return {
-          x: getDelta(0, clientWidth, left, right, currentOffset.x),
-          y: getDelta(0, clientHeight, top, bottom, currentOffset.y)
+          x: dx,
+          y: dy
         };
       });
     }
   }, [tipRef.current]);
 
   useEffect(() => {
-    window.addEventListener('resize', () => handleResize());
-
-    return window.removeEventListener('resize', () => handleResize());
+    reposition();
   }, []);
-
-  useEffect(() => {
-    handleResize();
-  }, [triggerProps]);
 
   const transform = `translate(50%) translate(${offset.x}px, ${offset.y}px)`;
 
   const spanClassNames = classNames('tooltip', className);
 
   return (
-    <div className="tooltip-container">
+    <div className="tooltip-container" onMouseEnter={reposition}>
       {children}
       <span ref={tipRef} className={spanClassNames} style={{ transform }}>
         {tooltip}

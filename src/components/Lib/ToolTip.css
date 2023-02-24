@@ -29,7 +29,9 @@
 .tooltip-container > *:focus-visible + .tooltip, .tooltip-container > *:hover + .tooltip {
   visibility: visible;
   opacity: 1;
-  transition: all 0.3s ease-in-out;
+  transition-property: visibility, opacity;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in-out;
   transition-delay: 1s
 }
 
