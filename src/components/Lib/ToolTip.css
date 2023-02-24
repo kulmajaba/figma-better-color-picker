@@ -26,15 +26,17 @@
   transition-delay: 0s;
 }
 
-.tooltip-container > *:focus-visible + .tooltip, .tooltip-container > *:hover + .tooltip {
-  visibility: visible;
-  opacity: 1;
-  transition-property: visibility, opacity;
-  transition-duration: 0.3s;
-  transition-timing-function: ease-in-out;
-  transition-delay: 1s
-}
-
-.tooltip-container > *:focus-visible + .tooltip.tooltip-immediate, .tooltip-container > *:hover + .tooltip.tooltip-immediate {
-  transition-delay: 0s
+@media(hover: hover) {
+  .tooltip-container > *:focus-visible + .tooltip, .tooltip-container > *:hover + .tooltip {
+    visibility: visible;
+    opacity: 1;
+    transition-property: visibility, opacity;
+    transition-duration: 0.3s;
+    transition-timing-function: ease-in-out;
+    transition-delay: 1s
+  }
+  
+  .tooltip-container > *:focus-visible + .tooltip.tooltip-immediate, .tooltip-container > *:hover + .tooltip.tooltip-immediate {
+    transition-delay: 0s
+  }
 }

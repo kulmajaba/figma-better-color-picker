@@ -17,8 +17,10 @@ button.small {
   padding: 0.3rem;
 }
 
-button:hover {
-  background-color: var(--color-bg-hover);
+@media(hover: hover) {
+  button:hover {
+    background-color: var(--color-bg-hover);
+  }
 }
 
 button:active {
