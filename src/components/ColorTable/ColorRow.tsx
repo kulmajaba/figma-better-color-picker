@@ -5,8 +5,8 @@ import { Color } from '../../types';
 import ColorInput from '../ColorInput/ColorInput';
 import ColorRowAddButton from './ColorRowAddButton';
 import Button from '../Lib/Button';
-import { useComparisonColors } from '../../hooks/useComparisonColors';
-import ColorComparisonCell from './ColorComparisonCell';
+import { useContrastChecker } from '../../hooks/useContrastChecker';
+import ContrastCheckerCell from './ContrastCheckerCell';
 import ColorTileButton from './ColorTileButton';
 
 import './ColorRow.css';
@@ -22,7 +22,7 @@ interface Props {
   thirdComponentLocked: boolean;
   alphaLocked: boolean;
   editing: boolean;
-  comparisonColors: Color[];
+  contrastColors: Color[];
   onDelete: () => void;
   onSetEditing: (color: Color, alpha: number) => void;
 }
@@ -37,7 +37,7 @@ const ColorRow: React.FC<Props> = ({
   thirdComponentLocked,
   alphaLocked,
   editing,
-  comparisonColors,
+  contrastColors,
   onDelete,
   onSetEditing: onSetEditingProp
 }) => {
@@ -47,7 +47,7 @@ const ColorRow: React.FC<Props> = ({
   const [alpha, setAlpha] = useState(alphaProp);
 
   const { convertFromPrevious } = useColorSpace();
-  const { comparisonColorsVisible } = useComparisonColors();
+  const { contrastCheckerVisible } = useContrastChecker();
 
   useEffect(() => {
     if (convertFromPrevious) {
@@ -137,10 +137,10 @@ const ColorRow: React.FC<Props> = ({
           <Button className="small border-none" icon="delete" onClick={onDelete} />
         </div>
       </div>
-      {comparisonColorsVisible && comparisonColors.length > 0 && (
+      {contrastCheckerVisible && contrastColors.length > 0 && (
         <div className="color-row-comparison">
-          {comparisonColors.map((comparisonColor, i) => (
-            <ColorComparisonCell key={i} color={color} comparisonColor={comparisonColor} />
+          {contrastColors.map((contrastColor, i) => (
+            <ContrastCheckerCell key={i} color={color} contrastColor={contrastColor} />
           ))}
         </div>
       )}

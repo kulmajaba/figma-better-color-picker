@@ -7,13 +7,13 @@ import { getColorContrast } from '../../util/colorContrast';
 
 interface Props {
   color: Color;
-  comparisonColor: Color;
+  contrastColor: Color;
 }
 
-const ColorComparisonCell: React.FC<Props> = ({ color, comparisonColor }) => {
+const ContrastCheckerCell: React.FC<Props> = ({ color, contrastColor }) => {
   const { toSRGB } = useColorSpace();
 
-  return <div>{floorTo2Decimals(getColorContrast(color, comparisonColor, toSRGB))} : 1</div>;
+  return <div>{floorTo2Decimals(getColorContrast(color, contrastColor, toSRGB))} : 1</div>;
 };
 
-export default ColorComparisonCell;
+export default ContrastCheckerCell;

@@ -4,7 +4,7 @@ import ColorRow from './ColorRow';
 import LockButton from './LockButton';
 import { useColorSpace } from '../../hooks/useColorSpace';
 import Button from '../Lib/Button';
-import { useComparisonColors } from '../../hooks/useComparisonColors';
+import { useContrastChecker } from '../../hooks/useContrastChecker';
 import strings from '../../assets/strings';
 import ToolTip from '../Lib/ToolTip';
 import { rgb_to_hex } from '../../color/general';
@@ -15,7 +15,7 @@ import './ColorTable.css';
 
 enum EditingTarget {
   Rows = 0,
-  ComparisonColors
+  ContrastColors
 }
 
 interface Props {
@@ -43,15 +43,15 @@ const ColorTable: React.FC<Props> = ({
   const [alpha, setAlpha] = useState(alphaProp);
 
   const [rows, setRows] = useState([0]);
-  const [comparisonColors, setComparisonColors] = useState<Color[]>([[0, 0, 0]]);
+  const [contrastColors, setContrastColors] = useState<Color[]>([[0, 0, 0]]);
   const [[editingRow, editingTarget], setEditingRow] = useState([0, EditingTarget.Rows]);
 
   const { componentShortNames, toSRGB, convertFromPrevious } = useColorSpace();
-  const { comparisonColorsVisible } = useComparisonColors();
+  const { contrastCheckerVisible } = useContrastChecker();
 
   useEffect(() => {
-    if (editingTarget === EditingTarget.ComparisonColors) {
-      setComparisonColors((colors) => {
+    if (editingTarget === EditingTarget.ContrastColors) {
+      setContrastColors((colors) => {
         const newColors = colors.slice();
         newColors[editingRow] = [firstComponentProp, secondComponentProp, thirdComponentProp];
         return newColors;
@@ -66,7 +66,7 @@ const ColorTable: React.FC<Props> = ({
 
   useEffect(() => {
     if (convertFromPrevious) {
-      setComparisonColors((colors) => colors.map(convertFromPrevious));
+      setContrastColors((colors) => colors.map(convertFromPrevious));
     }
   }, [convertFromPrevious]);
 
@@ -90,14 +90,13 @@ const ColorTable: React.FC<Props> = ({
     [onSetEditingProp]
   );
 
-  const addComparisonColor = useCallback(
-    () =>
-      setComparisonColors((colors) => colors.concat([[firstComponentProp, secondComponentProp, thirdComponentProp]])),
+  const addContrastColor = useCallback(
+    () => setContrastColors((colors) => colors.concat([[firstComponentProp, secondComponentProp, thirdComponentProp]])),
     [firstComponentProp, secondComponentProp, thirdComponentProp]
   );
 
-  const deleteComparisonColor = useCallback(
-    (index: number) => setComparisonColors((colors) => colors.filter((_, i) => i !== index)),
+  const deleteContrastColor = useCallback(
+    (index: number) => setContrastColors((colors) => colors.filter((_, i) => i !== index)),
     []
   );
 
@@ -113,7 +112,7 @@ const ColorTable: React.FC<Props> = ({
       thirdComponentLocked={thirdComponentLocked}
       alphaLocked={alphaLocked}
       editing={key === editingRow && editingTarget === EditingTarget.Rows}
-      comparisonColors={comparisonColors}
+      contrastColors={contrastColors}
       onDelete={() => deleteRow(key)}
       onSetEditing={(color, alpha) => onSetEditing(key, EditingTarget.Rows, color, alpha)}
     />
@@ -138,26 +137,26 @@ const ColorTable: React.FC<Props> = ({
         </div>
         <div className="lock-button-row-end">
           <Button icon="double_arrow" rotateIconDeg={90} onClick={addRow} tooltip={strings.tooltip.addColorRow} />
-          {comparisonColorsVisible && (
-            <Button icon="double_arrow" onClick={addComparisonColor} tooltip={strings.tooltip.addColorToComparison} />
+          {contrastCheckerVisible && (
+            <Button icon="double_arrow" onClick={addContrastColor} tooltip={strings.tooltip.addColorToChecker} />
           )}
         </div>
       </div>
-      {comparisonColorsVisible && comparisonColors.length > 0 && (
+      {contrastCheckerVisible && contrastColors.length > 0 && (
         <div className="color-comparison-header">
-          {comparisonColors.map((comparisonColor, i) => (
+          {contrastColors.map((contrastColor, i) => (
             <div key={i}>
               <Button
                 className="small border-none"
                 icon="delete"
-                tooltip={strings.tooltip.deleteColorFromComparison}
-                onClick={() => deleteComparisonColor(i)}
+                tooltip={strings.tooltip.deleteColorFromChecker}
+                onClick={() => deleteContrastColor(i)}
               />
-              <ToolTip className="tooltip-immediate" tooltip={rgb_to_hex(toSRGB(comparisonColor))}>
+              <ToolTip className="tooltip-immediate" tooltip={rgb_to_hex(toSRGB(contrastColor))}>
                 <ColorTileButton
-                  color={comparisonColor}
-                  selected={i === editingRow && editingTarget === EditingTarget.ComparisonColors}
-                  onClick={() => onSetEditing(i, EditingTarget.ComparisonColors, comparisonColor, 1)}
+                  color={contrastColor}
+                  selected={i === editingRow && editingTarget === EditingTarget.ContrastColors}
+                  onClick={() => onSetEditing(i, EditingTarget.ContrastColors, contrastColor, 1)}
                 />
               </ToolTip>
             </div>

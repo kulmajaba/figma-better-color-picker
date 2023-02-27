@@ -8,13 +8,13 @@ const strings = {
     copyColor: 'Copy color to clipboard',
     addColorRow: 'Add a color row',
     addColorToStyles: 'Add color to your styles',
-    addColorToComparison: 'Add color to contrast comparison',
-    deleteColorFromComparison: 'Delete color from contrast comparison'
+    addColorToChecker: 'Add color to contrast checker',
+    deleteColorFromChecker: 'Delete color from contrast checker'
   },
   label: {
     colorSpace: 'Color space',
     copyFormat: 'Copy format',
-    showContrastComparison: 'Show contrast comparison'
+    contrastChecker: 'Contrast checker'
   },
   info: {
     info_1: `The Better Color Picker does a few things that make it better:

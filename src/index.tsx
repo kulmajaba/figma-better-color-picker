@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client';
 
 import App from './App';
 import { ColorSpaceProvider } from './hooks/useColorSpace';
-import { ComparisonColorProvider } from './hooks/useComparisonColors';
+import { ContrastCheckerProvider } from './hooks/useContrastChecker';
 import { CopyFormatProvider } from './hooks/useCopyFormat';
 
 const container = document.getElementById('app');
@@ -11,10 +11,10 @@ const container = document.getElementById('app');
 const root = createRoot(container!);
 root.render(
   <ColorSpaceProvider>
-    <ComparisonColorProvider>
+    <ContrastCheckerProvider>
       <CopyFormatProvider>
         <App />
       </CopyFormatProvider>
-    </ComparisonColorProvider>
+    </ContrastCheckerProvider>
   </ColorSpaceProvider>
 );
