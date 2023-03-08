@@ -23,7 +23,7 @@ interface Props {
   secondComponent: number;
   thirdComponent: number;
   alpha: number;
-  onSetEditing: (color: Color, alpha: number) => void;
+  onSetEditing: (color: Color, alpha: number, enableAlpha: boolean) => void;
 }
 
 const ColorTable: React.FC<Props> = ({
@@ -85,7 +85,7 @@ const ColorTable: React.FC<Props> = ({
   const onSetEditing = useCallback(
     (key: number, editingTarget: EditingTarget, color: Color, alpha: number) => {
       setEditingRow([key, editingTarget]);
-      onSetEditingProp(color, alpha);
+      onSetEditingProp(color, alpha, editingTarget === EditingTarget.Rows);
     },
     [onSetEditingProp]
   );

@@ -14,7 +14,10 @@ const strings = {
   label: {
     colorSpace: 'Color space',
     copyFormat: 'Copy format',
-    contrastChecker: 'Contrast checker'
+    contrastChecker: 'Contrast checker',
+    hsv: 'HSV',
+    hsl: 'HSL',
+    hex: 'Hex'
   },
   info: {
     info_1: `The Better Color Picker does a few things that make it better:

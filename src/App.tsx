@@ -14,6 +14,7 @@ import Button from './components/Lib/Button';
 import ContrastCheckerSwitch from './components/Header/ColorCheckerSwitch';
 import InfoModal from './components/InfoModal';
 import CopyFormatDropDown from './components/Header/CopyFormatDropDown';
+import strings from './assets/strings';
 
 import './App.css';
 
@@ -32,10 +33,11 @@ function App() {
   const [firstComponent, setFirstComponent] = useState(0);
   const [xyComponent, setXyComponent] = useState(XYZero);
   const [alpha, setAlpha] = useState(1);
+  const [alphaEnabled, setAlphaEnabled] = useState(true);
 
   const [infoModalVisible, setInfoModalVisible] = useState(false);
 
-  const { fromSRGB, toSRGB, convertFromPrevious } = useColorSpace();
+  const { fromSRGB, toSRGB, convertFromPrevious, inputLabel } = useColorSpace();
 
   useEffect(() => {
     window.addEventListener('message', (e) => !e.data.source?.includes('react-devtools') && console.log(e));
@@ -131,10 +133,11 @@ function App() {
     }
   }, []);
 
-  const onSetEditing = useCallback((color: Color, alpha: number) => {
+  const onSetEditing = useCallback((color: Color, alpha: number, enableAlpha: boolean) => {
     setFirstComponent(color[0]);
     setXyComponent({ x: color[1], y: color[2] });
     setAlpha(alpha);
+    setAlphaEnabled(enableAlpha);
   }, []);
 
   const onShowInfoModal = useCallback(() => setInfoModalVisible(true), []);
@@ -194,11 +197,13 @@ RGB: ${roundToFixedPrecision(rgb[0], 3)}, ${roundToFixedPrecision(rgb[1], 3)}, $
             dragging={activePicker === PickerType.Alpha}
             onChange={onAlphaChange}
             onMouseDownOrTouchStart={onAlphaMouseDownOrTouchStart}
+            enabled={alphaEnabled}
           />
-          {dev && <p dangerouslySetInnerHTML={{ __html: colorString }} />}
+          {dev && <div dangerouslySetInnerHTML={{ __html: colorString }} />}
           <div className="main-inputs">
             <Button icon="eyedropper" onClick={onEyeDropper} />
             <div className="main-inputs-color-inputs">
+              <label>{strings.label[inputLabel]}</label>
               <ColorInput
                 type="component"
                 value={color}
@@ -206,6 +211,7 @@ RGB: ${roundToFixedPrecision(rgb[0], 3)}, ${roundToFixedPrecision(rgb[1], 3)}, $
                 onColorChange={onColorInputChange}
                 onAlphaChange={onAlphaChange}
               />
+              <label>{strings.label.hex}</label>
               <ColorInput
                 type="hex"
                 value={color}

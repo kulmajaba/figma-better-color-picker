@@ -3,6 +3,7 @@ import React, { useState, useContext, createContext, useCallback, useMemo } from
 import { hslvfloat_to_hslv, hslv_to_hslvfloat } from '../color/general';
 import { okhsl_to_srgb, okhsv_to_srgb, srgb_to_okhsl, srgb_to_okhsv } from '../color/oklab';
 import { Color, ColorConverter } from '../types';
+import strings from '../assets/strings';
 
 /**
  * Color spaces work with arrays of exactly three color components.
@@ -41,6 +42,10 @@ export interface ColorSpace {
    * Visible in the color table header
    */
   componentShortNames: [string, string, string];
+  /**
+   * Visible on main inputs
+   */
+  inputLabel: keyof typeof strings.label;
 }
 
 const okhsv: ColorSpace = {
@@ -50,7 +55,8 @@ const okhsv: ColorSpace = {
   toComponentRepresentation: hslvfloat_to_hslv,
   fromComponentRepresentation: hslv_to_hslvfloat,
   firstComponentSliderConstants: [0.9, 0.9],
-  componentShortNames: ['H', 'S', 'V']
+  componentShortNames: ['H', 'S', 'V'],
+  inputLabel: 'hsv'
 };
 
 const okhsl: ColorSpace = {
@@ -60,7 +66,8 @@ const okhsl: ColorSpace = {
   toComponentRepresentation: hslvfloat_to_hslv,
   fromComponentRepresentation: hslv_to_hslvfloat,
   firstComponentSliderConstants: [1, 0.6],
-  componentShortNames: ['H', 'S', 'L']
+  componentShortNames: ['H', 'S', 'L'],
+  inputLabel: 'hsl'
 };
 
 export const colorSpaces = {

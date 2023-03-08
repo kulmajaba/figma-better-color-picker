@@ -127,10 +127,6 @@ header {
   gap: var(--spacing-l);
 }
 
-main > section > * + *, .main-inputs-color-inputs > * + * {
-  margin-top: var(--spacing-m);
-}
-
 .pickers {
   width: 100%;
   padding: var(--padding-picker);
@@ -138,10 +134,7 @@ main > section > * + *, .main-inputs-color-inputs > * + * {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-}
-
-.main-inputs > * + * {
-  margin-left: var(--spacing-m);
+  gap: var(--spacing-l);
 }
 
 .focus-border:focus-visible {
@@ -166,11 +159,14 @@ img {
   display: flex;
   flex-direction: row;
   align-items: center;
+  gap: var(--spacing-l);
 }
 
 .main-inputs-color-inputs {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: var(--spacing-m);
+  align-items: center;
 }
 
 .color-row-main, .lock-button-row-container {

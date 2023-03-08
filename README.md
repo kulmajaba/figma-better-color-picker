@@ -15,9 +15,7 @@ If you encountered a bug you'd like to report, check the [Issues](https://github
 
 - Heading for contrast table
   - Mention WCAG somewhere in there (build support for other contrast calculations) 
-- Labels for main inputs
-  - Label color input components when there is enough space
-- Show disabled alpha picker when editing contrast color
+- Label color input components when there is enough space?
 
 ### Undo history???
 
