@@ -19,10 +19,6 @@ If you encountered a bug you'd like to report, check the [Issues](https://github
   - Label color input components when there is enough space
 - Show disabled alpha picker when editing contrast color
 
-### Hover states on Samsung phones
-
-Samsung is dumb and presents its devices as having a touchscreen and a touchpad, breaking hover states using `@media(hover: hover)`
-
 ### Undo history???
 
 Would be nice if you accidentally delete a color row etc.

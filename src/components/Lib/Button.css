@@ -17,7 +17,8 @@ button.small {
   padding: 0.3rem;
 }
 
-@media(hover: hover) {
+/* pointer: fine filters out Samsung devices, which falsely report hover */
+@media (hover: hover) and (pointer: fine) {
   button:hover {
     background-color: var(--color-bg-hover);
   }

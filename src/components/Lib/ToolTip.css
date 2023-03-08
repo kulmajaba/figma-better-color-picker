@@ -26,7 +26,8 @@
   transition-delay: 0s;
 }
 
-@media(hover: hover) {
+/* pointer: fine filters out Samsung devices, which falsely report hover */
+@media (hover: hover) and (pointer: fine) {
   .tooltip-container > *:focus-visible + .tooltip, .tooltip-container > *:hover + .tooltip {
     visibility: visible;
     opacity: 1;
