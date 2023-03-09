@@ -10,7 +10,7 @@ type Props = Omit<Modalprops, 'title|children'>;
 const InfoModal: React.FC<Props> = (props) => {
   const { isFigma, isPlugin } = useIsPlugin();
 
-  let infoMessage = `${strings.info.info_1}`;
+  let infoMessage = strings.info.info_1;
   isFigma && (infoMessage += ` ${strings.info.info_2_figma}`);
   !isPlugin && (infoMessage += ` ${strings.info.info_2_standalone}`);
   isPlugin && (infoMessage += `<br /><br />${strings.info.info_3_plugin}`);
