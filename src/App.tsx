@@ -1,6 +1,6 @@
 import React, { MouseEvent, TouchEvent, useCallback, useEffect, useState } from 'react';
 
-import { Color, isMouseEvent, MouseOrTouchEventHandler, Size, XY, XYZero } from './types';
+import { Color, isMouseEvent, MouseOrTouchEventHandler, PluginMessageType, Size, XY, XYZero } from './types';
 import HuePicker from './components/SliderPicker';
 import XYPicker from './components/XYPicker';
 import AlphaPicker from './components/AlphaPicker';
@@ -15,6 +15,9 @@ import ContrastCheckerSwitch from './components/Header/ColorCheckerSwitch';
 import InfoModal from './components/InfoModal';
 import CopyFormatDropDown from './components/Header/CopyFormatDropDown';
 import strings from './assets/strings';
+import useIsPlugin from './hooks/useIsPlugin';
+import { pluginPostMessage } from './pluginApi';
+import classNames from 'classnames';
 
 import './App.css';
 
@@ -38,6 +41,7 @@ function App() {
   const [infoModalVisible, setInfoModalVisible] = useState(false);
 
   const { fromSRGB, toSRGB, convertFromPrevious, inputLabel } = useColorSpace();
+  const { isFigma, isPlugin } = useIsPlugin();
 
   useEffect(() => {
     window.addEventListener('message', (e) => !e.data.source?.includes('react-devtools') && console.log(e));
@@ -143,6 +147,16 @@ function App() {
   const onShowInfoModal = useCallback(() => setInfoModalVisible(true), []);
   const onCloseInfoModal = useCallback(() => setInfoModalVisible(false), []);
 
+  const onResizeFigmaPlugin = useCallback(
+    (width: number) => {
+      if (isFigma) {
+        console.log('resize Figma window, ', width);
+        pluginPostMessage({ type: PluginMessageType.Resize, payload: { width } });
+      }
+    },
+    [isFigma]
+  );
+
   const color: Color = [firstComponent, xyComponent.x, xyComponent.y];
   const rgb = toSRGB(color);
 
@@ -152,9 +166,12 @@ function App() {
 RGB: ${roundToFixedPrecision(rgb[0], 3)}, ${roundToFixedPrecision(rgb[1], 3)}, ${roundToFixedPrecision(rgb[2], 3)}`
     : '';
 
+  const containerClassNames = classNames({ plugin: isPlugin });
+
   return (
     <div
       id="mouse-events"
+      className={containerClassNames}
       onMouseUp={onMouseUpOrTouchEnd}
       onTouchEnd={onMouseUpOrTouchEnd}
       onTouchCancel={onMouseUpOrTouchEnd}
@@ -229,6 +246,7 @@ RGB: ${roundToFixedPrecision(rgb[0], 3)}, ${roundToFixedPrecision(rgb[1], 3)}, $
         thirdComponent={xyComponent.y}
         alpha={alpha}
         onSetEditing={onSetEditing}
+        onResizeFigmaPlugin={onResizeFigmaPlugin}
       />
       <InfoModal visible={infoModalVisible} onClose={onCloseInfoModal} />
     </div>

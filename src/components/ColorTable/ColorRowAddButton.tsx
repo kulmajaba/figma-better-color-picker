@@ -30,7 +30,6 @@ const ColorRowAddButton: React.FC<Props> = ({ color, alpha }) => {
     });
   }, [color, alpha, toSRGB, toComponentRepresentation, name]);
 
-  // Clipboard permissions have to be explicitly allowed for iframes and Figma does not currently do so
   if (!isFigma) {
     return null;
   }

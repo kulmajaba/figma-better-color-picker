@@ -20,13 +20,16 @@
   --color-switch-off: var(--figma-color-icon-tertiary, #fff6);
 
   --max-size-picker: 300px;
-  --max-width-main: 460px;
-  --max-width-modal: calc(var(--max-width-main) * 0.8);
-  --size-color-tile: 24px;
-
   --height-picker: 12px;
-  --padding-picker: calc(var(--height-picker) * 1.5);
+  --padding-picker: 18px;
   --radius-picker: calc(var(--height-picker) / 2);
+
+  --width-main-plugin: 336px;
+  --width-main-standalone: 460px;
+  --width-main: var(--width-main-standalone);
+
+  --max-width-modal: calc(var(--width-main) * 0.8);
+  --size-color-tile: 24px;
 
   --border-radius-s: 4px;
   --border-radius-m: 8px;
@@ -40,6 +43,10 @@
   --spacing-l: 1rem;
 
   --border-1px: 1px solid var(--color-border);
+}
+
+.plugin {
+  --width-main: var(--width-main-plugin);
 }
 
 * {
@@ -91,7 +98,7 @@ body {
   justify-content: center;
   align-items: start;
   display: grid;
-  grid-template-columns: fit-content(var(--max-width-main)) minmax(0, auto);
+  grid-template-columns: var(--width-main) minmax(0, auto);
   grid-template-rows: fit-content(100%) auto;
 }
 
