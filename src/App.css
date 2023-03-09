@@ -98,12 +98,13 @@ body {
   justify-content: center;
   align-items: start;
   display: grid;
-  grid-template-columns: var(--width-main) minmax(0, auto);
+  grid-template-columns: fit-content(var(--width-main)) minmax(0, auto);
   grid-template-rows: fit-content(100%) auto;
 }
 
 #mouse-events.plugin {
   justify-content: start;
+  grid-template-columns: var(--width-main) minmax(0, auto);
 }
 
 main {

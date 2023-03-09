@@ -69,14 +69,10 @@ const ToolTip: React.FC<Props> = ({ tooltip, children, className }) => {
       const { top, bottom, left, right } = boundingRect;
       const { clientWidth, clientHeight } = document.body;
 
-      setOffset((currentOffset) => {
-        const dx = getDelta(0, clientWidth, left, right, currentOffset.x);
-        const dy = getDelta(0, clientHeight, top, bottom, currentOffset.y);
-        return {
-          x: dx,
-          y: dy
-        };
-      });
+      setOffset((currentOffset) => ({
+        x: getDelta(0, clientWidth, left, right, currentOffset.x),
+        y: getDelta(0, clientHeight, top, bottom, currentOffset.y)
+      }));
     }
   }, [tipRef.current]);
 
