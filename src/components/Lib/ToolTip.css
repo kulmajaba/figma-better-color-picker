@@ -4,7 +4,7 @@
 }
 
 .tooltip {
-  visibility: hidden;
+  display: none;
   pointer-events: none;
   background-color: var(--color-bg-brand-transparent);
   color: var(--color-text-onbrand);
@@ -26,18 +26,18 @@
   transition-delay: 0s;
 }
 
-/* pointer: fine filters out Samsung devices, which falsely report hover */
-@media (hover: hover) and (pointer: fine) {
-  .tooltip-container > *:focus-visible + .tooltip, .tooltip-container > *:hover + .tooltip {
-    visibility: visible;
-    opacity: 1;
-    transition-property: visibility, opacity;
-    transition-duration: 0.3s;
-    transition-timing-function: ease-in-out;
-    transition-delay: 1s
-  }
-  
-  .tooltip-container > *:focus-visible + .tooltip.tooltip-immediate, .tooltip-container > *:hover + .tooltip.tooltip-immediate {
-    transition-delay: 0s
-  }
+.tooltip_display {
+  display: block
+}
+
+.tooltip_visible {
+  opacity: 1;
+  transition-property: visibility, opacity;
+  transition-duration: 0.3s;
+  transition-timing-function: ease-in-out;
+  transition-delay: 1s
+}
+
+.tooltip_visible.tooltip-immediate {
+  transition-delay: 0s
 }

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 import ColorRow from './ColorRow';
 import LockButton from './LockButton';
@@ -10,6 +10,7 @@ import ToolTip from '../Lib/ToolTip';
 import { rgb_to_hex } from '../../color/general';
 import { Color } from '../../types';
 import ColorTileButton from './ColorTileButton';
+import useMountedEffect from '../../hooks/useMountedEffect';
 
 import './ColorTable.css';
 
@@ -24,6 +25,7 @@ interface Props {
   thirdComponent: number;
   alpha: number;
   onSetEditing: (color: Color, alpha: number, enableAlpha: boolean) => void;
+  onResizeFigmaPlugin: (width: number) => void;
 }
 
 const ColorTable: React.FC<Props> = ({
@@ -31,7 +33,8 @@ const ColorTable: React.FC<Props> = ({
   secondComponent: secondComponentProp,
   thirdComponent: thirdComponentProp,
   alpha: alphaProp,
-  onSetEditing: onSetEditingProp
+  onSetEditing: onSetEditingProp,
+  onResizeFigmaPlugin
 }) => {
   const [firstComponentLocked, setFirstComponentLocked] = useState(true);
   const [secondComponentLocked, setSecondComponentLocked] = useState(true);
@@ -48,6 +51,8 @@ const ColorTable: React.FC<Props> = ({
 
   const { componentShortNames, toSRGB, convertFromPrevious } = useColorSpace();
   const { contrastCheckerVisible } = useContrastChecker();
+
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (editingTarget === EditingTarget.ContrastColors) {
@@ -69,6 +74,10 @@ const ColorTable: React.FC<Props> = ({
       setContrastColors((colors) => colors.map(convertFromPrevious));
     }
   }, [convertFromPrevious]);
+
+  useMountedEffect(() => {
+    containerRef.current && onResizeFigmaPlugin(containerRef.current.scrollWidth);
+  }, [contrastColors, contrastCheckerVisible]);
 
   const toggleFirstComponentLocked = useCallback(() => setFirstComponentLocked((locked) => !locked), []);
 
@@ -119,7 +128,7 @@ const ColorTable: React.FC<Props> = ({
   ));
 
   return (
-    <section id="color-table">
+    <section ref={containerRef} id="color-table">
       <div className="lock-button-row-container">
         <div className="lock-button-row">
           <LockButton locked={firstComponentLocked} onClick={toggleFirstComponentLocked}>

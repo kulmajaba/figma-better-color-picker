@@ -3,12 +3,14 @@ import { roundArrayTo1Decimals } from './util/mathUtils';
 
 declare const BASE_URL: string | undefined;
 const urlParam = '?figma=true';
+const defaultWidth = 336;
+const defaultHeight = 800;
 
 console.log(BASE_URL);
 
 const html = BASE_URL ? `<script>window.location.href="${BASE_URL}${urlParam}"</script>` : __html__;
 
-figma.showUI(html, { themeColors: true, width: 336, height: 800 });
+figma.showUI(html, { themeColors: true, width: defaultWidth, height: defaultHeight });
 
 figma.ui.onmessage = (msg: PluginMessage) => {
   console.log(msg);
@@ -26,6 +28,11 @@ figma.ui.onmessage = (msg: PluginMessage) => {
       newPaintStyle.name = description;
       newPaintStyle.description = description;
       newPaintStyle.paints = [{ type: 'SOLID', color: rgb, opacity: alpha }];
+      break;
+    }
+    case PluginMessageType.Resize: {
+      figma.ui.resize(msg.payload.width, msg.payload.height || defaultHeight);
+      break;
     }
   }
 };
