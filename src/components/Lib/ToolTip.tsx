@@ -58,6 +58,8 @@ const getDelta = (
 
 const ToolTip: React.FC<Props> = ({ tooltip, children, className }) => {
   const [offset, setOffset] = useState<XY>({ x: 0, y: 0 });
+  const [display, setDisplay] = useState(false);
+  const [visible, setVisible] = useState(false);
 
   const tipRef = useRef<HTMLSpanElement>(null);
 
@@ -78,16 +80,33 @@ const ToolTip: React.FC<Props> = ({ tooltip, children, className }) => {
     }
   }, [tipRef.current]);
 
+  /**
+   * CSS-WG has agreed to adopt display animations into the standard,
+   * and at that point this component can be refactored to use pure CSS animations.
+   * https://github.com/w3c/csswg-drafts/issues/6429#issuecomment-1332439874
+   */
   useEffect(() => {
-    reposition();
+    if (display) {
+      reposition();
+      setVisible(true);
+    }
+  }, [display]);
+
+  const onFocus = useCallback(() => {
+    setDisplay(true);
+  }, []);
+
+  const onBlur = useCallback(() => {
+    setVisible(false);
+    setDisplay(false);
   }, []);
 
   const transform = `translate(50%) translate(${offset.x}px, ${offset.y}px)`;
 
-  const spanClassNames = classNames('tooltip', className);
+  const spanClassNames = classNames('tooltip', { tooltip_display: display, tooltip_visible: visible }, className);
 
   return (
-    <div className="tooltip-container" onMouseEnter={reposition}>
+    <div className="tooltip-container" onMouseEnter={onFocus} onFocus={onFocus} onMouseLeave={onBlur} onBlur={onBlur}>
       {children}
       <span ref={tipRef} className={spanClassNames} style={{ transform }}>
         {tooltip}

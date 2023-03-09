@@ -102,6 +102,10 @@ body {
   grid-template-rows: fit-content(100%) auto;
 }
 
+#mouse-events.plugin {
+  justify-content: start;
+}
+
 main {
   align-items: center;
   display: flex;
