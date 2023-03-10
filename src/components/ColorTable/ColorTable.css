@@ -1,7 +1,8 @@
 #color-table {
+  display: grid;
   grid-column: 1 / 3;
   grid-row: 2;
-  display: grid;
+
   /* When CSS subgrid becomes supported, the color table should use it */
   grid-template-columns: fit-content(var(--width-main)) auto;
   grid-template-rows: fit-content(100%) auto;
@@ -13,8 +14,8 @@
 
 .color-comparison-header > div {
   display: flex;
-  flex-direction: column;
   width: var(--size-color-tile);
+  flex-direction: column;
 }
 
 .lock-button-row-container > :last-child {
@@ -22,15 +23,15 @@
 }
 
 .lock-button-row {
-  grid-column: 2;
   padding: 0 var(--spacing-s);
   column-gap: var(--spacing-s);
+  grid-column: 2;
 }
 
 .lock-button-row-end {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
   column-gap: 4px;
+  grid-template-columns: 1fr 1fr 1fr;
 }
 
 .lock-button-row-end > :nth-last-child(2) {

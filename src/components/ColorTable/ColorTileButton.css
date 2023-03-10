@@ -1,7 +1,7 @@
 .color-tile-button {
-  padding: 0;
   width: 100%;
-  border: none
+  padding: 0;
+  border: none;
 }
 
 .color-tile-button--active {

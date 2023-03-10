@@ -4,40 +4,35 @@
 }
 
 .tooltip {
-  display: none;
-  pointer-events: none;
-  background-color: var(--color-bg-brand-transparent);
-  color: var(--color-text-onbrand);
-  text-align: center;
-  border-radius: var(--border-radius-s);
-  padding: var(--spacing-m);
-
   position: absolute;
+  z-index: 1;
+  right: 50%;
+  bottom: 100%;
+  display: none;
   width: max-content;
   max-width: 140px;
-  z-index: 1;
-  bottom: 100%;
+  padding: var(--spacing-m);
+  border-radius: var(--border-radius-s);
   margin-bottom: var(--spacing-s);
-  right: 50%;
-  transform: translateX(50%);
-
+  background-color: var(--color-bg-brand-transparent);
+  color: var(--color-text-onbrand);
   opacity: 0;
+  pointer-events: none;
+  text-align: center;
+  transform: translateX(50%);
   transition: none;
   transition-delay: 0s;
 }
 
 .tooltip_display {
-  display: block
+  display: block;
 }
 
 .tooltip_visible {
   opacity: 1;
-  transition-property: visibility, opacity;
-  transition-duration: 0.3s;
-  transition-timing-function: ease-in-out;
-  transition-delay: 1s
+  transition: visibility, opacity 0.3s ease-in-out 1s;
 }
 
 .tooltip_visible.tooltip-immediate {
-  transition-delay: 0s
+  transition-delay: 0s;
 }

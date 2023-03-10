@@ -1,37 +1,41 @@
 .switch-container {
   display: inline;
   align-items: center;
-  background-color: #0000;
-  transform: scale(1.0001);
-  border: 1px solid #0000;
-  border-radius: 12px;
-  outline: none;
   padding: 0;
+  border: 1px solid #00000000;
+  border-radius: 12px;
+  background-color: #00000000;
+  outline: none;
+  transform: scale(1.0001);
 }
 
 .switch {
   position: relative;
   width: 24px;
   height: 12px;
-  border-radius: 12px;
   box-sizing: border-box;
-  background: linear-gradient(90deg,var(--color-bg-brand, #0d99ff) 0px 24px,var(--color-icon-tertiary, #b3b3b3) 24px 48px);
+  border-radius: 12px;
+  background: linear-gradient(
+    90deg,
+    var(--color-bg-brand, #0d99ff) 0 24px,
+    var(--color-icon-tertiary, #b3b3b3) 24px 48px
+  );
+  background-clip: padding-box;
   background-repeat: no-repeat;
   background-size: 200% 100%;
-  background-clip: padding-box;
-  transition: background-position .1s ease-out;
+  transition: background-position 0.1s ease-out;
 }
 
 .switch-nub {
   position: absolute;
   top: 1px;
   left: 1px;
-  height: 10px;
   width: 10px;
-  border-radius: 100%;
-  background: var(--color-icon-onbrand, #fff);
+  height: 10px;
   box-sizing: border-box;
-  transition: all .1s ease-out;
+  border-radius: 100%;
+  background: var(--color-icon-onbrand, #ffffff);
+  transition: all 0.1s ease-out;
 }
 
 .switch--switchOff {

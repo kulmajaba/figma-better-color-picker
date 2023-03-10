@@ -1,8 +1,8 @@
 select {
+  border: var(--border-1px);
   border-radius: var(--border-radius-s);
   background: var(--color-bg);
   color: var(--color-text);
   cursor: pointer;
-  border: var(--border-1px);
   font-size: var(--font-size-label);
 }

@@ -12,6 +12,6 @@
 }
 
 .color-input-container input.hex {
-  text-align: start;
   grid-column: 1 / 4;
+  text-align: start;
 }

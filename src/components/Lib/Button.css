@@ -1,16 +1,16 @@
 button {
-  box-sizing: border-box;
-  text-align: center;
-  display: flex;
   position: relative;
+  display: flex;
   width: fit-content;
   height: fit-content;
+  box-sizing: border-box;
+  padding: var(--spacing-m);
+  border: var(--border-1px);
   border-radius: var(--border-radius-s);
   background: var(--color-bg);
   color: var(--color-text);
   cursor: pointer;
-  border: var(--border-1px);
-  padding: var(--spacing-m);
+  text-align: center;
 }
 
 button.small {
@@ -40,8 +40,8 @@ button.brand {
 button svg {
   width: 18px;
   height: 18px;
-  margin: 0;
   padding: 0;
+  margin: 0;
 }
 
 button.small svg {
@@ -50,8 +50,8 @@ button.small svg {
 }
 
 button.borderless-icon {
-  border: none;
   padding: 0;
+  border: none;
 }
 
 button.borderless-icon svg {

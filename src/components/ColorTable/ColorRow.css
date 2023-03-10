@@ -1,6 +1,6 @@
 .color-row-buttons {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
   column-gap: 4px;
+  grid-template-columns: 1fr 1fr 1fr;
   justify-items: center;
 }
