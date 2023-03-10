@@ -1,4 +1,4 @@
-#color-table {
+.ColorTable {
   display: grid;
   grid-column: 1 / 3;
   grid-row: 2;
@@ -8,36 +8,59 @@
   grid-template-rows: fit-content(100%) auto;
 }
 
-.plugin #color-table {
+.plugin .ColorTable {
   grid-template-columns: var(--width-main) auto;
 }
 
-.color-comparison-header > div {
+.ColorTable-lockButtonRow {
+  display: grid;
+  padding: 0 var(--spacing-s);
+  column-gap: var(--spacing-s);
+  grid-column: 2;
+  grid-template-columns: var(--grid-color-input-columns);
+}
+
+.ColorTable-contrastHeader {
+  display: grid;
+  align-items: center;
+  align-self: stretch;
+  padding: var(--padding-contrast-table-row);
+  border-left: var(--border-1px);
+  margin-left: var(--spacing-m);
+  grid-auto-columns: var(--grid-contrast-table-columns);
+  grid-auto-flow: column;
+  grid-column-gap: var(--spacing-m);
+}
+
+.ColorTable-contrastHeaderCell {
   display: flex;
   width: var(--size-color-tile);
   flex-direction: column;
 }
 
-.lock-button-row-container > :last-child {
+.ColorTable-header {
+  display: grid;
+  align-items: center;
+  padding: var(--padding-color-row);
+  column-gap: var(--spacing-color-row);
+  grid-column: 1;
+  grid-template-columns: var(--grid-color-row-columns);
+}
+
+.ColorTable-header > :last-child {
   justify-self: end;
 }
 
-.lock-button-row {
-  padding: 0 var(--spacing-s);
-  column-gap: var(--spacing-s);
-  grid-column: 2;
-}
-
-.lock-button-row-end {
+.ColorTable-headerRight {
   display: grid;
   column-gap: 4px;
   grid-template-columns: 1fr 1fr 1fr;
 }
 
-.lock-button-row-end > :nth-last-child(2) {
+.ColorTable-headerRight > :nth-last-child(2) {
   grid-column-start: 2;
 }
 
-.lock-button-row-end > :last-child {
+.ColorTable-headerRight > :last-child {
   grid-column-start: 3;
 }

@@ -128,9 +128,9 @@ const ColorTable: React.FC<Props> = ({
   ));
 
   return (
-    <section ref={containerRef} id="color-table">
-      <div className="lock-button-row-container">
-        <div className="lock-button-row">
+    <section className="ColorTable" ref={containerRef}>
+      <div className="ColorTable-header">
+        <div className="ColorTable-lockButtonRow">
           <LockButton locked={firstComponentLocked} onClick={toggleFirstComponentLocked}>
             {componentShortNames[0]}
           </LockButton>
@@ -144,7 +144,7 @@ const ColorTable: React.FC<Props> = ({
             A
           </LockButton>
         </div>
-        <div className="lock-button-row-end">
+        <div className="ColorTable-headerRight">
           <Button icon="double_arrow" rotateIconDeg={90} onClick={addRow} tooltip={strings.tooltip.addColorRow} />
           {contrastCheckerVisible && (
             <Button icon="double_arrow" onClick={addContrastColor} tooltip={strings.tooltip.addColorToChecker} />
@@ -152,11 +152,11 @@ const ColorTable: React.FC<Props> = ({
         </div>
       </div>
       {contrastCheckerVisible && contrastColors.length > 0 && (
-        <div className="color-comparison-header">
+        <div className="ColorTable-contrastHeader">
           {contrastColors.map((contrastColor, i) => (
-            <div key={i}>
+            <div className="ColorTable-contrastHeaderCell" key={i}>
               <Button
-                className="small border-none"
+                className="Button--small u-borderNone"
                 icon="delete"
                 tooltip={strings.tooltip.deleteColorFromChecker}
                 onClick={() => deleteContrastColor(i)}
