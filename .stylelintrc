@@ -10,7 +10,7 @@
       "preset": "suit",
       "componentName": "[A-Z]+",
       "componentSelectors": {
-        "initial": "^\\.{componentName}(?:-[a-z]+)?$"
+        "initial": "^\\.{componentName}(?:-[a-z]+[A-z]*)?(?:--[a-z]+[A-z]*)?(?:\\.is-[a-z]+[A-z]*)?$"
       },
       "utilitySelectors": "^\\.util-[a-z]+$",
       "implicitComponents": "src/components/**/*.css"
