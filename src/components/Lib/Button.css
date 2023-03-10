@@ -1,4 +1,4 @@
-button {
+.Button {
   position: relative;
   display: flex;
   width: fit-content;
@@ -13,48 +13,39 @@ button {
   text-align: center;
 }
 
-button.small {
+.Button--small {
   padding: 0.3rem;
+}
+
+.Button--borderless {
+  padding: 0;
+  border: none;
 }
 
 /* pointer: fine filters out Samsung devices, which falsely report hover */
 @media (hover: hover) and (pointer: fine) {
-  button:hover {
+  .Button:hover {
     background-color: var(--color-bg-hover);
   }
 }
 
-button:active {
+.Button:active {
   background-color: var(--color-bg-active);
 }
 
-button.brand {
-  --color-bg: var(--color-bg-brand);
-  --color-text: var(--color-text-brand);
-  --color-bg-hover: var(--color-bg-brand-hover);
-  --color-bg-active: var(--color-bg-brand-active);
-  --color-border: transparent;
-  --color-border-focus: var(--color-border-brand-focus);
-}
-
-button svg {
+.Button svg {
   width: 18px;
   height: 18px;
   padding: 0;
   margin: 0;
 }
 
-button.small svg {
+.Button--small svg {
   width: 14px;
   height: 14px;
 }
 
-button.borderless-icon {
-  padding: 0;
-  border: none;
-}
-
-button.borderless-icon svg {
+.Button--borderless svg {
   width: 24px;
   height: 24px;
 }

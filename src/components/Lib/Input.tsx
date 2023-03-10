@@ -58,7 +58,7 @@ const Input: React.FC<Props> = ({
 
   return (
     <input
-      className="focus-border"
+      className="u-focusBorder"
       value={value}
       onFocus={onFocus}
       onChange={onChange}

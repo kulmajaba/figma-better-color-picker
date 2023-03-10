@@ -161,8 +161,9 @@ function App() {
   const rgb = toSRGB(color);
 
   const dev = import.meta.env.DEV;
-  // eslint-disable-next-line prettier/prettier
-  const colorString = dev ? `Component: ${roundToFixedPrecision(color[0], 3)}, ${roundToFixedPrecision(color[1], 3)}, ${roundToFixedPrecision(color[2], 3)}, A: ${roundToFixedPrecision(alpha, 3)}<br />
+  // prettier-ignore
+  const colorString = dev
+    ? `Component: ${roundToFixedPrecision(color[0], 3)}, ${roundToFixedPrecision(color[1], 3)}, ${roundToFixedPrecision(color[2], 3)}, A: ${roundToFixedPrecision(alpha, 3)}<br />
 RGB: ${roundToFixedPrecision(rgb[0], 3)}, ${roundToFixedPrecision(rgb[1], 3)}, ${roundToFixedPrecision(rgb[2], 3)}`
     : '';
 
@@ -186,7 +187,7 @@ RGB: ${roundToFixedPrecision(rgb[0], 3)}, ${roundToFixedPrecision(rgb[1], 3)}, $
           </div>
           <div className="header-right">
             <ContrastCheckerSwitch />
-            <Button className="borderless-icon" icon="help_outline" onClick={onShowInfoModal} />
+            <Button className="Button--borderless" icon="help_outline" onClick={onShowInfoModal} />
           </div>
         </header>
         <section className="pickers">

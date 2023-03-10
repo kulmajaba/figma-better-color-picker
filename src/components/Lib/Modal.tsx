@@ -20,7 +20,7 @@ const Modal: React.FC<Props> = ({ visible, onClose, title, children }) => {
     <div className={containerClassNames} onClick={onClose} aria-hidden={!visible}>
       <div className="modal-content" onClick={onContentClick}>
         <div className="modal-header">
-          <Button className="borderless-icon" icon="close" onClick={onClose} />
+          <Button className="Button--borderless" icon="close" onClick={onClose} />
           {title && <h2>{title}</h2>}
         </div>
         {children}

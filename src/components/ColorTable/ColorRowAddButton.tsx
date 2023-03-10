@@ -35,7 +35,12 @@ const ColorRowAddButton: React.FC<Props> = ({ color, alpha }) => {
   }
 
   return (
-    <Button className="small border-none" icon="add" tooltip={strings.tooltip.addColorToStyles} onClick={addColor} />
+    <Button
+      className="Button--small u-borderNone"
+      icon="add"
+      tooltip={strings.tooltip.addColorToStyles}
+      onClick={addColor}
+    />
   );
 };
 

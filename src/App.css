@@ -165,7 +165,7 @@ header {
   gap: var(--spacing-l);
 }
 
-.focus-border:focus-visible {
+.u-focusBorder:focus-visible {
   border-color: var(--color-border-focus);
   outline-color: var(--color-border-focus);
 }
@@ -174,7 +174,7 @@ svg {
   fill: var(--color-icon);
 }
 
-.border-none {
+.u-borderNone {
   border: none;
 }
 

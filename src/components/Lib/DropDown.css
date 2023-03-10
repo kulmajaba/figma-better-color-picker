@@ -1,4 +1,11 @@
-select {
+.DropDown {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--spacing-m);
+}
+
+.DropDown-select {
   border: var(--border-1px);
   border-radius: var(--border-radius-s);
   background: var(--color-bg);

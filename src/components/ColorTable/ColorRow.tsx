@@ -8,9 +8,9 @@ import Button from '../Lib/Button';
 import { useContrastChecker } from '../../hooks/useContrastChecker';
 import ContrastCheckerCell from './ContrastCheckerCell';
 import ColorTileButton from './ColorTileButton';
+import ColorRowCopyButton from './ColorRowCopyButton';
 
 import './ColorRow.css';
-import ColorRowCopyButton from './ColorRowCopyButton';
 
 interface Props {
   firstComponent: number;
