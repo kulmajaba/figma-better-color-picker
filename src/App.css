@@ -43,6 +43,7 @@
   --spacing-l: 1rem;
 
   --border-1px: 1px solid var(--color-border);
+  --grid-color-input-columns: 1fr 1fr 1fr 1.5fr;
 }
 
 .plugin {
