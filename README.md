@@ -3,6 +3,7 @@
 The same thing, just a bit better.
 
 This is a Figma plugin and a standalone website for color picking with some added features:
+
 1. OKLab color spaces for more accurate control
 2. Ability to create color palettes by locking some of the color values and editing others individually
 3. Color contrast checks based on WCAG 2.1 guidelines
@@ -13,8 +14,11 @@ If you encountered a bug you'd like to report, check the [Issues](https://github
 
 ## Roadmap
 
+- Nested styles with SUIT css (Button svg)
+- ContrastCheckerCell style
+
 - Heading for contrast table
-  - Mention WCAG somewhere in there (build support for other contrast calculations) 
+  - Mention WCAG somewhere in there (build support for other contrast calculations)
 - Label color input components when there is enough space?
 - Using Figma theme when available
   - For a Figma plugin with the `themeColors` option set, Figma sets a style element into the iframe with color variables prefixed with `--figma-`. However the plugin code is hosted so the style, along with any other HTML in the iframe, is discarded as soon as the plugin navigates to the hosted site.
@@ -46,8 +50,9 @@ At the moment at every startup the plugin will calculate XY picker image data in
 This is non-trivial to cache due to the architecture of the plugins and the size of the data. For reference, the data for 300px wide picker (300 first component (hue) values and 300x300px XY canvas) is about 105MB
 
 Things that have been tried:
-  - Using figma.clientStorage: aborts after timeout due to large size (apparently window.postMessage does send the data?)
-  - Saving the data as static JSON file and bundling it with the plugin: big-json does not work in browser out of the box and it sucks to download that much data that could be calculated and saved locally
+
+- Using figma.clientStorage: aborts after timeout due to large size (apparently window.postMessage does send the data?)
+- Saving the data as static JSON file and bundling it with the plugin: big-json does not work in browser out of the box and it sucks to download that much data that could be calculated and saved locally
 
 ## Development
 
@@ -69,4 +74,3 @@ npm run build
 
 The UI deploy is done with GitHub Actions, set the repository secrets to match your production environment.
 The host SSH fingerprint can be found with `ssh-keyscan <host>`
-

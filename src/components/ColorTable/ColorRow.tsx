@@ -138,7 +138,7 @@ const ColorRow: React.FC<Props> = ({
         </div>
       </div>
       {contrastCheckerVisible && contrastColors.length > 0 && (
-        <div className="color-row-comparison">
+        <div className="ColorRow-contrastRow">
           {contrastColors.map((contrastColor, i) => (
             <ContrastCheckerCell key={i} color={color} contrastColor={contrastColor} />
           ))}
