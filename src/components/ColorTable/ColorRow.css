@@ -1,4 +1,13 @@
-.color-row-buttons {
+.ColorRow {
+  display: grid;
+  align-items: center;
+  padding: var(--padding-color-row);
+  column-gap: var(--spacing-color-row);
+  grid-column: 1;
+  grid-template-columns: var(--grid-color-row-columns);
+}
+
+.ColorRow-buttons {
   display: grid;
   column-gap: 4px;
   grid-template-columns: 1fr 1fr 1fr;
