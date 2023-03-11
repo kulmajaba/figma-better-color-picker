@@ -1,0 +1,47 @@
+@import url('theme.css');
+@import url('utils.css');
+
+* {
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans',
+    'Helvetica Neue', sans-serif;
+}
+
+body {
+  margin: 0;
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+p,
+input,
+button,
+span,
+div {
+  font-size: var(--font-size);
+}
+
+a {
+  color: var(--color-text-brand);
+}
+
+h1 {
+  font-size: 1.8em;
+}
+
+h2 {
+  font-size: 1.4em;
+}
+
+label {
+  font-size: var(--font-size-label);
+}
+
+ul,
+ol {
+  padding-inline-start: 2em;
+}
+
+svg {
+  fill: var(--color-icon);
+}

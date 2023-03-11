@@ -12,7 +12,7 @@
       "componentSelectors": {
         "initial": "^\\.{componentName}(?:-[a-z]+[A-z]*)?(?:--[a-z]+[A-z]*)?(?:\\.is-[a-z]+[A-z]*)?$"
       },
-      "utilitySelectors": "^\\.util-[a-z]+$",
+      "utilitySelectors": "^\\.u-[a-z]+[A-z]*$",
       "implicitComponents": "src/components/**/*.css"
     }
   }

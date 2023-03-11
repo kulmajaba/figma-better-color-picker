@@ -1,132 +1,29 @@
-:root {
-  /* As a hosted plugin, the Figma colors will always be undefined and fallback colors are used */
-  --color-bg: var(--figma-color-bg, #2c2c2c);
-  --color-bg-transparent: rgb(0 0 0 / 0.6);
-  --color-bg-hover: var(--figma-color-bg-hover, #383838);
-  --color-bg-active: var(--figma-color-bg-pressed, #383838);
-  --color-bg-brand: var(--figma-color-bg-brand, #0c8ce9);
-  --color-bg-brand-transparent: rgb(12 140 233 / 0.75); /* #0c8ce9 */
-  --color-bg-brand-hover: var(--figma-color-bg-brand-hover, #0a6dc2);
-  --color-bg-brand-active: var(--figma-color-bg-brand-pressed, #0a6dc2);
-  --color-border: var(--figma-color-border, #444444);
-  --color-border-focus: var(--figma-color-border-selected, #0c8ce9);
-  --color-icon: var(--figma-color-ico, rgb(255 255 255 / 1));
-  --color-icon-brand: var(--figma-color-icon-brand, #7cc4f8);
-  --color-switch-off: var(--figma-color-icon-tertiary, #ffffff66);
-  --color-text: var(--figma-color-text, rgb(255 255 255 / 1));
-  --color-text-brand: var(--figma-color-text-brand, #7cc4f8);
-  --color-text-onbrand: var(--figma-color-text-onbrand, rgb(255 255 255 / 1));
-  --color-border-brand: var(--figma-color-border-brand, #105cad);
-  --color-border-brand-focus: var(--figma-color-border-selected-strong, #7cc4f8);
+/** @define App */
 
-  --max-size-picker: 300px;
-  --height-picker: 12px;
-  --padding-picker: 18px;
-  --radius-picker: calc(var(--height-picker) / 2);
-
-  --width-main-plugin: 336px;
-  --width-main-standalone: 460px;
-  --width-main: var(--width-main-standalone);
-
-  --max-width-modal: calc(var(--width-main) * 0.8);
-  --size-color-tile: 24px;
-
-  --border-radius-s: 4px;
-  --border-radius-m: 8px;
-
-  --font-size: 11px;
-  --font-size-button: 12px;
-  --font-size-label: 12px;
-  --font-size-modal: 12px;
-
-  --spacing-s: 0.3rem;
-  --spacing-m: 0.5rem;
-  --spacing-l: 1rem;
-  --spacing-color-row: 4px;
-
-  --padding-color-row: var(--spacing-m) var(--spacing-m) 0;
-  --padding-contrast-table-row: var(--spacing-m) var(--spacing-m) 0 var(--spacing-l);
-
-  --border-1px: 1px solid var(--color-border);
-
-  --grid-color-input-columns: 1fr 1fr 1fr 1.5fr;
-  --grid-color-row-columns: var(--size-color-tile) 4.5fr 1.8fr;
-  --grid-contrast-table-columns: minmax(calc(var(--font-size) * 4 + 2px), 1fr);
-}
-
-.plugin {
-  --width-main: var(--width-main-plugin);
-}
-
-* {
-  box-sizing: border-box;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans',
-    'Helvetica Neue', sans-serif;
-}
-
-p,
-input,
-button,
-span,
-div {
-  font-size: var(--font-size);
-}
-
-a {
-  color: var(--color-text-brand);
-}
-
-h1 {
-  font-size: 1.8em;
-}
-
-h2 {
-  font-size: 1.4em;
-}
-
-label {
-  font-size: var(--font-size-label);
-}
-
-ul,
-ol {
-  padding-inline-start: 2em;
-}
-
-.label-container {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: var(--spacing-m);
-}
-
-body {
-  margin: 0;
-  background: var(--color-bg);
-  color: var(--color-text);
-}
-
-#mouse-events {
+.App {
   display: grid;
   width: 100vw;
   height: 100vh;
   align-items: start;
   justify-content: start;
 
-  /* Dynamic padding between 0 and X px, px number in calc is the point the padding is 0
-  and calc max/calc multiplier determines the range in which the value ramps to max  */
+  /* Dynamic padding between 0 and X px, px number in calc is the point at which the padding is 0
+  and max/(calc multiplier) determines the range in which the value ramps to max  */
   padding-top: clamp(0px, calc((100vh - 1000px) * 0.16), 32px);
   padding-left: clamp(0px, calc((100vw - 800px) * 0.1875), 150px);
   grid-template-columns: fit-content(var(--width-main)) minmax(0, auto);
   grid-template-rows: fit-content(100%) auto;
 }
 
-#mouse-events.plugin {
+.App.is-plugin {
+  /* stylelint-disable-next-line plugin/selector-bem-pattern */
+  --width-main: var(--width-main-plugin);
+
   padding: 0;
   grid-template-columns: var(--width-main) minmax(0, auto);
 }
 
-main {
+.App-main {
   display: flex;
   flex-direction: column;
   align-items: start;
@@ -135,7 +32,7 @@ main {
   grid-row: 1;
 }
 
-header {
+.App-header {
   display: flex;
   width: 100%;
   flex-direction: row;
@@ -146,19 +43,19 @@ header {
   gap: var(--spacing-l);
 }
 
-.header-left {
+.App-headerLeft {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-m);
 }
 
-.header-right {
+.App-headerRight {
   display: flex;
   flex-direction: row;
   gap: var(--spacing-l);
 }
 
-.pickers {
+.App-pickers {
   display: flex;
   width: 100%;
   flex-direction: column;
@@ -168,59 +65,16 @@ header {
   gap: var(--spacing-l);
 }
 
-.u-focusBorder:focus-visible {
-  border-color: var(--color-border-focus);
-  outline-color: var(--color-border-focus);
-}
-
-svg {
-  fill: var(--color-icon);
-}
-
-.u-borderNone {
-  border: none;
-}
-
-.main-inputs {
+.App-mainInputs {
   display: flex;
   flex-direction: row;
   align-items: center;
   gap: var(--spacing-l);
 }
 
-.main-inputs-color-inputs {
+.App-textInputs {
   display: grid;
   align-items: center;
   gap: var(--spacing-m);
   grid-template-columns: auto auto;
-}
-
-.color-row-main,
-.lock-button-row-container {
-  display: grid;
-  width: 100%;
-  align-items: center;
-  padding: var(--spacing-m) var(--spacing-m) 0;
-  column-gap: 4px;
-  grid-column: 1;
-  grid-template-columns: var(--size-color-tile) 4.5fr 1.8fr;
-}
-
-.color-input-container,
-.lock-button-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1.5fr;
-}
-
-.color-row-comparison,
-.color-comparison-header {
-  display: grid;
-  align-items: center;
-  align-self: stretch;
-  padding: var(--spacing-m) var(--spacing-m) 0 var(--spacing-l);
-  border-left: var(--border-1px);
-  margin-left: var(--spacing-m);
-  grid-auto-columns: minmax(calc(var(--font-size) * 4 + 2px), 1fr);
-  grid-auto-flow: column;
-  grid-column-gap: var(--spacing-m);
 }

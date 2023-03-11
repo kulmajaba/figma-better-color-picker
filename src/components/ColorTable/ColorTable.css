@@ -8,7 +8,7 @@
   grid-template-rows: fit-content(100%) auto;
 }
 
-.plugin .ColorTable {
+.is-plugin .ColorTable {
   grid-template-columns: var(--width-main) auto;
 }
 

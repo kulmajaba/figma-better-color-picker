@@ -1,0 +1,55 @@
+:root {
+  /* As a hosted plugin, the Figma colors will always be undefined and fallback colors are used */
+  --color-bg: var(--figma-color-bg, #2c2c2c);
+  --color-bg-transparent: rgb(0 0 0 / 0.6);
+  --color-bg-hover: var(--figma-color-bg-hover, #383838);
+  --color-bg-active: var(--figma-color-bg-pressed, #383838);
+  --color-bg-brand: var(--figma-color-bg-brand, #0c8ce9);
+  --color-bg-brand-transparent: rgb(12 140 233 / 0.75); /* #0c8ce9 */
+  --color-bg-brand-hover: var(--figma-color-bg-brand-hover, #0a6dc2);
+  --color-bg-brand-active: var(--figma-color-bg-brand-pressed, #0a6dc2);
+  --color-border: var(--figma-color-border, #444444);
+  --color-border-focus: var(--figma-color-border-selected, #0c8ce9);
+  --color-icon: var(--figma-color-ico, rgb(255 255 255 / 1));
+  --color-icon-brand: var(--figma-color-icon-brand, #7cc4f8);
+  --color-switch-off: var(--figma-color-icon-tertiary, #ffffff66);
+  --color-text: var(--figma-color-text, rgb(255 255 255 / 1));
+  --color-text-brand: var(--figma-color-text-brand, #7cc4f8);
+  --color-text-onbrand: var(--figma-color-text-onbrand, rgb(255 255 255 / 1));
+  --color-border-brand: var(--figma-color-border-brand, #105cad);
+  --color-border-brand-focus: var(--figma-color-border-selected-strong, #7cc4f8);
+
+  --max-size-picker: 300px;
+  --height-picker: 12px;
+  --padding-picker: 18px;
+  --radius-picker: calc(var(--height-picker) / 2);
+
+  --width-main-plugin: 336px;
+  --width-main-standalone: 460px;
+  --width-main: var(--width-main-standalone);
+
+  --max-width-modal: calc(var(--width-main) * 0.8);
+  --size-color-tile: 24px;
+
+  --border-radius-s: 4px;
+  --border-radius-m: 8px;
+
+  --font-size: 11px;
+  --font-size-button: 12px;
+  --font-size-label: 12px;
+  --font-size-modal: 12px;
+
+  --spacing-s: 0.3rem;
+  --spacing-m: 0.5rem;
+  --spacing-l: 1rem;
+  --spacing-color-row: 4px;
+
+  --padding-color-row: var(--spacing-m) var(--spacing-m) 0;
+  --padding-contrast-table-row: var(--spacing-m) var(--spacing-m) 0 var(--spacing-l);
+
+  --border-1px: 1px solid var(--color-border);
+
+  --grid-color-input-columns: 1fr 1fr 1fr 1.5fr;
+  --grid-color-row-columns: var(--size-color-tile) 4.5fr 1.8fr;
+  --grid-contrast-table-columns: minmax(calc(var(--font-size) * 4 + 2px), 1fr);
+}
