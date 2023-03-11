@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react';
 
-import { MouseOrTouchEventHandler, Size } from '../types';
+import { MouseOrTouchEventHandler, Size } from '../../types';
 
 import './PickerCanvas.css';
 

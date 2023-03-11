@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 
-import { HorizontalChangeDirection, VerticalChangeDirection } from '../types';
+import { HorizontalChangeDirection, VerticalChangeDirection } from '../../types';
 
 import './PickerBall.css';
 

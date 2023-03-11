@@ -1,10 +1,10 @@
 import React, { useCallback } from 'react';
 
-import { Color, ColorConverter, Direction, MouseOrTouchEventHandler, XY } from '../types';
+import { Color, ColorConverter, Direction, MouseOrTouchEventHandler, XY } from '../../types';
 import Picker from './Picker';
 import PickerCanvas from './PickerCanvas';
-import { createAlphaData, createCheckerData, createOverlay } from '../util/imageData';
-import { useColorSpace } from '../hooks/useColorSpace';
+import { createAlphaData, createCheckerData, createOverlay } from '../../util/imageData';
+import { useColorSpace } from '../../hooks/useColorSpace';
 
 import './AlphaPicker.css';
 

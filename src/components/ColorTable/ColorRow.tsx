@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 
 import { useColorSpace } from '../../hooks/useColorSpace';
 import { Color } from '../../types';
-import ColorInput from '../ColorInput/ColorInput';
+import ColorInput from '../ColorInput';
 import ColorRowAddButton from './ColorRowAddButton';
 import Button from '../Lib/Button';
 import { useContrastChecker } from '../../hooks/useContrastChecker';

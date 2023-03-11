@@ -1,11 +1,13 @@
 import React, { MouseEvent, TouchEvent, useCallback, useEffect, useState } from 'react';
 
+import classNames from 'classnames';
+
 import { Color, isMouseEvent, MouseOrTouchEventHandler, PluginMessageType, Size, XY, XYZero } from './types';
-import HuePicker from './components/SliderPicker';
-import XYPicker from './components/XYPicker';
-import AlphaPicker from './components/AlphaPicker';
+import HuePicker from './components/Picker/SliderPicker';
+import XYPicker from './components/Picker/XYPicker';
+import AlphaPicker from './components/Picker/AlphaPicker';
 import { roundToFixedPrecision } from './util/mathUtils';
-import ColorInput from './components/ColorInput/ColorInput';
+import ColorInput from './components/ColorInput';
 import ColorTable from './components/ColorTable/ColorTable';
 import { useColorSpace } from './hooks/useColorSpace';
 import { hex_to_rgb } from './color/general';
@@ -17,7 +19,6 @@ import CopyFormatDropDown from './components/Header/CopyFormatDropDown';
 import strings from './assets/strings';
 import useIsPlugin from './hooks/useIsPlugin';
 import { pluginPostMessage } from './pluginApi';
-import classNames from 'classnames';
 
 import './App.css';
 
@@ -150,7 +151,6 @@ function App() {
   const onResizeFigmaPlugin = useCallback(
     (width: number) => {
       if (isFigma) {
-        console.log('resize Figma window, ', width);
         pluginPostMessage({ type: PluginMessageType.Resize, payload: { width } });
       }
     },

@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 
-import { useColorSpace } from '../hooks/useColorSpace';
-import { Color, Direction, MouseOrTouchEventHandler, Size, XY } from '../types';
+import { useColorSpace } from '../../hooks/useColorSpace';
+import { Color, Direction, MouseOrTouchEventHandler, Size, XY } from '../../types';
 import Picker from './Picker';
 
 import './SliderPicker.css';

@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 
-import { useColorSpace } from '../hooks/useColorSpace';
-import useWebWorker from '../hooks/useWebWorker';
+import { useColorSpace } from '../../hooks/useColorSpace';
+import useWebWorker from '../../hooks/useWebWorker';
 import {
   ImageDataCache,
   ImageDataWorkerMessage,
@@ -12,11 +12,11 @@ import {
   VerticalChangeDirection,
   WorkerStatus,
   XY
-} from '../types';
-import { createXYData } from '../util/imageData';
+} from '../../types';
+import { createXYData } from '../../util/imageData';
 import Picker from './Picker';
 
-import imageDataWorkerUrl from '../util/imageDataWorker?worker&url';
+import imageDataWorkerUrl from '../../util/imageDataWorker?worker&url';
 
 import './XYPicker.css';
 

@@ -10,8 +10,8 @@ import {
   VerticalChangeDirection,
   XY,
   XYChangeHandler
-} from '../types';
-import { clampTo0_1 } from '../util/mathUtils';
+} from '../../types';
+import { clampTo0_1 } from '../../util/mathUtils';
 
 interface Props {
   getImageData: ImageDataCreator;
