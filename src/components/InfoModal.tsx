@@ -16,7 +16,7 @@ const InfoModal: React.FC<Props> = (props) => {
   isPlugin && (infoMessage += `<br /><br />${strings.info.info_3_plugin}`);
 
   return (
-    <Modal {...props} title="Help">
+    <Modal {...props} title={strings.info.title}>
       <p dangerouslySetInnerHTML={{ __html: infoMessage }} />
       <a href="https://github.com/kulmajaba/figma-better-color-picker" target="_blank" rel="noreferrer noopener">
         <Icon icon="github_mark" />

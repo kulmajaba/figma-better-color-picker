@@ -37,7 +37,7 @@ const ColorTile: React.FC<Props> = ({ color, alpha }) => {
   );
 
   return (
-    <div className="color-tile">
+    <div className="ColorTile">
       {alpha !== undefined && <PickerCanvas getImageData={createCheckerData} />}
       <PickerCanvas getImageData={createFill} />
     </div>

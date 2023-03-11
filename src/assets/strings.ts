@@ -20,6 +20,7 @@ const strings = {
     hex: 'Hex'
   },
   info: {
+    title: 'Help',
     info_1: `The Better Color Picker does a few things that make it better:
     <ol>
       <li>OKLab-based color spaces for more accurate control</li>

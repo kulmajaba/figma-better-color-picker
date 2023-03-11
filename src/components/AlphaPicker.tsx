@@ -33,7 +33,7 @@ const AlphaPicker: React.FC<Props> = ({ color, value, onChange, ...otherProps })
   );
 
   return (
-    <div className="alpha-container">
+    <div className="AlphaPicker">
       <PickerCanvas getImageData={createCheckerData} />
       <Picker
         getImageData={getAlphaData}
