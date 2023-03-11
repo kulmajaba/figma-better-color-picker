@@ -4,12 +4,8 @@
   grid-row: 2;
 
   /* When CSS subgrid becomes supported, the color table should use it */
-  grid-template-columns: fit-content(var(--width-main)) auto;
+  grid-template-columns: var(--grid-main-columns);
   grid-template-rows: fit-content(100%) auto;
-}
-
-.is-plugin .ColorTable {
-  grid-template-columns: var(--width-main) auto;
 }
 
 .ColorTable-lockButtonRow {

@@ -49,7 +49,14 @@
 
   --border-1px: 1px solid var(--color-border);
 
+  --grid-main-columns: fit-content(var(--width-main)) minmax(0, auto);
   --grid-color-input-columns: 1fr 1fr 1fr 1.5fr;
   --grid-color-row-columns: var(--size-color-tile) 4.5fr 1.8fr;
   --grid-contrast-table-columns: minmax(calc(var(--font-size) * 4 + 2px), 1fr);
+}
+
+.is-plugin {
+  --width-main: var(--width-main-plugin);
+  --max-width-modal: calc(var(--width-main) * 0.8);
+  --grid-main-columns: var(--width-main) minmax(0, auto);
 }
