@@ -18,13 +18,10 @@ const ColorRowCopyButton: React.FC<Props> = ({ color, alpha }) => {
   const { toSRGB } = useColorSpace();
   const { toCopyFormat } = useCopyFormat();
 
-  // TODO: format from context
   const onCopy = useCallback(async () => {
-    console.log('copy');
     if (navigator.clipboard) {
       try {
         await navigator.clipboard.writeText(toCopyFormat([...toSRGB(color), alpha]));
-        console.log('copy successful');
       } catch (e) {
         console.error(e);
       }
