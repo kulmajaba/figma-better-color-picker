@@ -12,16 +12,16 @@ export interface Props {
 }
 
 const Modal: React.FC<Props> = ({ visible, onClose, title, children }) => {
-  const containerClassNames = classNames('modal-container', { 'modal-container--visible': visible });
+  const containerClassNames = classNames('Modal', { 'is-visible': visible });
 
   const onContentClick = useCallback((e: React.MouseEvent<HTMLDivElement, MouseEvent>) => e.stopPropagation(), []);
 
   return (
     <div className={containerClassNames} onClick={onClose} aria-hidden={!visible}>
-      <div className="modal-content" onClick={onContentClick}>
-        <div className="modal-header">
+      <div className="Modal-content" onClick={onContentClick}>
+        <div className="Modal-header">
           <Button className="Button--borderless" icon="close" onClick={onClose} />
-          {title && <h2>{title}</h2>}
+          {title && <h2 className="Modal-heading">{title}</h2>}
         </div>
         {children}
       </div>

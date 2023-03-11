@@ -16,6 +16,7 @@ If you encountered a bug you'd like to report, check the [Issues](https://github
 
 - Nested styles with SUIT css (Button svg)
 - ContrastCheckerCell style
+- Add a layer into App between mouse-events and main content for padding only, ensuring Modal is properly displayed
 
 - Heading for contrast table
   - Mention WCAG somewhere in there (build support for other contrast calculations)
