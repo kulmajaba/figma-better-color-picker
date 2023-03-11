@@ -47,6 +47,7 @@
   line-height: 0.5em;
 }
 
+/* stylelint-disable-next-line plugin/selector-bem-pattern */
 .Modal-content p {
   font-size: var(--font-size-modal);
 }

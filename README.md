@@ -14,9 +14,6 @@ If you encountered a bug you'd like to report, check the [Issues](https://github
 
 ## Roadmap
 
-- Nested styles with SUIT css (e.g. Button svg)
-- ContrastCheckerCell style
-
 - Heading for contrast table
   - Mention WCAG somewhere in there (build support for other contrast calculations)
 - Label color input components when there is enough space?
@@ -62,6 +59,29 @@ The plugin is based on Node.js, ensure you have a modern LTS version on your com
 nvm use
 npm install
 npm start
+```
+
+### CSS
+
+CSS follows the SUIT naming convention (https://github.com/suitcss/suit/blob/master/doc/naming-conventions.md) except for variables which are kebab-cased, use Stylelint (standalone or VS Code plugin) to lint. Quick explanation of the class selector pattern (Double-escaped for JS string):
+
+```regexp
+^\\.{componentName}(?:-[a-z]+[A-z]*)?(?:--[a-z]+[A-z]*)?(?:\\.is-[a-z]+[A-z]*)?(?:\\[.+\\])?$
+
+# ComponentName
+\\.{componentName}
+
+# -descendantName
+(?:-[a-z]+[A-z]*)?
+
+# --variantName
+(?:--[a-z]+[A-z]*)?
+
+# .is-stateName
+(?:\\.is-[a-z]+[A-z]*)?
+
+# type='number' etc.
+(?:\\[.+\\])?
 ```
 
 ## Production
