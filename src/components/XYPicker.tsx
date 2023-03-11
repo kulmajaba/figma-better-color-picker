@@ -79,7 +79,7 @@ const XYPicker: React.FC<Props> = ({ firstComponentValues, firstComponent, value
   }, []);
 
   return (
-    <div className="xy-container">
+    <div className="XYPicker">
       <Picker
         getImageData={getXYData}
         verticalChangeDirection={VerticalChangeDirection.BottomToTop}
@@ -89,7 +89,7 @@ const XYPicker: React.FC<Props> = ({ firstComponentValues, firstComponent, value
         {...otherProps}
       />
       {status !== WorkerStatus.Idle && (
-        <div className="xy-loading-indicator">
+        <div className="XYPicker-loadingIndicator">
           <p>Loading</p>
         </div>
       )}

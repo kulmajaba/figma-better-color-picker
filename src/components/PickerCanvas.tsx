@@ -53,7 +53,7 @@ const PickerCanvas = React.forwardRef<HTMLCanvasElement, Props>(
     return (
       <canvas
         ref={canvasRef}
-        className="picker-canvas"
+        className="PickerCanvas"
         onMouseDown={onMouseDownOrTouchStart}
         onTouchStart={onMouseDownOrTouchStart}
       />

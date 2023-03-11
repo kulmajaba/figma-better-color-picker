@@ -1,6 +1,6 @@
-.slider-container {
+.SliderPicker {
   position: relative;
   width: 100%;
-  height: var(--height-picker);
   max-width: var(--max-size-picker);
+  height: var(--height-picker);
 }

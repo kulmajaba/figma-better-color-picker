@@ -95,11 +95,29 @@ const ColorInput: React.FC<Props> = ({
     const componentRepr = roundArrayTo1Decimals(toComponentRepresentation(valueProp));
 
     return (
-      <div className="color-input-container">
-        <Input type="number" required value={componentRepr[0]} onChange={handleFirstComponentChange} />
-        <Input type="number" required value={componentRepr[1]} onChange={handleSecondComponentChange} />
-        <Input type="number" required value={componentRepr[2]} onChange={handleThirdComponentChange} />
-        <Input type="number" required value={alpha} onChange={handleAlphaChange} />
+      <div className="ColorInput">
+        <Input
+          className="ColorInput-input"
+          type="number"
+          required
+          value={componentRepr[0]}
+          onChange={handleFirstComponentChange}
+        />
+        <Input
+          className="ColorInput-input"
+          type="number"
+          required
+          value={componentRepr[1]}
+          onChange={handleSecondComponentChange}
+        />
+        <Input
+          className="ColorInput-input"
+          type="number"
+          required
+          value={componentRepr[2]}
+          onChange={handleThirdComponentChange}
+        />
+        <Input className="ColorInput-input" type="number" required value={alpha} onChange={handleAlphaChange} />
       </div>
     );
   } else {
@@ -107,9 +125,15 @@ const ColorInput: React.FC<Props> = ({
     const hex = rgb_to_hex(toSRGB(valueProp));
 
     return (
-      <div className="color-input-container">
-        <Input className="hex" type="text" required value={hex} onChange={handleHexChange} />
-        <Input type="number" required value={alpha} onChange={handleAlphaChange} />
+      <div className="ColorInput">
+        <Input
+          className="ColorInput-input ColorInput-input--hex"
+          type="text"
+          required
+          value={hex}
+          onChange={handleHexChange}
+        />
+        <Input className="ColorInput-input" type="number" required value={alpha} onChange={handleAlphaChange} />
       </div>
     );
   }

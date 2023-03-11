@@ -60,7 +60,7 @@ const SliderPicker: React.FC<Props> = ({ value, onChange, ...otherProps }) => {
 
   const pickerValue = { x: value, y: 0.5 };
   return (
-    <div className="slider-container">
+    <div className="SliderPicker">
       <Picker
         getImageData={createHorizontalSliderData}
         value={pickerValue}

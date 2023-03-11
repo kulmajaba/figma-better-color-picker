@@ -12,20 +12,14 @@ interface Props {
 }
 
 const Switch: React.FC<Props> = ({ value, onClick, name, label }) => {
-  const switchClassNames = classNames('switch', value ? 'switch--switchOn' : 'switch--switchOff');
+  const switchClassNames = classNames('Switch-track', value ? 'Switch-track--switchOn' : 'Switch-track--switchOff');
 
   return (
-    <div className="label-container">
+    <div className="Switch">
       <label htmlFor={name}>{label}</label>
-      <button
-        name={name}
-        className="switch-container focus-border"
-        type="button"
-        aria-pressed={value}
-        onClick={onClick}
-      >
+      <button name={name} className="Switch-button u-focusBorder" type="button" aria-pressed={value} onClick={onClick}>
         <div className={switchClassNames}>
-          <div className="switch-nub"></div>
+          <div className="Switch-nub"></div>
         </div>
       </button>
     </div>

@@ -4,6 +4,7 @@ import classNames from 'classnames';
 
 import { Color, HMTLButtonProps } from '../../types';
 import ColorTile from '../ColorTile';
+import Button from '../Lib/Button';
 
 import './ColorTileButton.css';
 
@@ -14,16 +15,12 @@ interface Props extends Omit<HMTLButtonProps, 'color'> {
 }
 
 const ColorTileButton: React.FC<Props> = ({ color, alpha, selected, className, ...buttonProps }) => {
-  const buttonClassNames = classNames(
-    'color-tile-button focus-border',
-    { 'color-tile-button--active': selected },
-    className
-  );
+  const buttonClassNames = classNames('ColorTileButton u-focusBorder', className, { 'is-active': selected });
 
   return (
-    <button className={buttonClassNames} type="button" {...buttonProps}>
+    <Button className={buttonClassNames} {...buttonProps}>
       <ColorTile color={color} alpha={alpha} />
-    </button>
+    </Button>
   );
 };
 

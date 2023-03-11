@@ -1,10 +1,10 @@
-.color-tile {
-  height: auto;
-  width: 100%;
-  aspect-ratio: 1;
+.ColorTile {
   position: relative;
+  overflow: hidden;
+  width: 100%;
+  height: auto;
   box-sizing: border-box;
   border: var(--border-1px);
   border-radius: var(--border-radius-s);
-  overflow: hidden;
+  aspect-ratio: 1;
 }

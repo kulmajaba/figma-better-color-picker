@@ -1,20 +1,20 @@
-.lock-button {
-  width: 100%;
+.LockButton {
   display: flex;
+  width: 100%;
   flex-direction: column;
   align-items: center;
 }
 
-.lock-button span {
-  line-height: normal;
-  font-size: var(--font-size-button);
-  font-weight: 500;
-}
-
-.lock-button.locked {
+.LockButton.is-locked {
   color: var(--color-text-brand);
 }
 
-.lock-button.locked svg {
+.LockButton-text {
+  font-size: var(--font-size-button);
+  font-weight: 500;
+  line-height: normal;
+}
+
+.LockButton-icon.is-locked {
   fill: var(--color-icon-brand);
 }

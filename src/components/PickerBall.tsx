@@ -50,7 +50,7 @@ const PickerBall: React.FC<Props> = ({ value, horizontalChangeDirection, vertica
     }
   }, [value]);
 
-  return <canvas ref={canvasRef} className="picker-ball" />;
+  return <canvas ref={canvasRef} className="PickerBall" />;
 };
 
 export default PickerBall;

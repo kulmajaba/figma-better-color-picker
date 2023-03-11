@@ -1,60 +1,54 @@
-button {
-  box-sizing: border-box;
-  text-align: center;
-  display: flex;
+.Button {
   position: relative;
+  display: flex;
   width: fit-content;
   height: fit-content;
+  box-sizing: border-box;
+  padding: var(--spacing-m);
+  border: var(--border-1px);
   border-radius: var(--border-radius-s);
   background: var(--color-bg);
   color: var(--color-text);
   cursor: pointer;
-  border: var(--border-1px);
-  padding: var(--spacing-m);
+  text-align: center;
 }
 
-button.small {
+.Button--small {
   padding: 0.3rem;
+}
+
+.Button--borderless {
+  padding: 0;
+  border: none;
 }
 
 /* pointer: fine filters out Samsung devices, which falsely report hover */
 @media (hover: hover) and (pointer: fine) {
-  button:hover {
+  .Button:hover {
     background-color: var(--color-bg-hover);
   }
 }
 
-button:active {
+.Button:active {
   background-color: var(--color-bg-active);
 }
 
-button.brand {
-  --color-bg: var(--color-bg-brand);
-  --color-text: var(--color-text-brand);
-  --color-bg-hover: var(--color-bg-brand-hover);
-  --color-bg-active: var(--color-bg-brand-active);
-  --color-border: transparent;
-  --color-border-focus: var(--color-border-brand-focus);
-}
-
-button svg {
+/* stylelint-disable-next-line plugin/selector-bem-pattern */
+.Button svg {
   width: 18px;
   height: 18px;
-  margin: 0;
   padding: 0;
+  margin: 0;
 }
 
-button.small svg {
+/* stylelint-disable-next-line plugin/selector-bem-pattern */
+.Button--small svg {
   width: 14px;
   height: 14px;
 }
 
-button.borderless-icon {
-  border: none;
-  padding: 0;
-}
-
-button.borderless-icon svg {
+/* stylelint-disable-next-line plugin/selector-bem-pattern */
+.Button--borderless svg {
   width: 24px;
   height: 24px;
 }

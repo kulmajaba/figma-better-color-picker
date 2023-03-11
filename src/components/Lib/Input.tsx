@@ -1,5 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 
+import classNames from 'classnames';
+
 import { InputValue } from '../../types';
 
 import './Input.css';
@@ -15,6 +17,7 @@ const Input: React.FC<Props> = ({
   onChange: onChangeProp,
   required = true,
   selectAllOnFocus = true,
+  className,
   ...inputProps
 }) => {
   const [value, setValue] = useState(valueProp);
@@ -56,9 +59,11 @@ const Input: React.FC<Props> = ({
     }
   }, [onChangeProp, value, valueProp]);
 
+  const inputClassNames = classNames('Input', 'u-focusBorder', className);
+
   return (
     <input
-      className="focus-border"
+      className={inputClassNames}
       value={value}
       onFocus={onFocus}
       onChange={onChange}

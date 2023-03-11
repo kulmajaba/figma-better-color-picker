@@ -1,17 +1,19 @@
-.color-input-container {
+.ColorInput {
+  display: grid;
   border: var(--border-1px);
   border-radius: 4px;
+  grid-template-columns: var(--grid-color-input-columns);
 }
 
-.color-input-container input {
+.ColorInput-input {
   border: none;
 }
 
-.color-input-container input:not(:last-child) {
+.ColorInput-input:not(:last-child) {
   border-right: var(--border-1px);
 }
 
-.color-input-container input.hex {
-  text-align: start;
+.ColorInput-input--hex {
   grid-column: 1 / 4;
+  text-align: start;
 }

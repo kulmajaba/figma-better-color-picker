@@ -161,16 +161,16 @@ function App() {
   const rgb = toSRGB(color);
 
   const dev = import.meta.env.DEV;
-  // eslint-disable-next-line prettier/prettier
-  const colorString = dev ? `Component: ${roundToFixedPrecision(color[0], 3)}, ${roundToFixedPrecision(color[1], 3)}, ${roundToFixedPrecision(color[2], 3)}, A: ${roundToFixedPrecision(alpha, 3)}<br />
+  // prettier-ignore
+  const colorString = dev
+    ? `Component: ${roundToFixedPrecision(color[0], 3)}, ${roundToFixedPrecision(color[1], 3)}, ${roundToFixedPrecision(color[2], 3)}, A: ${roundToFixedPrecision(alpha, 3)}<br />
 RGB: ${roundToFixedPrecision(rgb[0], 3)}, ${roundToFixedPrecision(rgb[1], 3)}, ${roundToFixedPrecision(rgb[2], 3)}`
     : '';
 
-  const containerClassNames = classNames({ plugin: isPlugin });
+  const containerClassNames = classNames('App', { 'is-plugin': isPlugin });
 
   return (
     <div
-      id="mouse-events"
       className={containerClassNames}
       onMouseUp={onMouseUpOrTouchEnd}
       onTouchEnd={onMouseUpOrTouchEnd}
@@ -178,18 +178,18 @@ RGB: ${roundToFixedPrecision(rgb[0], 3)}, ${roundToFixedPrecision(rgb[1], 3)}, $
       onMouseMove={onMouseMoveOrTouchMove}
       onTouchMove={onMouseMoveOrTouchMove}
     >
-      <main>
-        <header>
-          <div className="header-left">
+      <main className="App-main">
+        <header className="App-header">
+          <div className="App-headerLeft">
             <ColorSpaceDropDown />
             <CopyFormatDropDown />
           </div>
-          <div className="header-right">
+          <div className="App-headerRight">
             <ContrastCheckerSwitch />
-            <Button className="borderless-icon" icon="help_outline" onClick={onShowInfoModal} />
+            <Button className="Button--borderless" icon="help_outline" onClick={onShowInfoModal} />
           </div>
         </header>
-        <section className="pickers">
+        <section className="App-pickers">
           <XYPicker
             firstComponentValues={firstComponentValues}
             firstComponent={firstComponent}
@@ -217,9 +217,9 @@ RGB: ${roundToFixedPrecision(rgb[0], 3)}, ${roundToFixedPrecision(rgb[1], 3)}, $
             enabled={alphaEnabled}
           />
           {dev && <div dangerouslySetInnerHTML={{ __html: colorString }} />}
-          <div className="main-inputs">
+          <div className="App-mainInputs">
             <Button icon="eyedropper" onClick={onEyeDropper} />
-            <div className="main-inputs-color-inputs">
+            <div className="App-textInputs">
               <label>{strings.label[inputLabel]}</label>
               <ColorInput
                 type="component"

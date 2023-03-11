@@ -8,9 +8,9 @@ import Button from '../Lib/Button';
 import { useContrastChecker } from '../../hooks/useContrastChecker';
 import ContrastCheckerCell from './ContrastCheckerCell';
 import ColorTileButton from './ColorTileButton';
+import ColorRowCopyButton from './ColorRowCopyButton';
 
 import './ColorRow.css';
-import ColorRowCopyButton from './ColorRowCopyButton';
 
 interface Props {
   firstComponent: number;
@@ -122,7 +122,7 @@ const ColorRow: React.FC<Props> = ({
 
   return (
     <>
-      <div className="color-row-main">
+      <div className="ColorRow">
         <ColorTileButton color={color} alpha={alpha} selected={editing} onClick={onSetEditing} />
         <ColorInput
           type="component"
@@ -131,14 +131,14 @@ const ColorRow: React.FC<Props> = ({
           onColorChange={onColorChange}
           onAlphaChange={onAlphaChange}
         />
-        <div className="color-row-buttons">
+        <div className="ColorRow-buttons">
           <ColorRowCopyButton color={color} alpha={alpha} />
           <ColorRowAddButton color={color} alpha={alpha} />
-          <Button className="small border-none" icon="delete" onClick={onDelete} />
+          <Button className="Button--small u-borderNone" icon="delete" onClick={onDelete} />
         </div>
       </div>
       {contrastCheckerVisible && contrastColors.length > 0 && (
-        <div className="color-row-comparison">
+        <div className="ColorRow-contrastRow">
           {contrastColors.map((contrastColor, i) => (
             <ContrastCheckerCell key={i} color={color} contrastColor={contrastColor} />
           ))}
