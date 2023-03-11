@@ -161,7 +161,7 @@ const ColorTable: React.FC<Props> = ({
                 tooltip={strings.tooltip.deleteColorFromChecker}
                 onClick={() => deleteContrastColor(i)}
               />
-              <ToolTip className="tooltip-immediate" tooltip={rgb_to_hex(toSRGB(contrastColor))}>
+              <ToolTip className="ToolTip--immediate" tooltip={rgb_to_hex(toSRGB(contrastColor))}>
                 <ColorTileButton
                   color={contrastColor}
                   selected={i === editingRow && editingTarget === EditingTarget.ContrastColors}

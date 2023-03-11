@@ -99,10 +99,10 @@ const ToolTip: React.FC<Props> = ({ tooltip, children, className }) => {
 
   const transform = `translate(50%) translate(${offset.x}px, ${offset.y}px)`;
 
-  const spanClassNames = classNames('tooltip', { tooltip_display: display, tooltip_visible: visible }, className);
+  const spanClassNames = classNames('ToolTip-text', { 'is-display': display, 'is-visible': visible }, className);
 
   return (
-    <div className="tooltip-container" onMouseEnter={onFocus} onFocus={onFocus} onMouseLeave={onBlur} onBlur={onBlur}>
+    <div className="ToolTip" onMouseEnter={onFocus} onFocus={onFocus} onMouseLeave={onBlur} onBlur={onBlur}>
       {children}
       <span ref={tipRef} className={spanClassNames} style={{ transform }}>
         {tooltip}

@@ -1,9 +1,9 @@
-.tooltip-container {
+.ToolTip {
   position: relative;
   display: inline-block;
 }
 
-.tooltip {
+.ToolTip-text {
   position: absolute;
   z-index: 1;
   right: 50%;
@@ -24,15 +24,15 @@
   transition-delay: 0s;
 }
 
-.tooltip_display {
+.ToolTip-text.is-display {
   display: block;
 }
 
-.tooltip_visible {
+.ToolTip-text.is-visible {
   opacity: 1;
   transition: visibility, opacity 0.3s ease-in-out 1s;
 }
 
-.tooltip_visible.tooltip-immediate {
+.ToolTip--immediate.is-visible {
   transition-delay: 0s;
 }
