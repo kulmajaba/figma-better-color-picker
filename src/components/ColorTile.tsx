@@ -3,7 +3,7 @@ import React, { useCallback } from 'react';
 import { useColorSpace } from '../hooks/useColorSpace';
 import { Color } from '../types';
 import { createCheckerData } from '../util/imageData';
-import PickerCanvas from './PickerCanvas';
+import PickerCanvas from './Picker/PickerCanvas';
 
 import './ColorTile.css';
 
