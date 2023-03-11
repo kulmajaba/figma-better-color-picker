@@ -1,4 +1,4 @@
-.xy-container {
+.XYPicker {
   position: relative;
   width: 100%;
   max-width: var(--max-size-picker);
@@ -6,7 +6,7 @@
   aspect-ratio: 1;
 }
 
-.xy-loading-indicator {
+.XYPicker-loadingIndicator {
   position: absolute;
   display: flex;
   width: 100%;
@@ -16,6 +16,6 @@
   pointer-events: none;
 }
 
-.xy-loading-indicator p {
+.XYPicker-loadingIndicator p {
   user-select: none;
 }

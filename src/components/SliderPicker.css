@@ -1,4 +1,4 @@
-.slider-container {
+.SliderPicker {
   position: relative;
   width: 100%;
   max-width: var(--max-size-picker);
