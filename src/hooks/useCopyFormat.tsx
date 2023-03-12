@@ -62,7 +62,7 @@ export const CopyFormatProvider: React.FC<{ children?: React.ReactNode }> = ({ c
       name: copyFormatName,
       setCopyFormat
     }),
-    [copyFormat, copyFormatName]
+    [copyFormat, copyFormatName, setCopyFormat]
   );
 
   return <CopyFormatContext.Provider value={contextValue}>{children}</CopyFormatContext.Provider>;

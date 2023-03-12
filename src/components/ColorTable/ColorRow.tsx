@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { useColorSpace } from '../../hooks/useColorSpace';
 import { Color } from '../../types';
@@ -57,6 +57,7 @@ const ColorRow: React.FC<Props> = ({
       setSecondComponent(second);
       setThirdComponent(third);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [convertFromPrevious]);
 
   useEffect(() => {
@@ -111,14 +112,17 @@ const ColorRow: React.FC<Props> = ({
         return false;
       }
     },
-    [alphaLocked]
+    [alpha, alphaLocked]
   );
 
-  const color: Color = [firstComponent, secondComponent, thirdComponent];
+  const color: Color = useMemo(
+    () => [firstComponent, secondComponent, thirdComponent],
+    [firstComponent, secondComponent, thirdComponent]
+  );
 
   const onSetEditing = useCallback(() => {
     onSetEditingProp(color, alpha);
-  }, [color, alpha]);
+  }, [onSetEditingProp, color, alpha]);
 
   return (
     <>

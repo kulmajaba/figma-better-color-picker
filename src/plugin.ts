@@ -35,7 +35,7 @@ figma.ui.onmessage = (msg: PluginMessage) => {
         figma.notify(`${strings.figma.updateColorSuccessful} ${colorName}`);
       } else {
         const newPaintStyle = figma.createPaintStyle();
-        newPaintStyle.name = colorName || description;
+        newPaintStyle.name = colorName ?? '';
         newPaintStyle.description = description;
         newPaintStyle.paints = [{ type: 'SOLID', color: rgb, opacity: alpha }];
         figma.notify(`${strings.figma.addColorSuccessful_1} ${colorName} ${strings.figma.addColorSuccessful_2}`);
@@ -44,7 +44,7 @@ figma.ui.onmessage = (msg: PluginMessage) => {
       break;
     }
     case PluginMessageType.Resize: {
-      figma.ui.resize(msg.payload.width, msg.payload.height || defaultHeight);
+      figma.ui.resize(msg.payload.width, msg.payload.height ?? defaultHeight);
       break;
     }
   }

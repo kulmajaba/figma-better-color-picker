@@ -8,6 +8,7 @@ const useMountedEffect = (effect: React.EffectCallback, deps?: React.DependencyL
       return effect();
     }
     didMountRef.current = true;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, deps);
 };
 

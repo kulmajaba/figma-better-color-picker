@@ -74,7 +74,7 @@ const ToolTip: React.FC<Props> = ({ tooltip, children, className }) => {
         y: getDelta(0, clientHeight, top, bottom, currentOffset.y)
       }));
     }
-  }, [tipRef.current]);
+  }, []);
 
   /**
    * CSS-WG has agreed to adopt display animations into the standard,
@@ -86,7 +86,7 @@ const ToolTip: React.FC<Props> = ({ tooltip, children, className }) => {
       reposition();
       setVisible(true);
     }
-  }, [display]);
+  }, [display, reposition]);
 
   const onFocus = useCallback(() => {
     setDisplay(true);

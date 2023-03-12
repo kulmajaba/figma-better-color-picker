@@ -28,7 +28,7 @@ enum PickerType {
   Alpha = 'ALPHA'
 }
 
-function App() {
+const App = () => {
   const [dragging, setDragging] = useState(false);
   const [activePicker, setActivePicker] = useState<PickerType | undefined>(undefined);
   const [mousePos, setMousePos] = useState(XYZero);
@@ -55,6 +55,7 @@ function App() {
       setFirstComponent(first);
       setXyComponent({ x, y });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [convertFromPrevious]);
 
   const onMouseMoveOrTouchMove: MouseOrTouchEventHandler = useCallback(
@@ -135,7 +136,7 @@ function App() {
         console.log(e);
       }
     }
-  }, []);
+  }, [fromSRGB]);
 
   const onSetEditing = useCallback((color: Color, alpha: number, enableAlpha: boolean) => {
     setFirstComponent(color[0]);
@@ -250,6 +251,6 @@ RGB: ${roundToFixedPrecision(rgb[0], 3)}, ${roundToFixedPrecision(rgb[1], 3)}, $
       <InfoModal visible={infoModalVisible} onClose={onCloseInfoModal} />
     </div>
   );
-}
+};
 
 export default App;

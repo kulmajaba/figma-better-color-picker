@@ -64,7 +64,7 @@ const Picker: React.FC<Props> = ({
         onChange(newVal);
       }
     }
-  }, [globalValue, dragging]);
+  }, [globalValue, dragging, horizontalChangeDirection, verticalChangeDirection, onChange]);
 
   if (enabled !== undefined && getDisabledOverlayData === undefined) {
     console.warn('Picker: enabled prop is controlled but no getDisabledOverlayData prop provided');

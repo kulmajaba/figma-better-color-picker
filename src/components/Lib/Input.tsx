@@ -46,13 +46,16 @@ const Input = forwardRef<HTMLInputElement, Props>(
       [selectAllOnFocus]
     );
 
-    const onChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-      if (onChangeProp) {
-        onChangeProp(e.currentTarget.value);
-      } else {
-        setValue(e.currentTarget.value);
-      }
-    }, []);
+    const onChange = useCallback(
+      (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (onChangeProp) {
+          onChangeProp(e.currentTarget.value);
+        } else {
+          setValue(e.currentTarget.value);
+        }
+      },
+      [onChangeProp]
+    );
 
     const onBlur = useCallback(() => {
       if (required && value === '') {
@@ -66,7 +69,7 @@ const Input = forwardRef<HTMLInputElement, Props>(
           setValue(valueProp);
         }
       }
-    }, [onBlurProp, value, valueProp]);
+    }, [onBlurProp, required, value, valueProp]);
 
     const onSubmit = useCallback(
       (value: InputValue) => {
@@ -82,7 +85,7 @@ const Input = forwardRef<HTMLInputElement, Props>(
           }
         }
       },
-      [onSubmitProp, valueProp]
+      [onSubmitProp, required, valueProp]
     );
 
     const onKeyDown = useCallback(
@@ -113,5 +116,7 @@ const Input = forwardRef<HTMLInputElement, Props>(
     );
   }
 );
+
+Input.displayName = 'Input';
 
 export default Input;

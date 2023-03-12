@@ -62,10 +62,11 @@ const XYPicker: React.FC<Props> = ({ firstComponentValues, firstComponent, value
     } catch (e) {
       console.log(e);
     }
-  }, [toSRGB, firstComponentValues]);
+  }, [firstComponentValues, canvasSize, toSRGB, job]);
 
   useEffect(() => {
     updateXYCache();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [canvasSize, firstComponentValues, toSRGB]);
 
   const getXYData = useCallback(

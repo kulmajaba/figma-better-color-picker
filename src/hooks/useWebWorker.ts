@@ -24,6 +24,7 @@ const useWebWorker = <MessageType, ReturnType>({
   useEffect(() => {
     worker.current = workerFactory();
     return () => worker.current?.terminate();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleMessage = useCallback(
@@ -41,7 +42,7 @@ const useWebWorker = <MessageType, ReturnType>({
     setStatus(WorkerStatus.Idle);
     worker.current?.terminate();
     worker.current = workerFactory();
-  }, [worker.current]);
+  }, [workerFactory]);
 
   const job = useCallback(
     (message: MessageType): Promise<ReturnType> => {
@@ -68,7 +69,7 @@ const useWebWorker = <MessageType, ReturnType>({
         worker.current.postMessage(message);
       });
     },
-    [worker.current, status, terminateOnNewJob]
+    [terminateOnNewJob, status, terminate, workerFactory, handleMessage]
   );
 
   return { status, job, terminate };

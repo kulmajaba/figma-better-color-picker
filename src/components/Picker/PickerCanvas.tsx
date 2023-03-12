@@ -40,7 +40,7 @@ const PickerCanvas = forwardRef<HTMLCanvasElement, Props>(
           context && draw(context);
         }
       }
-    }, []);
+    }, [canvasSize, draw, onSizeChange]);
 
     useEffect(() => {
       const canvas = canvasRef.current;
@@ -48,7 +48,7 @@ const PickerCanvas = forwardRef<HTMLCanvasElement, Props>(
         const context = canvas.getContext('2d');
         context && draw(context);
       }
-    }, [getImageData]);
+    }, [draw, getImageData]);
 
     return (
       <canvas
@@ -60,5 +60,7 @@ const PickerCanvas = forwardRef<HTMLCanvasElement, Props>(
     );
   }
 );
+
+PickerCanvas.displayName = 'PickerCanvas';
 
 export default PickerCanvas;

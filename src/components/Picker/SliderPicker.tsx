@@ -55,7 +55,7 @@ const SliderPicker: React.FC<Props> = ({ value, onChange, ...otherProps }) => {
         firstComponentSliderConstants[1],
         Direction.Horizontal
       ),
-    [toSRGB]
+    [firstComponentSliderConstants, toSRGB]
   );
 
   const pickerValue = { x: value, y: 0.5 };

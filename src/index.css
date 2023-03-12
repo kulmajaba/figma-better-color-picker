@@ -60,7 +60,7 @@
 
 .is-plugin {
   --width-main: var(--width-main-plugin);
-  --max-width-modal: calc(var(--width-main) * 0.8);
+  --max-width-modal: calc(var(--width-main) * 0.9);
   --grid-main-columns: var(--width-main) minmax(0, auto);
 }
 

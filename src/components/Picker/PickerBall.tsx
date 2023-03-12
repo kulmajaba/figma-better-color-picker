@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 import { HorizontalChangeDirection, VerticalChangeDirection } from '../../types';
 
@@ -15,26 +15,29 @@ const PickerBall: React.FC<Props> = ({ value, horizontalChangeDirection, vertica
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  const draw = (ctx: CanvasRenderingContext2D) => {
-    const { width, height } = ctx.canvas;
-    const strokeWidth = 1;
-    // TODO: use CSS variable
-    const r = 6;
-    const x =
-      horizontalChangeDirection === HorizontalChangeDirection.LeftToRight
-        ? Math.round(value.x * (width - 2 * r) + r)
-        : Math.round((1 - value.x) * (width - 2 * r) + r);
-    const y =
-      verticalChangeDirection === VerticalChangeDirection.TopToBottom
-        ? Math.round(value.y * (height - 2 * r) + r)
-        : Math.round((1 - value.y) * (height - 2 * r) + r);
+  const draw = useCallback(
+    (ctx: CanvasRenderingContext2D) => {
+      const { width, height } = ctx.canvas;
+      const strokeWidth = 1;
+      // TODO: use CSS variable
+      const r = 6;
+      const x =
+        horizontalChangeDirection === HorizontalChangeDirection.LeftToRight
+          ? Math.round(value.x * (width - 2 * r) + r)
+          : Math.round((1 - value.x) * (width - 2 * r) + r);
+      const y =
+        verticalChangeDirection === VerticalChangeDirection.TopToBottom
+          ? Math.round(value.y * (height - 2 * r) + r)
+          : Math.round((1 - value.y) * (height - 2 * r) + r);
 
-    ctx.clearRect(0, 0, width, height);
-    ctx.strokeStyle = '#ffffff';
-    ctx.beginPath();
-    ctx.arc(x, y, r - strokeWidth, 0, Math.PI * 2);
-    ctx.stroke();
-  };
+      ctx.clearRect(0, 0, width, height);
+      ctx.strokeStyle = '#ffffff';
+      ctx.beginPath();
+      ctx.arc(x, y, r - strokeWidth, 0, Math.PI * 2);
+      ctx.stroke();
+    },
+    [horizontalChangeDirection, value, verticalChangeDirection]
+  );
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -48,7 +51,7 @@ const PickerBall: React.FC<Props> = ({ value, horizontalChangeDirection, vertica
       const context = canvas.getContext('2d');
       context && draw(context);
     }
-  }, [value]);
+  }, [value, canvasSize, draw]);
 
   return <canvas ref={canvasRef} className="PickerBall" />;
 };

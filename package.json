@@ -6,12 +6,14 @@
   "scripts": {
     "start": "npm run dev",
     "build": "rm -rf dist/* && npm run build:ui && npm run build:main:prod",
-    "build:main:prod": "esbuild src/plugin.ts --bundle --minify --outfile=dist/plugin.js --define:BASE_URL=\\\"https://colorpicker.kulmajaba.com/\\\"",
-    "build:main:dev": "esbuild src/plugin.ts --bundle --outfile=dist/plugin.js --define:BASE_URL=\\\"http://localhost:5173/\\\"",
+    "build:main": "esbuild src/plugin.ts --target=es2017 --bundle --minify --outfile=dist/plugin.js",
+    "build:main:prod": "npm run build:main -- --define:BASE_URL=\\\"https://colorpicker.kulmajaba.com/\\\"",
+    "build:main:dev": "npm run build:main -- --define:BASE_URL=\\\"http://localhost:5173/\\\"",
     "build:ui": "vite build --emptyOutDir=false --minify=false",
     "build:watch": "npm run build:main:dev -- --watch",
     "dev": "concurrently -n build,vite 'npm:build:watch' 'vite'",
-    "tsc:main": "tsc --noEmit -p ."
+    "tsc": "tsc --noEmit -p .",
+    "lint": "eslint ."
   },
   "author": "Mika Kuitunen",
   "license": "MIT License",
@@ -25,6 +27,8 @@
     "eslint": "^8.29.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-react": "^7.32.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
     "prettier": "^2.8.0",
     "stylelint": "^15.2.0",
     "stylelint-config-idiomatic-order": "^9.0.0",
