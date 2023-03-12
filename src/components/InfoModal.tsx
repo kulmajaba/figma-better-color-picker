@@ -5,7 +5,9 @@ import useIsPlugin from '../hooks/useIsPlugin';
 import Icon from './Lib/Icon';
 import Modal, { Props as Modalprops } from './Lib/Modal';
 
-type Props = Omit<Modalprops, 'title|children'>;
+import './InfoModal.css';
+
+type Props = Omit<Modalprops, 'title' | 'children'>;
 
 const InfoModal: React.FC<Props> = (props) => {
   const { isFigma, isPlugin } = useIsPlugin();
@@ -17,7 +19,7 @@ const InfoModal: React.FC<Props> = (props) => {
 
   return (
     <Modal {...props} title={strings.info.title}>
-      <p dangerouslySetInnerHTML={{ __html: infoMessage }} />
+      <p className="InfoModal-p" dangerouslySetInnerHTML={{ __html: infoMessage }} />
       <a href="https://github.com/kulmajaba/figma-better-color-picker" target="_blank" rel="noreferrer noopener">
         <Icon icon="github_mark" />
       </a>

@@ -21,7 +21,14 @@ interface PluginMessageBase {
 
 export interface PluginMessageAddColor extends PluginMessageBase {
   type: PluginMessageType.AddColor;
-  payload: { color: Color; alpha: number; colorSpaceName: string; componentRepresentation: Color };
+  payload: {
+    color: Color;
+    alpha: number;
+    colorSpaceName: string;
+    componentRepresentation: Color;
+    colorName: string | undefined;
+    updateExistingStyle: boolean;
+  };
   fromFigma: false;
 }
 

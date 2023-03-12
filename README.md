@@ -14,6 +14,9 @@ If you encountered a bug you'd like to report, check the [Issues](https://github
 
 ## Roadmap
 
+- ToolTip hover behavior when alt-tabbing back to the window with a modal open
+- Delete ToolTips prevent proper resizing in plugin mode due to them becoming visible during contrast color deletion
+
 - Heading for contrast table
   - Mention WCAG somewhere in there (build support for other contrast calculations)
 - Label color input components when there is enough space?

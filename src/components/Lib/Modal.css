@@ -13,7 +13,6 @@
   color: var(--color-text-onbrand);
   cursor: pointer;
   opacity: 0;
-  transition: all 0.3s ease-in-out;
   visibility: hidden;
 }
 
@@ -24,10 +23,10 @@
 
 .Modal-content {
   display: flex;
-  max-width: var(--max-width-modal);
+  width: var(--max-width-modal);
   flex-direction: column;
   padding: var(--spacing-l);
-  border-radius: var(--border-radius-m);
+  border-radius: var(--border-radius-l);
   background-color: var(--color-bg);
   cursor: auto;
 }
@@ -37,17 +36,10 @@
   flex-direction: row-reverse;
   align-items: center;
   justify-content: space-between;
-  padding-bottom: var(--spacing-m);
-  border-bottom: var(--border-1px);
-  margin-bottom: var(--spacing-m);
+  padding-bottom: var(--spacing-l);
   gap: var(--spacing-l);
 }
 
 .Modal-heading {
-  line-height: 0.5em;
-}
-
-/* stylelint-disable-next-line plugin/selector-bem-pattern */
-.Modal-content p {
-  font-size: var(--font-size-modal);
+  margin: 0;
 }

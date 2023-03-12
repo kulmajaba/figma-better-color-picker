@@ -4,13 +4,20 @@
   width: fit-content;
   height: fit-content;
   box-sizing: border-box;
+  align-items: center;
+  justify-content: center;
   padding: var(--spacing-m);
   border: var(--border-1px);
-  border-radius: var(--border-radius-s);
+  border-radius: var(--border-radius-m);
   background: var(--color-bg);
   color: var(--color-text);
   cursor: pointer;
   text-align: center;
+}
+
+.Button--primary {
+  background: var(--color-bg-brand);
+  color: var(--color-text-onbrand);
 }
 
 .Button--small {
@@ -26,6 +33,10 @@
 @media (hover: hover) and (pointer: fine) {
   .Button:hover {
     background-color: var(--color-bg-hover);
+  }
+
+  .Button--primary:hover {
+    background: var(--color-bg-brand-hover);
   }
 }
 

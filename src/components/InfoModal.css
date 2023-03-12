@@ -1,0 +1,4 @@
+.InfoModal-p {
+  margin: 0 0 var(--spacing-l);
+  font-size: var(--font-size-modal);
+}

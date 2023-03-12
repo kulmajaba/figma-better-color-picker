@@ -128,7 +128,6 @@ function App() {
     if (EyeDropper) {
       try {
         const res = await new EyeDropper().open();
-        console.log('Eyedropper color', res.sRGBHex);
         const color = fromSRGB(hex_to_rgb(res.sRGBHex));
         setFirstComponent(color[0]);
         setXyComponent({ x: color[1], y: color[2] });

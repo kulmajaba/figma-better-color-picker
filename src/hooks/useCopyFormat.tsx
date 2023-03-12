@@ -52,7 +52,6 @@ export const CopyFormatProvider: React.FC<{ children?: React.ReactNode }> = ({ c
   const [copyFormatName, setCopyFormatName] = useState<CopyFormatName>('hex');
 
   const setCopyFormat = useCallback((name: CopyFormatName) => {
-    console.log(name);
     _setCopyFormat(copyFormats[name]);
     setCopyFormatName(name);
   }, []);

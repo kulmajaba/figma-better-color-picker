@@ -37,6 +37,15 @@ const strings = {
     info_2_figma: 'Use the plus button to add the color to your style library.',
     info_2_standalone: 'Set the copy format from the header and copy a color to clipboard by clicking the copy button.',
     info_3_plugin: `This picker is currently in plugin mode. Visit <a href="https://colorpicker.kulmajaba.com" target="_blank" rel="noopener noreferrer">colorpicker.kulmajaba.com</a> to use the picker in standalone mode.`
+  },
+  figma: {
+    addColorModalTitle: 'Create new color style',
+    addColorSuccessful_1: 'Added color style',
+    addColorSuccessful_2: 'to your styles',
+    colorNamePlaceholder: 'Untitled',
+    createStyle: 'Create style',
+    updateColorSuccessful: 'Updated color style',
+    updateExistingColor: 'Update existing color'
   }
 };
 

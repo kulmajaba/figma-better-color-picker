@@ -101,23 +101,23 @@ const ColorInput: React.FC<Props> = ({
           type="number"
           required
           value={componentRepr[0]}
-          onChange={handleFirstComponentChange}
+          onBlur={handleFirstComponentChange}
         />
         <Input
           className="ColorInput-input"
           type="number"
           required
           value={componentRepr[1]}
-          onChange={handleSecondComponentChange}
+          onBlur={handleSecondComponentChange}
         />
         <Input
           className="ColorInput-input"
           type="number"
           required
           value={componentRepr[2]}
-          onChange={handleThirdComponentChange}
+          onBlur={handleThirdComponentChange}
         />
-        <Input className="ColorInput-input" type="number" required value={alpha} onChange={handleAlphaChange} />
+        <Input className="ColorInput-input" type="number" required value={alpha} onBlur={handleAlphaChange} />
       </div>
     );
   } else {
@@ -131,9 +131,9 @@ const ColorInput: React.FC<Props> = ({
           type="text"
           required
           value={hex}
-          onChange={handleHexChange}
+          onBlur={handleHexChange}
         />
-        <Input className="ColorInput-input" type="number" required value={alpha} onChange={handleAlphaChange} />
+        <Input className="ColorInput-input" type="number" required value={alpha} onBlur={handleAlphaChange} />
       </div>
     );
   }

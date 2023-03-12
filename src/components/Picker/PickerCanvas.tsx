@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react';
 
 import { MouseOrTouchEventHandler, Size } from '../../types';
 
@@ -10,7 +10,7 @@ interface Props {
   onSizeChange?: (size: Size) => void;
 }
 
-const PickerCanvas = React.forwardRef<HTMLCanvasElement, Props>(
+const PickerCanvas = forwardRef<HTMLCanvasElement, Props>(
   ({ getImageData, onMouseDownOrTouchStart, onSizeChange }, ref) => {
     const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 });
 
