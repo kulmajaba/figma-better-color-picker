@@ -60,7 +60,7 @@ const XYPicker: React.FC<Props> = ({ firstComponentValues, firstComponent, value
       const cache = await job(message);
       setXyDataCache(cache);
     } catch (e) {
-      console.log(e);
+      console.error(e);
     }
   }, [firstComponentValues, canvasSize, toSRGB, job]);
 

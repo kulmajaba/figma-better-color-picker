@@ -7,9 +7,9 @@ const urlParam = '?figma=true';
 const defaultWidth = 336;
 const defaultHeight = 800;
 
-console.log(BASE_URL);
+console.log('Plugin base URL:', BASE_URL);
 
-const html = BASE_URL ? `<script>window.location.href="${BASE_URL}${urlParam}"</script>` : __html__;
+const html = `<script>window.location.href="${BASE_URL}${urlParam}"</script>`;
 
 figma.showUI(html, { themeColors: true, width: defaultWidth, height: defaultHeight });
 

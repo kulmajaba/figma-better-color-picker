@@ -29,10 +29,8 @@ const useWebWorker = <MessageType, ReturnType>({
 
   const handleMessage = useCallback(
     (e: MessageEvent<ReturnType>, resolve: (value: ReturnType | PromiseLike<ReturnType>) => void) => {
-      if (e && e.data) {
-        setStatus(WorkerStatus.Idle);
-        resolve(e.data);
-      }
+      setStatus(WorkerStatus.Idle);
+      resolve(e.data);
     },
     []
   );
@@ -48,7 +46,7 @@ const useWebWorker = <MessageType, ReturnType>({
     (message: MessageType): Promise<ReturnType> => {
       return new Promise((resolve, reject) => {
         if (!terminateOnNewJob && status !== WorkerStatus.Idle) {
-          console.error('The worker already has a job and terminateOnNewJob is false, new job not started');
+          reject('The worker already has a job and terminateOnNewJob is false, new job not started');
           return;
         }
 
