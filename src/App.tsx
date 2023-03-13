@@ -1,19 +1,24 @@
-import React, { MouseEvent, TouchEvent, useCallback, useEffect, useState } from 'react';
+import React, { MouseEvent, TouchEvent, useCallback, useEffect, useRef, useState } from 'react';
 
-import { Color, isMouseEvent, MouseOrTouchEventHandler, Size, XY, XYZero } from './types';
-import HuePicker from './components/SliderPicker';
-import XYPicker from './components/XYPicker';
-import AlphaPicker from './components/AlphaPicker';
+import classNames from 'classnames';
+
+import { Color, isMouseEvent, MouseOrTouchEventHandler, PluginMessageType, Size, XY, XYZero } from './types';
+import HuePicker from './components/Picker/SliderPicker';
+import XYPicker from './components/Picker/XYPicker';
+import AlphaPicker from './components/Picker/AlphaPicker';
 import { roundToFixedPrecision } from './util/mathUtils';
-import ColorInput from './components/ColorInput/ColorInput';
+import ColorInput from './components/ColorInput';
 import ColorTable from './components/ColorTable/ColorTable';
 import { useColorSpace } from './hooks/useColorSpace';
 import { hex_to_rgb } from './color/general';
 import ColorSpaceDropDown from './components/Header/ColorSpaceDropDown';
 import Button from './components/Lib/Button';
-import ColorComparisonSwitch from './components/Header/ColorComparisonSwitch';
+import ContrastCheckerSwitch from './components/Header/ColorCheckerSwitch';
 import InfoModal from './components/InfoModal';
 import CopyFormatDropDown from './components/Header/CopyFormatDropDown';
+import strings from './assets/strings';
+import useIsPlugin from './hooks/useIsPlugin';
+import { pluginPostMessage } from './pluginApi';
 
 import './App.css';
 
@@ -23,7 +28,7 @@ enum PickerType {
   Alpha = 'ALPHA'
 }
 
-function App() {
+const App = () => {
   const [dragging, setDragging] = useState(false);
   const [activePicker, setActivePicker] = useState<PickerType | undefined>(undefined);
   const [mousePos, setMousePos] = useState(XYZero);
@@ -32,10 +37,14 @@ function App() {
   const [firstComponent, setFirstComponent] = useState(0);
   const [xyComponent, setXyComponent] = useState(XYZero);
   const [alpha, setAlpha] = useState(1);
+  const [alphaEnabled, setAlphaEnabled] = useState(true);
 
   const [infoModalVisible, setInfoModalVisible] = useState(false);
 
-  const { fromSRGB, toSRGB, convertFromPrevious } = useColorSpace();
+  const { fromSRGB, toSRGB, convertFromPrevious, inputLabel } = useColorSpace();
+  const { isFigma, isPlugin } = useIsPlugin();
+
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     window.addEventListener('message', (e) => !e.data.source?.includes('react-devtools') && console.log(e));
@@ -48,6 +57,7 @@ function App() {
       setFirstComponent(first);
       setXyComponent({ x, y });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [convertFromPrevious]);
 
   const onMouseMoveOrTouchMove: MouseOrTouchEventHandler = useCallback(
@@ -121,7 +131,6 @@ function App() {
     if (EyeDropper) {
       try {
         const res = await new EyeDropper().open();
-        console.log('Eyedropper color', res.sRGBHex);
         const color = fromSRGB(hex_to_rgb(res.sRGBHex));
         setFirstComponent(color[0]);
         setXyComponent({ x: color[1], y: color[2] });
@@ -129,47 +138,66 @@ function App() {
         console.log(e);
       }
     }
-  }, []);
+  }, [fromSRGB]);
 
-  const onSetEditing = useCallback((color: Color, alpha: number) => {
+  const onSetEditing = useCallback((color: Color, alpha: number, enableAlpha: boolean) => {
     setFirstComponent(color[0]);
     setXyComponent({ x: color[1], y: color[2] });
     setAlpha(alpha);
+    setAlphaEnabled(enableAlpha);
   }, []);
 
   const onShowInfoModal = useCallback(() => setInfoModalVisible(true), []);
   const onCloseInfoModal = useCallback(() => setInfoModalVisible(false), []);
 
+  const onResizeFigmaPlugin = useCallback(
+    (width: number) => {
+      if (isFigma) {
+        if (containerRef.current && containerRef.current.scrollHeight > window.innerHeight) {
+          // Pad for scrollbar
+          width += 8;
+        }
+        pluginPostMessage({ type: PluginMessageType.Resize, payload: { width } });
+      }
+    },
+    [isFigma]
+  );
+
   const color: Color = [firstComponent, xyComponent.x, xyComponent.y];
   const rgb = toSRGB(color);
 
   const dev = import.meta.env.DEV;
-  // eslint-disable-next-line prettier/prettier
-  const colorString = dev ? `Component: ${roundToFixedPrecision(color[0], 3)}, ${roundToFixedPrecision(color[1], 3)}, ${roundToFixedPrecision(color[2], 3)}, A: ${roundToFixedPrecision(alpha, 3)}<br />
+  // prettier-ignore
+  const colorString = dev
+    ? `Component: ${roundToFixedPrecision(color[0], 3)}, ${roundToFixedPrecision(color[1], 3)}, ${roundToFixedPrecision(color[2], 3)}, A: ${roundToFixedPrecision(alpha, 3)}<br />
 RGB: ${roundToFixedPrecision(rgb[0], 3)}, ${roundToFixedPrecision(rgb[1], 3)}, ${roundToFixedPrecision(rgb[2], 3)}`
     : '';
 
+  const containerClassNames = classNames('App', { 'is-plugin': isPlugin });
+
   return (
+    // eslint-disable-next-line jsx-a11y/no-static-element-interactions
     <div
-      id="mouse-events"
+      ref={containerRef}
+      className={containerClassNames}
       onMouseUp={onMouseUpOrTouchEnd}
       onTouchEnd={onMouseUpOrTouchEnd}
       onTouchCancel={onMouseUpOrTouchEnd}
       onMouseMove={onMouseMoveOrTouchMove}
       onTouchMove={onMouseMoveOrTouchMove}
     >
-      <main>
-        <header>
-          <div className="header-left">
+      <main className="App-main">
+        <header className="App-header">
+          <div className="App-headerLeft">
             <ColorSpaceDropDown />
             <CopyFormatDropDown />
           </div>
-          <div className="header-right">
-            <ColorComparisonSwitch />
-            <Button className="borderless-icon" icon="help_outline" onClick={onShowInfoModal} />
+          <div className="App-headerRight">
+            <ContrastCheckerSwitch />
+            <Button className="Button--borderless" icon="help_outline" onClick={onShowInfoModal} />
           </div>
         </header>
-        <section className="pickers">
+        <section className="App-pickers">
           <XYPicker
             firstComponentValues={firstComponentValues}
             firstComponent={firstComponent}
@@ -194,11 +222,13 @@ RGB: ${roundToFixedPrecision(rgb[0], 3)}, ${roundToFixedPrecision(rgb[1], 3)}, $
             dragging={activePicker === PickerType.Alpha}
             onChange={onAlphaChange}
             onMouseDownOrTouchStart={onAlphaMouseDownOrTouchStart}
+            enabled={alphaEnabled}
           />
-          {dev && <p dangerouslySetInnerHTML={{ __html: colorString }} />}
-          <div className="main-inputs">
+          {dev && <div dangerouslySetInnerHTML={{ __html: colorString }} />}
+          <div className="App-mainInputs">
             <Button icon="eyedropper" onClick={onEyeDropper} />
-            <div className="main-inputs-color-inputs">
+            <div className="App-textInputs">
+              <label>{strings.label[inputLabel]}</label>
               <ColorInput
                 type="component"
                 value={color}
@@ -206,6 +236,7 @@ RGB: ${roundToFixedPrecision(rgb[0], 3)}, ${roundToFixedPrecision(rgb[1], 3)}, $
                 onColorChange={onColorInputChange}
                 onAlphaChange={onAlphaChange}
               />
+              <label>{strings.label.hex}</label>
               <ColorInput
                 type="hex"
                 value={color}
@@ -223,10 +254,11 @@ RGB: ${roundToFixedPrecision(rgb[0], 3)}, ${roundToFixedPrecision(rgb[1], 3)}, $
         thirdComponent={xyComponent.y}
         alpha={alpha}
         onSetEditing={onSetEditing}
+        onResizeFigmaPlugin={onResizeFigmaPlugin}
       />
       <InfoModal visible={infoModalVisible} onClose={onCloseInfoModal} />
     </div>
   );
-}
+};
 
 export default App;

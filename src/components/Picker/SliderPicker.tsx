@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 
-import { useColorSpace } from '../hooks/useColorSpace';
-import { Color, Direction, MouseOrTouchEventHandler, Size, XY } from '../types';
+import { useColorSpace } from '../../hooks/useColorSpace';
+import { Color, Direction, MouseOrTouchEventHandler, Size, XY } from '../../types';
 import Picker from './Picker';
 
 import './SliderPicker.css';
@@ -55,12 +55,12 @@ const SliderPicker: React.FC<Props> = ({ value, onChange, ...otherProps }) => {
         firstComponentSliderConstants[1],
         Direction.Horizontal
       ),
-    [toSRGB]
+    [firstComponentSliderConstants, toSRGB]
   );
 
   const pickerValue = { x: value, y: 0.5 };
   return (
-    <div className="slider-container">
+    <div className="SliderPicker">
       <Picker
         getImageData={createHorizontalSliderData}
         value={pickerValue}

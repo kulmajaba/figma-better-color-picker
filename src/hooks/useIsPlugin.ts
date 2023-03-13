@@ -1,7 +1,9 @@
 import { useMemo } from 'react';
 
 const useIsPlugin = () => {
-  const queryParams = useMemo(() => new URLSearchParams(window.location.search), [window.location.search]);
+  // TODO: Outer scope variables like window aren't valid deps for a hook because
+  // mutating them does not re-render the component
+  const queryParams = useMemo(() => new URLSearchParams(window.location.search), []);
 
   const isFigma = queryParams.get('figma') === 'true';
 
@@ -12,7 +14,7 @@ const useIsPlugin = () => {
       isFigma,
       isPlugin
     }),
-    [isFigma]
+    [isFigma, isPlugin]
   );
 
   return value;

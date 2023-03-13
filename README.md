@@ -3,6 +3,7 @@
 The same thing, just a bit better.
 
 This is a Figma plugin and a standalone website for color picking with some added features:
+
 1. OKLab color spaces for more accurate control
 2. Ability to create color palettes by locking some of the color values and editing others individually
 3. Color contrast checks based on WCAG 2.1 guidelines
@@ -13,16 +14,16 @@ If you encountered a bug you'd like to report, check the [Issues](https://github
 
 ## Roadmap
 
-- Rename contrast comparison to contrast checker
+- ToolTip hover behavior when alt-tabbing back to the window with a modal open
+- Delete ToolTips prevent proper resizing in plugin mode due to them becoming visible during contrast color deletion
+
 - Heading for contrast table
-  - Mention WCAG somewhere in there (build support for other contrast calculations) 
-- Mobile wraps header labels and looks bad
-- Fix horizontal overflow on mobile
-  - This might be the tooltip not updating its position in certain situations?
-- Labels for main inputs
-  - Label color input components when there is enough space
-- Pressed button on mobile: tooltip should not be shown
-- Show disabled alpha picker when editing contrast color
+  - Mention WCAG somewhere in there (build support for other contrast calculations)
+- Label color input components when there is enough space?
+- Using Figma theme when available
+  - For a Figma plugin with the `themeColors` option set, Figma sets a style element into the iframe with color variables prefixed with `--figma-`. However the plugin code is hosted so the style, along with any other HTML in the iframe, is discarded as soon as the plugin navigates to the hosted site.
+  - One option would be to use `postMessage` to send the colors to the plugin logic, navigate to the hosted UI and then post the colors back to the UI where they would be set via JS. Quite complicated for some theme colors.
+  - Any changes in the theme colors (changing from/to dark mode) are not detected either
 
 ### Undo history???
 
@@ -49,12 +50,9 @@ At the moment at every startup the plugin will calculate XY picker image data in
 This is non-trivial to cache due to the architecture of the plugins and the size of the data. For reference, the data for 300px wide picker (300 first component (hue) values and 300x300px XY canvas) is about 105MB
 
 Things that have been tried:
-  - Using figma.clientStorage: aborts after timeout due to large size (apparently window.postMessage does send the data?)
-  - Saving the data as static JSON file and bundling it with the plugin: big-json does not work in browser out of the box and it sucks to download that much data that could be calculated and saved locally
 
-### Better ToolTip component
-
-Currently the tooltip repositions itself on window resizes and when certain props (given to the tooltip) change. it would be nicer to have the tooltip automatically reposition when the page layout changes, but `useLayoutEffect` causes and endless loop that is difficult to stop as the repositioning of the tooltip is a layout change in itself.
+- Using figma.clientStorage: aborts after timeout due to large size (apparently window.postMessage does send the data?)
+- Saving the data as static JSON file and bundling it with the plugin: big-json does not work in browser out of the box and it sucks to download that much data that could be calculated and saved locally
 
 ## Development
 
@@ -64,6 +62,29 @@ The plugin is based on Node.js, ensure you have a modern LTS version on your com
 nvm use
 npm install
 npm start
+```
+
+### CSS
+
+CSS follows the SUIT naming convention (https://github.com/suitcss/suit/blob/master/doc/naming-conventions.md) except for variables which are kebab-cased, use Stylelint (standalone or VS Code plugin) to lint. Quick explanation of the class selector pattern (Double-escaped for JS string):
+
+```regexp
+^\\.{componentName}(?:-[a-z]+[A-z]*)?(?:--[a-z]+[A-z]*)?(?:\\.is-[a-z]+[A-z]*)?(?:\\[.+\\])?$
+
+# ComponentName
+\\.{componentName}
+
+# -descendantName
+(?:-[a-z]+[A-z]*)?
+
+# --variantName
+(?:--[a-z]+[A-z]*)?
+
+# .is-stateName
+(?:\\.is-[a-z]+[A-z]*)?
+
+# type='number' etc.
+(?:\\[.+\\])?
 ```
 
 ## Production
@@ -76,4 +97,3 @@ npm run build
 
 The UI deploy is done with GitHub Actions, set the repository secrets to match your production environment.
 The host SSH fingerprint can be found with `ssh-keyscan <host>`
-

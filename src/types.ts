@@ -10,7 +10,8 @@ export type ColorConverter = (color: Color) => Color;
 export type InputValue = string | number | readonly string[] | undefined;
 
 export enum PluginMessageType {
-  AddColor = 'ADD_COLOR'
+  AddColor = 'ADD_COLOR',
+  Resize = 'RESIZE'
 }
 
 interface PluginMessageBase {
@@ -20,12 +21,25 @@ interface PluginMessageBase {
 
 export interface PluginMessageAddColor extends PluginMessageBase {
   type: PluginMessageType.AddColor;
-  payload: { color: Color; alpha: number; colorSpaceName: string; componentRepresentation: Color };
+  payload: {
+    color: Color;
+    alpha: number;
+    colorSpaceName: string;
+    componentRepresentation: Color;
+    colorName: string | undefined;
+    updateExistingStyle: boolean;
+  };
+  fromFigma: false;
+}
+
+export interface PluginMessageResize extends PluginMessageBase {
+  type: PluginMessageType.Resize;
+  payload: { width: number; height?: number };
   fromFigma: false;
 }
 
 // Union types for all accepted messages
-export type PluginMessage = PluginMessageAddColor;
+export type PluginMessage = PluginMessageAddColor | PluginMessageResize;
 export type PluginReturnMessage = unknown;
 
 export enum Direction {

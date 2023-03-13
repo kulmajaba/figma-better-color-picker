@@ -1,9 +1,10 @@
-.modal-container {
+.Modal {
   position: fixed;
-  width: 100vw;
-  height: 100vh;
   z-index: 2;
-
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -11,38 +12,34 @@
   background-color: var(--color-bg-transparent);
   color: var(--color-text-onbrand);
   cursor: pointer;
-
-  visibility: hidden;
   opacity: 0;
-  transition: all 0.3s ease-in-out;
+  visibility: hidden;
 }
 
-.modal-container--visible {
-  visibility: visible;
+.Modal.is-visible {
   opacity: 1;
+  visibility: visible;
 }
 
-.modal-header {
+.Modal-content {
+  display: flex;
+  width: var(--max-width-modal);
+  flex-direction: column;
+  padding: var(--spacing-l);
+  border-radius: var(--border-radius-l);
+  background-color: var(--color-bg);
+  cursor: auto;
+}
+
+.Modal-header {
   display: flex;
   flex-direction: row-reverse;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
+  padding-bottom: var(--spacing-l);
   gap: var(--spacing-l);
-  padding-bottom: var(--spacing-m);
-  margin-bottom: var(--spacing-m);
-  border-bottom: var(--border-1px);
 }
 
-.modal-header h2 {
-  line-height: 0.5em;
-}
-
-.modal-content {
-  display: flex;
-  flex-direction: column;
-  background-color: var(--color-bg);
-  border-radius: var(--border-radius-m);
-  padding: var(--spacing-l);
-  max-width: var(--max-width-modal);
-  cursor: auto;
+.Modal-heading {
+  margin: 0;
 }

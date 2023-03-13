@@ -1,9 +1,9 @@
-.picker-ball {
-  pointer-events: none;
-  touch-action: none;
+.PickerBall {
   position: absolute;
   top: calc(var(--radius-picker) * -1);
   left: calc(var(--radius-picker) * -1);
   width: calc(100% + var(--radius-picker) * 2);
   height: calc(100% + var(--radius-picker) * 2);
+  pointer-events: none;
+  touch-action: none;
 }

@@ -1,6 +1,27 @@
-.color-row-buttons {
+.ColorRow {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  align-items: center;
+  padding: var(--padding-color-row);
+  column-gap: var(--spacing-color-row);
+  grid-column: 1;
+  grid-template-columns: var(--grid-color-row-columns);
+}
+
+.ColorRow-buttons {
+  display: grid;
   column-gap: 4px;
+  grid-template-columns: 1fr 1fr 1fr;
   justify-items: center;
+}
+
+.ColorRow-contrastRow {
+  display: grid;
+  align-items: center;
+  align-self: stretch;
+  padding: var(--padding-contrast-table-row);
+  border-left: var(--border-1px);
+  margin-left: var(--spacing-m);
+  grid-auto-columns: var(--grid-contrast-table-columns);
+  grid-auto-flow: column;
+  grid-column-gap: var(--spacing-m);
 }

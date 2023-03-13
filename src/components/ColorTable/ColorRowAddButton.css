@@ -1,0 +1,14 @@
+.ColorRowAddButton-modal {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--spacing-l);
+}
+
+.ColorRowAddButton-inputRow {
+  display: grid;
+  width: 100%;
+  align-items: center;
+  column-gap: var(--spacing-s);
+  grid-template-columns: var(--size-color-tile) auto;
+}

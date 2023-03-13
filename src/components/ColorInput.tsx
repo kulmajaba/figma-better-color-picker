@@ -1,11 +1,11 @@
 import React, { useCallback } from 'react';
 
-import { useColorSpace } from '../../hooks/useColorSpace';
-import { Color, InputValue } from '../../types';
-import { clampTo0_1, roundArrayTo1Decimals, roundTo1Decimals } from '../../util/mathUtils';
-import { inputValueToNumber, inputValueToString } from '../../util/parsingUtils';
-import { hex_to_rgb, rgb_to_hex } from '../../color/general';
-import Input from '../Lib/Input';
+import { useColorSpace } from '../hooks/useColorSpace';
+import { Color, InputValue } from '../types';
+import { clampTo0_1, roundArrayTo1Decimals, roundTo1Decimals } from '../util/mathUtils';
+import { inputValueToNumber, inputValueToString } from '../util/parsingUtils';
+import { hex_to_rgb, rgb_to_hex } from '../color/general';
+import Input from './Lib/Input';
 
 import './ColorInput.css';
 
@@ -95,11 +95,29 @@ const ColorInput: React.FC<Props> = ({
     const componentRepr = roundArrayTo1Decimals(toComponentRepresentation(valueProp));
 
     return (
-      <div className="color-input-container">
-        <Input type="number" required value={componentRepr[0]} onChange={handleFirstComponentChange} />
-        <Input type="number" required value={componentRepr[1]} onChange={handleSecondComponentChange} />
-        <Input type="number" required value={componentRepr[2]} onChange={handleThirdComponentChange} />
-        <Input type="number" required value={alpha} onChange={handleAlphaChange} />
+      <div className="ColorInput">
+        <Input
+          className="ColorInput-input"
+          type="number"
+          required
+          value={componentRepr[0]}
+          onBlur={handleFirstComponentChange}
+        />
+        <Input
+          className="ColorInput-input"
+          type="number"
+          required
+          value={componentRepr[1]}
+          onBlur={handleSecondComponentChange}
+        />
+        <Input
+          className="ColorInput-input"
+          type="number"
+          required
+          value={componentRepr[2]}
+          onBlur={handleThirdComponentChange}
+        />
+        <Input className="ColorInput-input" type="number" required value={alpha} onBlur={handleAlphaChange} />
       </div>
     );
   } else {
@@ -107,9 +125,15 @@ const ColorInput: React.FC<Props> = ({
     const hex = rgb_to_hex(toSRGB(valueProp));
 
     return (
-      <div className="color-input-container">
-        <Input className="hex" type="text" required value={hex} onChange={handleHexChange} />
-        <Input type="number" required value={alpha} onChange={handleAlphaChange} />
+      <div className="ColorInput">
+        <Input
+          className="ColorInput-input ColorInput-input--hex"
+          type="text"
+          required
+          value={hex}
+          onBlur={handleHexChange}
+        />
+        <Input className="ColorInput-input" type="number" required value={alpha} onBlur={handleAlphaChange} />
       </div>
     );
   }

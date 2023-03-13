@@ -1,17 +1,25 @@
 {
   "root": true,
   "parser": "@typescript-eslint/parser",
-  "plugins": [
-    "@typescript-eslint",
-    "prettier"
-  ],
+  "plugins": ["prettier", "@typescript-eslint", "react"],
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  },
   "extends": [
     "eslint:recommended",
+    "prettier",
     "plugin:@typescript-eslint/eslint-recommended",
     "plugin:@typescript-eslint/recommended",
-    "prettier"
+    "plugin:react/recommended",
+    "plugin:react-hooks/recommended",
+    "plugin:jsx-a11y/recommended"
   ],
   "rules": {
-    "prettier/prettier": 2
+    "prettier/prettier": 1,
+    "react/jsx-fragments": [1, "syntax"],
+    "react/destructuring-assignment": [1, "always"],
+    "react/function-component-definition": [1, { "namedComponents": "arrow-function" }]
   }
 }

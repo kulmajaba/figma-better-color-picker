@@ -8,28 +8,46 @@ const strings = {
     copyColor: 'Copy color to clipboard',
     addColorRow: 'Add a color row',
     addColorToStyles: 'Add color to your styles',
-    addColorToComparison: 'Add color to contrast comparison',
-    deleteColorFromComparison: 'Delete color from contrast comparison'
+    addColorToChecker: 'Add color to contrast checker',
+    deleteColorFromChecker: 'Delete color from contrast checker'
   },
   label: {
     colorSpace: 'Color space',
     copyFormat: 'Copy format',
-    showContrastComparison: 'Show contrast comparison'
+    contrastChecker: 'Contrast checker',
+    hsv: 'HSV',
+    hsl: 'HSL',
+    hex: 'Hex'
   },
   info: {
+    title: 'Help',
     info_1: `The Better Color Picker does a few things that make it better:
     <ol>
       <li>OKLab-based color spaces for more accurate control</li>
-      <li>Ability to create palettes with multiple shades and lock desired values to the main controls</li>
-      <li>Color contrast checks against a list of colors (in standalone mode)</li>
+      <li>Ability to create palettes with multiple shades and lock desired values together</li>
+      <li>Color contrast checks against user-definable colors (WCAG 2.1)</li>
     </ol>
-    You can select the color space from the header, as well as show or hide the color contrast checks. The graphical
+    You can select the color space from the header as well as show or hide the color contrast checks. The graphical
     pickers, eyedropper and the two text inputs in the main section are all tied together and also control the
-    locked sections of the color table. You can start creating different shades of the same hue by unlocking some of
-    the sections of the table, and inputting individual values.`,
+    locked sections of the color table.
+    <br /><br />
+    You can start creating different shades of the same hue by unlocking some of the sections of the table,
+    selecting the color rows and editing them individually. Use the double arrow buttons to add color rows or
+    contrast colors.`,
     info_2_figma: 'Use the plus button to add the color to your style library.',
-    info_2_standalone: 'Use the double arrow button to add a color into the color contrast checks.',
-    info_3_plugin: `This picker is currently in plugin mode. Visit <a href="https://colorpicker.kulmajaba.com" target="_blank" rel="noopener noreferrer">colorpicker.kulmajaba.com</a> to use the picker in standalone mode.`
+    info_2_standalone: 'Set the copy format from the header and copy a color to clipboard by clicking the copy button.',
+    info_3_standalone:
+      'You are currently using the picker in standalone mode. Try the Figma plugin at <a href="https://www.figma.com/community/plugin/1209779625070339366" target="_blank" rel="noopener noreferrer">figma.com/community/plugin/1209779625070339366</a>.',
+    info_3_plugin: `You are currently using the picker in plugin mode. Visit <a href="https://colorpicker.kulmajaba.com" target="_blank" rel="noopener noreferrer">colorpicker.kulmajaba.com</a> to use the picker in standalone mode.`
+  },
+  figma: {
+    addColorModalTitle: 'Create new color style',
+    addColorSuccessful_1: 'Added color style',
+    addColorSuccessful_2: 'to your styles',
+    updateColorSuccessful: 'Updated color style',
+    colorNamePlaceholder: 'Untitled',
+    createStyle: 'Create style',
+    updateExistingColor: 'Update existing color'
   }
 };
 

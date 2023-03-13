@@ -10,8 +10,8 @@ import {
   VerticalChangeDirection,
   XY,
   XYChangeHandler
-} from '../types';
-import { clampTo0_1 } from '../util/mathUtils';
+} from '../../types';
+import { clampTo0_1 } from '../../util/mathUtils';
 
 interface Props {
   getImageData: ImageDataCreator;
@@ -21,6 +21,8 @@ interface Props {
   onChange: XYChangeHandler;
   onMouseDownOrTouchStart: MouseOrTouchEventHandler;
   onSizeChange?: (size: Size) => void;
+  enabled?: boolean;
+  getDisabledOverlayData?: ImageDataCreator;
   horizontalChangeDirection?: HorizontalChangeDirection;
   verticalChangeDirection?: VerticalChangeDirection;
 }
@@ -33,6 +35,8 @@ const Picker: React.FC<Props> = ({
   onChange,
   onMouseDownOrTouchStart,
   onSizeChange,
+  enabled,
+  getDisabledOverlayData,
   horizontalChangeDirection = HorizontalChangeDirection.LeftToRight,
   verticalChangeDirection = VerticalChangeDirection.TopToBottom
 }) => {
@@ -60,7 +64,15 @@ const Picker: React.FC<Props> = ({
         onChange(newVal);
       }
     }
-  }, [globalValue, dragging]);
+  }, [globalValue, dragging, horizontalChangeDirection, verticalChangeDirection, onChange]);
+
+  if (enabled !== undefined && getDisabledOverlayData === undefined) {
+    console.warn('Picker: enabled prop is controlled but no getDisabledOverlayData prop provided');
+  }
+
+  if (enabled === false && getDisabledOverlayData !== undefined) {
+    return <PickerCanvas getImageData={getDisabledOverlayData} />;
+  }
 
   return (
     <>

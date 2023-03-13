@@ -203,5 +203,5 @@ export const rgba_to_hex = (rgba: ColorWithAlpha): string => {
 
 export const rgba_to_rgba_string = (rgba: ColorWithAlpha): string => {
   const [r, g, b, a] = rgba;
-  return `rgba(${Math.round(r)}, ${Math.round(g)}, ${Math.round(b)}, ${roundTo2Decimals(a)})`;
+  return `rgb(${Math.round(r)} ${Math.round(g)} ${Math.round(b)} / ${roundTo2Decimals(a)})`;
 };

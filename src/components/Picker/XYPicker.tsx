@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 
-import { useColorSpace } from '../hooks/useColorSpace';
-import useWebWorker from '../hooks/useWebWorker';
+import { useColorSpace } from '../../hooks/useColorSpace';
+import useWebWorker from '../../hooks/useWebWorker';
 import {
   ImageDataCache,
   ImageDataWorkerMessage,
@@ -12,11 +12,11 @@ import {
   VerticalChangeDirection,
   WorkerStatus,
   XY
-} from '../types';
-import { createXYData } from '../util/imageData';
+} from '../../types';
+import { createXYData } from '../../util/imageData';
 import Picker from './Picker';
 
-import imageDataWorkerUrl from '../util/imageDataWorker?worker&url';
+import imageDataWorkerUrl from '../../util/imageDataWorker?worker&url';
 
 import './XYPicker.css';
 
@@ -60,12 +60,13 @@ const XYPicker: React.FC<Props> = ({ firstComponentValues, firstComponent, value
       const cache = await job(message);
       setXyDataCache(cache);
     } catch (e) {
-      console.log(e);
+      console.error(e);
     }
-  }, [toSRGB, firstComponentValues]);
+  }, [firstComponentValues, canvasSize, toSRGB, job]);
 
   useEffect(() => {
     updateXYCache();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [canvasSize, firstComponentValues, toSRGB]);
 
   const getXYData = useCallback(
@@ -79,7 +80,7 @@ const XYPicker: React.FC<Props> = ({ firstComponentValues, firstComponent, value
   }, []);
 
   return (
-    <div className="xy-container">
+    <div className="XYPicker">
       <Picker
         getImageData={getXYData}
         verticalChangeDirection={VerticalChangeDirection.BottomToTop}
@@ -89,7 +90,7 @@ const XYPicker: React.FC<Props> = ({ firstComponentValues, firstComponent, value
         {...otherProps}
       />
       {status !== WorkerStatus.Idle && (
-        <div className="xy-loading-indicator">
+        <div className="XYPicker-loadingIndicator">
           <p>Loading</p>
         </div>
       )}

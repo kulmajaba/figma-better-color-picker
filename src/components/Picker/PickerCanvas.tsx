@@ -1,6 +1,6 @@
-import React, { useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react';
 
-import { MouseOrTouchEventHandler, Size } from '../types';
+import { MouseOrTouchEventHandler, Size } from '../../types';
 
 import './PickerCanvas.css';
 
@@ -10,7 +10,7 @@ interface Props {
   onSizeChange?: (size: Size) => void;
 }
 
-const PickerCanvas = React.forwardRef<HTMLCanvasElement, Props>(
+const PickerCanvas = forwardRef<HTMLCanvasElement, Props>(
   ({ getImageData, onMouseDownOrTouchStart, onSizeChange }, ref) => {
     const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 });
 
@@ -40,7 +40,7 @@ const PickerCanvas = React.forwardRef<HTMLCanvasElement, Props>(
           context && draw(context);
         }
       }
-    }, []);
+    }, [canvasSize, draw, onSizeChange]);
 
     useEffect(() => {
       const canvas = canvasRef.current;
@@ -48,17 +48,19 @@ const PickerCanvas = React.forwardRef<HTMLCanvasElement, Props>(
         const context = canvas.getContext('2d');
         context && draw(context);
       }
-    }, [getImageData]);
+    }, [draw, getImageData]);
 
     return (
       <canvas
         ref={canvasRef}
-        className="picker-canvas"
+        className="PickerCanvas"
         onMouseDown={onMouseDownOrTouchStart}
         onTouchStart={onMouseDownOrTouchStart}
       />
     );
   }
 );
+
+PickerCanvas.displayName = 'PickerCanvas';
 
 export default PickerCanvas;

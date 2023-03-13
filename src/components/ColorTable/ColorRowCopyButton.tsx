@@ -1,4 +1,5 @@
 import React, { useCallback } from 'react';
+
 import strings from '../../assets/strings';
 import { useColorSpace } from '../../hooks/useColorSpace';
 import { useCopyFormat } from '../../hooks/useCopyFormat';
@@ -17,13 +18,10 @@ const ColorRowCopyButton: React.FC<Props> = ({ color, alpha }) => {
   const { toSRGB } = useColorSpace();
   const { toCopyFormat } = useCopyFormat();
 
-  // TODO: format from context
   const onCopy = useCallback(async () => {
-    console.log('copy');
     if (navigator.clipboard) {
       try {
         await navigator.clipboard.writeText(toCopyFormat([...toSRGB(color), alpha]));
-        console.log('copy successful');
       } catch (e) {
         console.error(e);
       }
@@ -38,7 +36,12 @@ const ColorRowCopyButton: React.FC<Props> = ({ color, alpha }) => {
   }
 
   return (
-    <Button className="small border-none" icon="content_copy" tooltip={strings.tooltip.copyColor} onClick={onCopy} />
+    <Button
+      className="Button--small u-borderNone"
+      icon="content_copy"
+      tooltip={strings.tooltip.copyColor}
+      onClick={onCopy}
+    />
   );
 };
 

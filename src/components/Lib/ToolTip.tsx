@@ -58,6 +58,8 @@ const getDelta = (
 
 const ToolTip: React.FC<Props> = ({ tooltip, children, className }) => {
   const [offset, setOffset] = useState<XY>({ x: 0, y: 0 });
+  const [display, setDisplay] = useState(false);
+  const [visible, setVisible] = useState(false);
 
   const tipRef = useRef<HTMLSpanElement>(null);
 
@@ -67,27 +69,48 @@ const ToolTip: React.FC<Props> = ({ tooltip, children, className }) => {
       const { top, bottom, left, right } = boundingRect;
       const { clientWidth, clientHeight } = document.body;
 
-      setOffset((currentOffset) => {
-        const dx = getDelta(0, clientWidth, left, right, currentOffset.x);
-        const dy = getDelta(0, clientHeight, top, bottom, currentOffset.y);
-        return {
-          x: dx,
-          y: dy
-        };
-      });
+      setOffset((currentOffset) => ({
+        x: getDelta(0, clientWidth, left, right, currentOffset.x),
+        y: getDelta(0, clientHeight, top, bottom, currentOffset.y)
+      }));
     }
-  }, [tipRef.current]);
+  }, []);
 
+  /**
+   * CSS-WG has agreed to adopt display animations into the standard,
+   * and at that point this component can be refactored to use pure CSS animations.
+   * https://github.com/w3c/csswg-drafts/issues/6429#issuecomment-1332439874
+   */
   useEffect(() => {
-    reposition();
+    if (display) {
+      reposition();
+      setVisible(true);
+    }
+  }, [display, reposition]);
+
+  const onFocus = useCallback(() => {
+    setDisplay(true);
+  }, []);
+
+  const onBlur = useCallback(() => {
+    setVisible(false);
+    setDisplay(false);
   }, []);
 
   const transform = `translate(50%) translate(${offset.x}px, ${offset.y}px)`;
 
-  const spanClassNames = classNames('tooltip', className);
+  const spanClassNames = classNames('ToolTip-text', { 'is-display': display, 'is-visible': visible }, className);
 
   return (
-    <div className="tooltip-container" onMouseEnter={reposition}>
+    // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
+    <div
+      className="ToolTip"
+      onClick={onBlur}
+      onMouseEnter={onFocus}
+      onFocus={onFocus}
+      onMouseLeave={onBlur}
+      onBlur={onBlur}
+    >
       {children}
       <span ref={tipRef} className={spanClassNames} style={{ transform }}>
         {tooltip}
