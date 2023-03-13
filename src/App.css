@@ -9,7 +9,7 @@
 
   /* Dynamic padding between 0 and X px, px number in calc is the point at which the padding is 0
   and max/(calc multiplier) determines the range in which the value ramps to max  */
-  padding-top: clamp(0px, calc((100vh - 1000px) * 0.16), 32px);
+  padding-top: clamp(0px, calc((100vh - 800px) * 0.08), 32px);
   padding-left: clamp(0px, calc((100% - 800px) * 0.1875), 150px);
   grid-template-columns: var(--grid-main-columns);
   grid-template-rows: fit-content(100%) auto;
