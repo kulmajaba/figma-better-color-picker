@@ -170,6 +170,7 @@ RGB: ${roundToFixedPrecision(rgb[0], 3)}, ${roundToFixedPrecision(rgb[1], 3)}, $
   const containerClassNames = classNames('App', { 'is-plugin': isPlugin });
 
   return (
+    // eslint-disable-next-line jsx-a11y/no-static-element-interactions
     <div
       className={containerClassNames}
       onMouseUp={onMouseUpOrTouchEnd}
