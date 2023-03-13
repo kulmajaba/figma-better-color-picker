@@ -16,6 +16,7 @@ const InfoModal: React.FC<Props> = (props) => {
   isFigma && (infoMessage += ` ${strings.info.info_2_figma}`);
   !isPlugin && (infoMessage += ` ${strings.info.info_2_standalone}`);
   isPlugin && (infoMessage += `<br /><br />${strings.info.info_3_plugin}`);
+  !isPlugin && (infoMessage += `<br /><br />${strings.info.info_3_standalone}`);
 
   return (
     <Modal {...props} title={strings.info.title}>

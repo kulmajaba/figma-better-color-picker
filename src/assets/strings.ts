@@ -36,15 +36,17 @@ const strings = {
     contrast colors.`,
     info_2_figma: 'Use the plus button to add the color to your style library.',
     info_2_standalone: 'Set the copy format from the header and copy a color to clipboard by clicking the copy button.',
-    info_3_plugin: `This picker is currently in plugin mode. Visit <a href="https://colorpicker.kulmajaba.com" target="_blank" rel="noopener noreferrer">colorpicker.kulmajaba.com</a> to use the picker in standalone mode.`
+    info_3_standalone:
+      'You are currently using the picker in standalone mode. Try the Figma plugin at <a href="https://www.figma.com/community/plugin/1209779625070339366" target="_blank" rel="noopener noreferrer">figma.com/community/plugin/1209779625070339366</a>.',
+    info_3_plugin: `You are currently using the picker in plugin mode. Visit <a href="https://colorpicker.kulmajaba.com" target="_blank" rel="noopener noreferrer">colorpicker.kulmajaba.com</a> to use the picker in standalone mode.`
   },
   figma: {
     addColorModalTitle: 'Create new color style',
     addColorSuccessful_1: 'Added color style',
     addColorSuccessful_2: 'to your styles',
+    updateColorSuccessful: 'Updated color style',
     colorNamePlaceholder: 'Untitled',
     createStyle: 'Create style',
-    updateColorSuccessful: 'Updated color style',
     updateExistingColor: 'Update existing color'
   }
 };
