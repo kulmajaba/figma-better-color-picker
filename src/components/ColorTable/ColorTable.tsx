@@ -77,7 +77,7 @@ const ColorTable: React.FC<Props> = ({
 
   useMountedEffect(() => {
     containerRef.current && onResizeFigmaPlugin(containerRef.current.scrollWidth);
-  }, [contrastColors, contrastCheckerVisible]);
+  }, [contrastColors.length, contrastCheckerVisible, rows.length]);
 
   const toggleFirstComponentLocked = useCallback(() => setFirstComponentLocked((locked) => !locked), []);
 

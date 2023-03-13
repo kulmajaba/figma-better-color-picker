@@ -5,7 +5,7 @@ import { roundArrayTo1Decimals } from './util/mathUtils';
 declare const BASE_URL: string | undefined;
 const urlParam = '?figma=true';
 const defaultWidth = 336;
-const defaultHeight = 800;
+const defaultHeight = 830;
 
 console.log('Plugin base URL:', BASE_URL);
 
@@ -38,7 +38,7 @@ figma.ui.onmessage = (msg: PluginMessage) => {
         newPaintStyle.name = colorName ?? '';
         newPaintStyle.description = description;
         newPaintStyle.paints = [{ type: 'SOLID', color: rgb, opacity: alpha }];
-        figma.notify(`${strings.figma.addColorSuccessful_1} ${colorName} ${strings.figma.addColorSuccessful_2}`);
+        figma.notify(`${strings.figma.addColorSuccessful_1} ${colorName ?? ''} ${strings.figma.addColorSuccessful_2}`);
       }
 
       break;

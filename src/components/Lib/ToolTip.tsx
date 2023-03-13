@@ -102,7 +102,15 @@ const ToolTip: React.FC<Props> = ({ tooltip, children, className }) => {
   const spanClassNames = classNames('ToolTip-text', { 'is-display': display, 'is-visible': visible }, className);
 
   return (
-    <div className="ToolTip" onMouseEnter={onFocus} onFocus={onFocus} onMouseLeave={onBlur} onBlur={onBlur}>
+    // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
+    <div
+      className="ToolTip"
+      onClick={onBlur}
+      onMouseEnter={onFocus}
+      onFocus={onFocus}
+      onMouseLeave={onBlur}
+      onBlur={onBlur}
+    >
       {children}
       <span ref={tipRef} className={spanClassNames} style={{ transform }}>
         {tooltip}

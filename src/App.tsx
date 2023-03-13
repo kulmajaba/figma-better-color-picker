@@ -1,4 +1,4 @@
-import React, { MouseEvent, TouchEvent, useCallback, useEffect, useState } from 'react';
+import React, { MouseEvent, TouchEvent, useCallback, useEffect, useRef, useState } from 'react';
 
 import classNames from 'classnames';
 
@@ -43,6 +43,8 @@ const App = () => {
 
   const { fromSRGB, toSRGB, convertFromPrevious, inputLabel } = useColorSpace();
   const { isFigma, isPlugin } = useIsPlugin();
+
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     window.addEventListener('message', (e) => !e.data.source?.includes('react-devtools') && console.log(e));
@@ -151,6 +153,10 @@ const App = () => {
   const onResizeFigmaPlugin = useCallback(
     (width: number) => {
       if (isFigma) {
+        if (containerRef.current && containerRef.current.scrollHeight > window.innerHeight) {
+          // Pad for scrollbar
+          width += 8;
+        }
         pluginPostMessage({ type: PluginMessageType.Resize, payload: { width } });
       }
     },
@@ -172,6 +178,7 @@ RGB: ${roundToFixedPrecision(rgb[0], 3)}, ${roundToFixedPrecision(rgb[1], 3)}, $
   return (
     // eslint-disable-next-line jsx-a11y/no-static-element-interactions
     <div
+      ref={containerRef}
       className={containerClassNames}
       onMouseUp={onMouseUpOrTouchEnd}
       onTouchEnd={onMouseUpOrTouchEnd}
