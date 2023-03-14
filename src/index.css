@@ -57,7 +57,7 @@
   --grid-main-columns: fit-content(var(--width-main)) minmax(0, auto);
   --grid-color-input-columns: 1fr 1fr 1fr 1.5fr;
   --grid-color-row-columns: var(--size-color-tile) 4.5fr 1.8fr;
-  --grid-contrast-table-columns: minmax(calc(var(--font-size) * 4 + 2px), 1fr);
+  --grid-contrast-table-columns: calc(var(--font-size) * 4 + 2px);
 }
 
 .is-plugin {
