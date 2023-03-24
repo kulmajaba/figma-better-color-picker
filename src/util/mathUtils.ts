@@ -22,3 +22,5 @@ export const floor = (value: number, decimals: number) =>
   Math.floor(value * Math.pow(10, decimals)) / Math.pow(10, decimals);
 
 export const floorTo2Decimals = (value: number) => floor(value, 2);
+
+export const closeEnough = (a: number, b: number) => Math.abs(a - b) < 0.001;

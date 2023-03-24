@@ -41,7 +41,7 @@ const App = () => {
 
   const [infoModalVisible, setInfoModalVisible] = useState(false);
 
-  const { fromSRGB, toSRGB, convertFromPrevious, inputLabel } = useColorSpace();
+  const { fromSRGB, toSRGB, convertFromPrevious, inputLabelKey } = useColorSpace();
   const { isFigma, isPlugin } = useIsPlugin();
 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -228,7 +228,7 @@ RGB: ${roundToFixedPrecision(rgb[0], 3)}, ${roundToFixedPrecision(rgb[1], 3)}, $
           <div className="App-mainInputs">
             <Button icon="eyedropper" onClick={onEyeDropper} />
             <div className="App-textInputs">
-              <label>{strings.label[inputLabel]}</label>
+              <label>{strings.label[inputLabelKey]}</label>
               <ColorInput
                 type="component"
                 value={color}

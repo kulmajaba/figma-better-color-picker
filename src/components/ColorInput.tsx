@@ -24,7 +24,15 @@ const ColorInput: React.FC<Props> = ({
   onColorChange,
   onAlphaChange
 }) => {
-  const { fromSRGB, toSRGB, fromComponentRepresentation, toComponentRepresentation } = useColorSpace();
+  const {
+    fromSRGB,
+    toSRGB,
+    fromComponentRepresentation,
+    toComponentRepresentation,
+    firstComponentAgnostic,
+    secondComponentAgnostic,
+    thirdComponentAgnostic
+  } = useColorSpace();
 
   const alpha = roundTo1Decimals(alphaProp * 100);
 
@@ -68,14 +76,19 @@ const ColorInput: React.FC<Props> = ({
   const handleHexChange = useCallback(
     (value: InputValue) => {
       try {
-        const newValue = inputValueToString(value);
-        return onColorChange(fromSRGB(hex_to_rgb(newValue))) ?? true;
+        const newValue = fromSRGB(hex_to_rgb(inputValueToString(value)));
+        const aggregateValue = newValue;
+        firstComponentAgnostic(newValue) && (aggregateValue[0] = valueProp[0]);
+        secondComponentAgnostic(newValue) && (aggregateValue[1] = valueProp[1]);
+        thirdComponentAgnostic(newValue) && (aggregateValue[2] = valueProp[2]);
+
+        return onColorChange(aggregateValue) ?? true;
       } catch (e) {
         console.error(e);
         return false;
       }
     },
-    [onColorChange, fromSRGB]
+    [fromSRGB, firstComponentAgnostic, valueProp, secondComponentAgnostic, thirdComponentAgnostic, onColorChange]
   );
 
   const handleAlphaChange = useCallback(

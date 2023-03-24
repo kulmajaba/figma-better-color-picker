@@ -2,6 +2,7 @@
 // Copyright (c) 2022 Mika Kuitunen
 
 import { Color } from '../types';
+import { clampTo0_1 } from '../util/mathUtils';
 import { srgb_transfer_function, srgb_transfer_function_inv } from './srgb';
 
 const linear_srgb_to_oklab = (r: number, g: number, b: number) => {
@@ -245,7 +246,7 @@ const get_ST_max = (a_: number, b_: number, cusp?: number[]) => {
 };
 
 const get_ST_mid = (a_: number, b_: number) => {
-  /* eslint-disable prettier/prettier */
+  // prettier-ignore
   const S = 0.11516993 + 1/(
     + 7.44778970 + 4.15901240 * b_
     + a_ * (- 2.19557347 + 1.75198401 * b_
@@ -254,6 +255,7 @@ const get_ST_mid = (a_: number, b_: number) => {
     )))
   );
 
+  // prettier-ignore
   const T = 0.11239642 + 1/(
     + 1.61320320 - 0.68124379 * b_
     + a_ * (+ 0.40370612 + 0.90148123 * b_
@@ -261,7 +263,6 @@ const get_ST_mid = (a_: number, b_: number) => {
     + a_ * (+ 0.00299215 - 0.45399568 * b_ - 0.14661872 * a_
     )))
   );
-  /* eslint-enable prettier/prettier */
 
   return [S, T];
 };
@@ -272,7 +273,7 @@ const get_Cs = (L: number, a_: number, b_: number) => {
   const C_max = find_gamut_intersection(a_, b_, L, 1, L, cusp);
   const ST_max = get_ST_max(a_, b_, cusp);
 
-  /* eslint-disable prettier/prettier */
+  // prettier-ignore
   const S_mid = 0.11516993 + 1/(
       + 7.44778970 + 4.15901240*b_
       + a_*(- 2.19557347 + 1.75198401*b_
@@ -281,6 +282,7 @@ const get_Cs = (L: number, a_: number, b_: number) => {
       )))
   );
 
+  // prettier-ignore
   const T_mid = 0.11239642 + 1/(
       + 1.61320320 - 0.68124379*b_
       + a_*(+ 0.40370612 + 0.90148123*b_
@@ -288,7 +290,6 @@ const get_Cs = (L: number, a_: number, b_: number) => {
       + a_*(+ 0.00299215 - 0.45399568*b_ - 0.14661872*a_
       )))
   );
-  /* eslint-enable prettier/prettier */
 
   const k = C_max / Math.min(L * ST_max[0], (1 - L) * ST_max[1]);
 
@@ -402,7 +403,7 @@ export const srgb_to_okhsl = (rgb: Color): Color => {
   }
 
   const l = toe(L);
-  return [h, s, l];
+  return [clampTo0_1(h), clampTo0_1(s), clampTo0_1(l)];
 };
 
 export const okhsv_to_srgb = (hsv: Color): Color => {
@@ -492,5 +493,5 @@ export const srgb_to_okhsv = (rgb: Color): Color => {
   const v = L === 0 ? 0 : L / L_v;
   const s = C_v === 0 ? 0 : ((S_0 + T) * C_v) / (T * S_0 + T * k * C_v);
 
-  return [h, s, v];
+  return [clampTo0_1(h), clampTo0_1(s), clampTo0_1(v)];
 };
