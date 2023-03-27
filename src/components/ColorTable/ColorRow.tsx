@@ -1,5 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
+import classNames from 'classnames';
+
 import { useColorSpace } from '../../hooks/useColorSpace';
 import { Color } from '../../types';
 import ColorInput from '../ColorInput';
@@ -124,6 +126,8 @@ const ColorRow: React.FC<Props> = ({
     onSetEditingProp(color, alpha);
   }, [onSetEditingProp, color, alpha]);
 
+  const contrastRowClassNames = classNames('ColorRow-contrastRow', { 'ColorRow-contrastRow--selected': editing });
+
   return (
     <>
       <div className="ColorRow">
@@ -142,7 +146,7 @@ const ColorRow: React.FC<Props> = ({
         </div>
       </div>
       {contrastCheckerVisible && contrastColors.length > 0 && (
-        <div className="ColorRow-contrastRow">
+        <div className={contrastRowClassNames}>
           {contrastColors.map((contrastColor, i) => (
             <ContrastCheckerCell key={i} color={color} contrastColor={contrastColor} />
           ))}
