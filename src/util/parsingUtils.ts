@@ -1,12 +1,24 @@
+import { evaluate } from 'mathjs';
+
 import { InputValue } from '../types';
 import { InvalidArgumentError } from './errors';
+
+const numberRegex = /^[0-9]*(?:[.,][0-9]+)*$/;
+const arithmeticRegex = /^(?:[0-9]*(?:[.,][0-9]+)*(?: *[+\-*/] *)*)+$/;
 
 export const inputValueToNumber = (val: InputValue): number => {
   if (typeof val === 'number') {
     return val;
   } else if (typeof val === 'string') {
-    return parseFloat(val);
+    if (numberRegex.test(val)) {
+      return parseFloat(val.replace(',', '.'));
+    } else if (arithmeticRegex.test(val)) {
+      return evaluate(val.replace(',', '.'));
+    } else {
+      throw new InvalidArgumentError(`Could not parse ${val} to number`);
+    }
   } else {
+    console.error(val);
     throw new InvalidArgumentError(`Could not parse ${val} to number`);
   }
 };

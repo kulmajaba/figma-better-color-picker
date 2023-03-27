@@ -111,21 +111,21 @@ const ColorInput: React.FC<Props> = ({
       <div className="ColorInput">
         <Input
           className="ColorInput-input"
-          type="number"
+          type="text"
           required
           value={componentRepr[0]}
           onBlur={handleFirstComponentChange}
         />
         <Input
           className="ColorInput-input"
-          type="number"
+          type="text"
           required
           value={componentRepr[1]}
           onBlur={handleSecondComponentChange}
         />
         <Input
           className="ColorInput-input"
-          type="number"
+          type="text"
           required
           value={componentRepr[2]}
           onBlur={handleThirdComponentChange}
