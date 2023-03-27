@@ -51,7 +51,6 @@
   --spacing-color-row: 4px;
 
   --padding-color-row: var(--spacing-s) var(--spacing-m);
-  --padding-contrast-table-row: var(--spacing-s) var(--spacing-m) var(--spacing-s) var(--spacing-l);
 
   --border-1px: 1px solid var(--color-border);
   --border-1px-selected: 1px solid var(--color-border-selected);
@@ -59,7 +58,7 @@
   --grid-main-columns: fit-content(var(--width-main)) minmax(0, auto);
   --grid-color-input-columns: 1fr 1fr 1fr 1.5fr;
   --grid-color-row-columns: var(--size-color-tile) 4.5fr 1.8fr;
-  --grid-contrast-table-columns: calc(var(--font-size) * 4 + 2px);
+  --grid-contrast-table-columns: calc(var(--font-size) * 4 + 4px + var(--spacing-s) * 2);
 }
 
 .is-plugin {

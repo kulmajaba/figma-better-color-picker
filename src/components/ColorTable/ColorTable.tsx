@@ -8,16 +8,11 @@ import { useContrastChecker } from '../../hooks/useContrastChecker';
 import strings from '../../assets/strings';
 import ToolTip from '../Lib/ToolTip';
 import { rgb_to_hex } from '../../color/general';
-import { Color } from '../../types';
+import { Color, SetEditingColorCallback } from '../../types';
 import ColorTileButton from './ColorTileButton';
 import useMountedEffect from '../../hooks/useMountedEffect';
 
 import './ColorTable.css';
-
-enum EditingTarget {
-  Rows = 0,
-  ContrastColors
-}
 
 interface Props {
   firstComponent: number;
@@ -47,7 +42,10 @@ const ColorTable: React.FC<Props> = ({
 
   const [rows, setRows] = useState([0]);
   const [contrastColors, setContrastColors] = useState<Color[]>([[0, 0, 0]]);
-  const [[editingRow, editingTarget], setEditingRow] = useState([0, EditingTarget.Rows]);
+  const [[editingRowKey, editingContrastKey], setEditingRow] = useState<[number | undefined, number | undefined]>([
+    0,
+    undefined
+  ]);
 
   const { componentShortNames, toSRGB, convertFromPrevious } = useColorSpace();
   const { contrastCheckerVisible } = useContrastChecker();
@@ -55,10 +53,10 @@ const ColorTable: React.FC<Props> = ({
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (editingTarget === EditingTarget.ContrastColors) {
+    if (editingContrastKey !== undefined) {
       setContrastColors((colors) => {
         const newColors = colors.slice();
-        newColors[editingRow] = [firstComponentProp, secondComponentProp, thirdComponentProp];
+        newColors[editingContrastKey] = [firstComponentProp, secondComponentProp, thirdComponentProp];
         return newColors;
       });
     } else {
@@ -67,7 +65,7 @@ const ColorTable: React.FC<Props> = ({
       setThirdComponent(thirdComponentProp);
       setAlpha(alphaProp);
     }
-  }, [firstComponentProp, secondComponentProp, thirdComponentProp, alphaProp, editingRow, editingTarget]);
+  }, [firstComponentProp, secondComponentProp, thirdComponentProp, alphaProp, editingContrastKey]);
 
   useEffect(() => {
     if (convertFromPrevious) {
@@ -91,10 +89,10 @@ const ColorTable: React.FC<Props> = ({
 
   const deleteRow = useCallback((key: number) => setRows((rows) => rows.filter((k) => k !== key)), []);
 
-  const onSetEditing = useCallback(
-    (key: number, editingTarget: EditingTarget, color: Color, alpha: number) => {
-      setEditingRow([key, editingTarget]);
-      onSetEditingProp(color, alpha, editingTarget === EditingTarget.Rows);
+  const onSetEditing: SetEditingColorCallback = useCallback(
+    (colorRow, contrastColumn, color, alpha) => {
+      setEditingRow([colorRow, contrastColumn]);
+      onSetEditingProp(color, alpha ?? 1, colorRow !== undefined);
     },
     [onSetEditingProp]
   );
@@ -112,6 +110,7 @@ const ColorTable: React.FC<Props> = ({
   const colorRows = rows.map((key) => (
     <ColorRow
       key={key}
+      id={key}
       firstComponent={firstComponent}
       secondComponent={secondComponent}
       thirdComponent={thirdComponent}
@@ -120,10 +119,11 @@ const ColorTable: React.FC<Props> = ({
       secondComponentLocked={secondComponentLocked}
       thirdComponentLocked={thirdComponentLocked}
       alphaLocked={alphaLocked}
-      editing={key === editingRow && editingTarget === EditingTarget.Rows}
+      editingColorRow={editingRowKey}
+      editingContrastColumn={editingContrastKey}
       contrastColors={contrastColors}
       onDelete={() => deleteRow(key)}
-      onSetEditing={(color, alpha) => onSetEditing(key, EditingTarget.Rows, color, alpha)}
+      onSetEditing={onSetEditing}
     />
   ));
 
@@ -164,8 +164,8 @@ const ColorTable: React.FC<Props> = ({
               <ToolTip className="ToolTip--immediate" tooltip={rgb_to_hex(toSRGB(contrastColor))}>
                 <ColorTileButton
                   color={contrastColor}
-                  selected={i === editingRow && editingTarget === EditingTarget.ContrastColors}
-                  onClick={() => onSetEditing(i, EditingTarget.ContrastColors, contrastColor, 1)}
+                  selected={i === editingContrastKey}
+                  onClick={() => onSetEditing(undefined, i, contrastColor, 1)}
                 />
               </ToolTip>
             </div>

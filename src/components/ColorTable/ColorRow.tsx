@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import classNames from 'classnames';
 
 import { useColorSpace } from '../../hooks/useColorSpace';
-import { Color } from '../../types';
+import { Color, SetEditingColorCallback } from '../../types';
 import ColorInput from '../ColorInput';
 import ColorRowAddButton from './ColorRowAddButton';
 import Button from '../Lib/Button';
@@ -15,6 +15,7 @@ import ColorRowCopyButton from './ColorRowCopyButton';
 import './ColorRow.css';
 
 interface Props {
+  id: number;
   firstComponent: number;
   secondComponent: number;
   thirdComponent: number;
@@ -23,13 +24,15 @@ interface Props {
   secondComponentLocked: boolean;
   thirdComponentLocked: boolean;
   alphaLocked: boolean;
-  editing: boolean;
+  editingColorRow: number | undefined;
+  editingContrastColumn: number | undefined;
   contrastColors: Color[];
   onDelete: () => void;
-  onSetEditing: (color: Color, alpha: number) => void;
+  onSetEditing: SetEditingColorCallback;
 }
 
 const ColorRow: React.FC<Props> = ({
+  id,
   firstComponent: firstComponentProp,
   secondComponent: secondComponentProp,
   thirdComponent: thirdComponentProp,
@@ -38,7 +41,8 @@ const ColorRow: React.FC<Props> = ({
   secondComponentLocked,
   thirdComponentLocked,
   alphaLocked,
-  editing,
+  editingColorRow,
+  editingContrastColumn,
   contrastColors,
   onDelete,
   onSetEditing: onSetEditingProp
@@ -61,6 +65,8 @@ const ColorRow: React.FC<Props> = ({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [convertFromPrevious]);
+
+  const editing = useMemo(() => editingColorRow === id, [editingColorRow, id]);
 
   useEffect(() => {
     if (firstComponentLocked || editing) {
@@ -123,8 +129,8 @@ const ColorRow: React.FC<Props> = ({
   );
 
   const onSetEditing = useCallback(() => {
-    onSetEditingProp(color, alpha);
-  }, [onSetEditingProp, color, alpha]);
+    onSetEditingProp(id, undefined, color, alpha);
+  }, [onSetEditingProp, id, color, alpha]);
 
   const contrastRowClassNames = classNames('ColorRow-contrastRow', { 'ColorRow-contrastRow--selected': editing });
 
@@ -148,7 +154,12 @@ const ColorRow: React.FC<Props> = ({
       {contrastCheckerVisible && contrastColors.length > 0 && (
         <div className={contrastRowClassNames}>
           {contrastColors.map((contrastColor, i) => (
-            <ContrastCheckerCell key={i} color={color} contrastColor={contrastColor} />
+            <ContrastCheckerCell
+              key={i}
+              color={color}
+              contrastColor={contrastColor}
+              editing={editingContrastColumn === i}
+            />
           ))}
         </div>
       )}

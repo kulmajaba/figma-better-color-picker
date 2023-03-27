@@ -97,4 +97,11 @@ export type HMTLButtonProps = React.DetailedHTMLProps<React.ButtonHTMLAttributes
 
 export type MouseOrTouchEventHandler = (e: MouseEvent | TouchEvent) => void;
 
+export type SetEditingColorCallback = (
+  colorRow: number | undefined,
+  contrastColumn: number | undefined,
+  color: Color,
+  alpha?: number
+) => void;
+
 export const isMouseEvent = (e: MouseEvent | TouchEvent): e is MouseEvent => e.type.includes('mouse');
