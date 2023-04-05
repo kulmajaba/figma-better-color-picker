@@ -2,7 +2,7 @@ import React, { useCallback } from 'react';
 
 import { useColorSpace } from '../hooks/useColorSpace';
 import { Color, InputValue } from '../types';
-import { clampTo0_1, roundArrayTo1Decimals, roundTo1Decimals } from '../util/mathUtils';
+import { arraysCloseEnough, clampTo0_1, roundArrayTo1Decimals, roundTo1Decimals } from '../util/mathUtils';
 import { inputValueToNumber, inputValueToString } from '../util/parsingUtils';
 import { hex_to_rgb, rgb_to_hex } from '../color/general';
 import Input from './Lib/Input';
@@ -81,6 +81,10 @@ const ColorInput: React.FC<Props> = ({
         firstComponentAgnostic(newValue) && (aggregateValue[0] = valueProp[0]);
         secondComponentAgnostic(newValue) && (aggregateValue[1] = valueProp[1]);
         thirdComponentAgnostic(newValue) && (aggregateValue[2] = valueProp[2]);
+
+        if (arraysCloseEnough(aggregateValue, valueProp)) {
+          return false;
+        }
 
         return onColorChange(aggregateValue) ?? true;
       } catch (e) {

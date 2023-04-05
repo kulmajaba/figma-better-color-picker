@@ -24,3 +24,15 @@ export const floor = (value: number, decimals: number) =>
 export const floorTo2Decimals = (value: number) => floor(value, 2);
 
 export const closeEnough = (a: number, b: number) => Math.abs(a - b) < 0.001;
+
+export const arraysCloseEnough = (a: number[], b: number[]) => {
+  if (a.length !== b.length) {
+    return false;
+  }
+  for (let i = 0; i < a.length; i++) {
+    if (!closeEnough(a[i], b[i])) {
+      return false;
+    }
+  }
+  return true;
+};
