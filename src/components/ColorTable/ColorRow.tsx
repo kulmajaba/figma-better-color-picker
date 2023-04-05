@@ -68,6 +68,11 @@ const ColorRow: React.FC<Props> = ({
 
   const editing = useMemo(() => editingColorRow === id, [editingColorRow, id]);
 
+  const color: Color = useMemo(
+    () => [firstComponent, secondComponent, thirdComponent],
+    [firstComponent, secondComponent, thirdComponent]
+  );
+
   useEffect(() => {
     if (firstComponentLocked || editing) {
       setFirstComponent(firstComponentProp);
@@ -92,40 +97,54 @@ const ColorRow: React.FC<Props> = ({
     }
   }, [alphaProp, alphaLocked, editing]);
 
-  // TODO: call onSetEditing if needed
   const onColorChange = useCallback(
-    (color: Color) => {
-      const shouldChangeFirst = !firstComponentLocked && color[0] !== firstComponent;
-      const shouldChangeSecond = !secondComponentLocked && color[1] !== secondComponent;
-      const shouldChangeThird = !thirdComponentLocked && color[2] !== thirdComponent;
+    (newColor: Color) => {
+      if (editing) {
+        onSetEditingProp(id, undefined, newColor, alpha);
+      }
 
-      shouldChangeFirst && setFirstComponent(color[0]);
-      shouldChangeSecond && setSecondComponent(color[1]);
-      shouldChangeThird && setThirdComponent(color[2]);
+      const shouldChangeFirst = !firstComponentLocked && newColor[0] !== firstComponent;
+      const shouldChangeSecond = !secondComponentLocked && newColor[1] !== secondComponent;
+      const shouldChangeThird = !thirdComponentLocked && newColor[2] !== thirdComponent;
+
+      shouldChangeFirst && setFirstComponent(newColor[0]);
+      shouldChangeSecond && setSecondComponent(newColor[1]);
+      shouldChangeThird && setThirdComponent(newColor[2]);
 
       if (shouldChangeFirst || shouldChangeSecond || shouldChangeThird) {
         return true;
       }
+
       return false;
     },
-    [firstComponentLocked, secondComponentLocked, thirdComponentLocked, firstComponent, secondComponent, thirdComponent]
+    [
+      firstComponentLocked,
+      firstComponent,
+      secondComponentLocked,
+      secondComponent,
+      thirdComponentLocked,
+      thirdComponent,
+      editing,
+      onSetEditingProp,
+      id,
+      alpha
+    ]
   );
 
   const onAlphaChange = useCallback(
     (newAlpha: number) => {
+      if (editing) {
+        onSetEditingProp(id, undefined, color, newAlpha);
+      }
+
       if (!alphaLocked && alpha !== newAlpha) {
         setAlpha(newAlpha);
         return true;
-      } else {
-        return false;
       }
-    },
-    [alpha, alphaLocked]
-  );
 
-  const color: Color = useMemo(
-    () => [firstComponent, secondComponent, thirdComponent],
-    [firstComponent, secondComponent, thirdComponent]
+      return false;
+    },
+    [alpha, alphaLocked, color, editing, id, onSetEditingProp]
   );
 
   const onSetEditing = useCallback(() => {
