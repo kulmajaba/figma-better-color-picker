@@ -1,10 +1,11 @@
-import React, { useState, useContext, createContext, useCallback, useMemo } from 'react';
+import { useState, useContext, createContext, useCallback, useMemo, FC } from 'react';
 
+import strings from '../assets/strings';
 import { hslvfloat_to_hslv, hslv_to_hslvfloat } from '../color/general';
 import { okhsl_to_srgb, okhsv_to_srgb, srgb_to_okhsl, srgb_to_okhsv } from '../color/oklab';
-import { Color, ColorConverter } from '../types';
-import strings from '../assets/strings';
 import { closeEnough } from '../util/mathUtils';
+
+import { Color, ColorConverter } from '../types';
 
 /**
  * Color spaces work with arrays of exactly three color components.
@@ -120,7 +121,7 @@ const ColorSpaceContext = createContext<SpaceContext>({
   convertFromPrevious: undefined
 });
 
-export const ColorSpaceProvider: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
+export const ColorSpaceProvider: FC<{ children?: React.ReactNode }> = ({ children }) => {
   const [colorSpace, _setColorSpace] = useState(okhsv);
   const [colorSpaceName, setColorSpaceName] = useState<ColorSpaceName>('okhsv');
   const [convertFromPrevious, setConvertFromPrevious] = useState<ColorConverter | undefined>(undefined);

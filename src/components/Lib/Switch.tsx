@@ -1,4 +1,4 @@
-import React from 'react';
+import { FC } from 'react';
 
 import classNames from 'classnames';
 
@@ -11,7 +11,7 @@ interface Props {
   label: string;
 }
 
-const Switch: React.FC<Props> = ({ value, onClick, name, label }) => {
+const Switch: FC<Props> = ({ value, onClick, name, label }) => {
   const switchClassNames = classNames('Switch-track', value ? 'Switch-track--switchOn' : 'Switch-track--switchOff');
 
   return (

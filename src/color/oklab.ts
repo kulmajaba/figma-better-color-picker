@@ -1,9 +1,11 @@
 // Copyright (c) 2021 Björn Ottosson
 // Copyright (c) 2022 Mika Kuitunen
 
-import { Color } from '../types';
 import { clampTo0_1 } from '../util/mathUtils';
+
 import { srgb_transfer_function, srgb_transfer_function_inv } from './srgb';
+
+import { Color } from '../types';
 
 const linear_srgb_to_oklab = (r: number, g: number, b: number) => {
   const l = 0.4122214708 * r + 0.5363325363 * g + 0.0514459929 * b;
@@ -216,6 +218,7 @@ const find_gamut_intersection = (a: number, b: number, L1: number, C1: number, L
         const u_g = g1 / (g1 * g1 - 0.5 * g * g2);
         let t_g = -g * u_g;
 
+        // eslint-disable-next-line @typescript-eslint/no-shadow
         const b = -0.0041960863 * l - 0.7034186147 * m + 1.707614701 * s - 1;
         const b1 = -0.0041960863 * ldt - 0.7034186147 * mdt + 1.707614701 * sdt;
         const b2 = -0.0041960863 * ldt2 - 0.7034186147 * mdt2 + 1.707614701 * sdt2;

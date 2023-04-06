@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { FC, useCallback, useEffect, useRef, useState } from 'react';
 
 import { HorizontalChangeDirection, VerticalChangeDirection } from '../../types';
 
@@ -10,7 +10,7 @@ interface Props {
   verticalChangeDirection: VerticalChangeDirection;
 }
 
-const PickerBall: React.FC<Props> = ({ value, horizontalChangeDirection, verticalChangeDirection }) => {
+const PickerBall: FC<Props> = ({ value, horizontalChangeDirection, verticalChangeDirection }) => {
   const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 });
 
   const canvasRef = useRef<HTMLCanvasElement>(null);

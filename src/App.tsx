@@ -1,34 +1,35 @@
-import React, { MouseEvent, TouchEvent, useCallback, useEffect, useRef, useState } from 'react';
+import { FC, MouseEvent, TouchEvent, useCallback, useEffect, useRef, useState } from 'react';
 
 import classNames from 'classnames';
 
-import { Color, isMouseEvent, MouseOrTouchEventHandler, PluginMessageType, Size, XY, XYZero } from './types';
-import HuePicker from './components/Picker/SliderPicker';
-import XYPicker from './components/Picker/XYPicker';
-import AlphaPicker from './components/Picker/AlphaPicker';
-import { roundToFixedPrecision } from './util/mathUtils';
+import strings from './assets/strings';
+import { hex_to_rgb } from './color/general';
 import ColorInput from './components/ColorInput';
 import ColorTable from './components/ColorTable/ColorTable';
-import { useColorSpace } from './hooks/useColorSpace';
-import { hex_to_rgb } from './color/general';
-import ColorSpaceDropDown from './components/Header/ColorSpaceDropDown';
-import Button from './components/Lib/Button';
 import ContrastCheckerSwitch from './components/Header/ColorCheckerSwitch';
-import InfoModal from './components/InfoModal';
+import ColorSpaceDropDown from './components/Header/ColorSpaceDropDown';
 import CopyFormatDropDown from './components/Header/CopyFormatDropDown';
-import strings from './assets/strings';
+import InfoModal from './components/InfoModal';
+import Button from './components/Lib/Button';
+import AlphaPicker from './components/Picker/AlphaPicker';
+import HuePicker from './components/Picker/SliderPicker';
+import XYPicker from './components/Picker/XYPicker';
+import { useColorSpace } from './hooks/useColorSpace';
 import useIsPlugin from './hooks/useIsPlugin';
 import { pluginPostMessage } from './pluginApi';
+import { roundToFixedPrecision } from './util/mathUtils';
+
+import { Color, MouseOrTouchEventHandler, PluginMessageType, Size, XY, XYZero, isMouseEvent } from './types';
 
 import './App.css';
 
 enum PickerType {
   FirstComponentSlider = 'FIRST_COMPONENT_SLIDER',
-  XY = 'XY',
-  Alpha = 'ALPHA'
+  XYArea = 'XY_PICKER',
+  AlphaSlider = 'ALPHA_SLIDER'
 }
 
-const App = () => {
+const App: FC = () => {
   const [dragging, setDragging] = useState(false);
   const [activePicker, setActivePicker] = useState<PickerType | undefined>(undefined);
   const [mousePos, setMousePos] = useState(XYZero);
@@ -100,7 +101,7 @@ const App = () => {
   }, []);
 
   const onXyMouseDownOrTouchStart: MouseOrTouchEventHandler = useCallback(
-    (e) => onMouseDownOrTouchStart(e, PickerType.XY),
+    (e) => onMouseDownOrTouchStart(e, PickerType.XYArea),
     [onMouseDownOrTouchStart]
   );
 
@@ -118,7 +119,7 @@ const App = () => {
   }, []);
 
   const onAlphaMouseDownOrTouchStart: MouseOrTouchEventHandler = useCallback(
-    (e) => onMouseDownOrTouchStart(e, PickerType.Alpha),
+    (e) => onMouseDownOrTouchStart(e, PickerType.AlphaSlider),
     [onMouseDownOrTouchStart]
   );
 
@@ -140,10 +141,10 @@ const App = () => {
     }
   }, [fromSRGB]);
 
-  const onSetEditing = useCallback((color: Color, alpha: number, enableAlpha: boolean) => {
-    setFirstComponent(color[0]);
-    setXyComponent({ x: color[1], y: color[2] });
-    setAlpha(alpha);
+  const onSetEditing = useCallback((newColor: Color, newAlpha: number, enableAlpha: boolean) => {
+    setFirstComponent(newColor[0]);
+    setXyComponent({ x: newColor[1], y: newColor[2] });
+    setAlpha(newAlpha);
     setAlphaEnabled(enableAlpha);
   }, []);
 
@@ -203,7 +204,7 @@ RGB: ${roundToFixedPrecision(rgb[0], 3)}, ${roundToFixedPrecision(rgb[1], 3)}, $
             firstComponent={firstComponent}
             globalValue={mousePos}
             value={xyComponent}
-            dragging={activePicker === PickerType.XY}
+            dragging={activePicker === PickerType.XYArea}
             onChange={onXyChange}
             onMouseDownOrTouchStart={onXyMouseDownOrTouchStart}
           />
@@ -219,7 +220,7 @@ RGB: ${roundToFixedPrecision(rgb[0], 3)}, ${roundToFixedPrecision(rgb[1], 3)}, $
             color={color}
             globalValue={mousePos}
             value={alpha}
-            dragging={activePicker === PickerType.Alpha}
+            dragging={activePicker === PickerType.AlphaSlider}
             onChange={onAlphaChange}
             onMouseDownOrTouchStart={onAlphaMouseDownOrTouchStart}
             enabled={alphaEnabled}

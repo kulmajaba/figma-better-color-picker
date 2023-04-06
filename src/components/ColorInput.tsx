@@ -1,11 +1,13 @@
-import React, { useCallback } from 'react';
+import { FC, useCallback } from 'react';
 
+import { hex_to_rgb, rgb_to_hex } from '../color/general';
 import { useColorSpace } from '../hooks/useColorSpace';
-import { Color, InputValue } from '../types';
 import { arraysCloseEnough, clampTo0_1, roundArrayTo1Decimals, roundTo1Decimals } from '../util/mathUtils';
 import { inputValueToNumber, inputValueToString } from '../util/parsingUtils';
-import { hex_to_rgb, rgb_to_hex } from '../color/general';
+
 import Input from './Lib/Input';
+
+import { Color, InputValue } from '../types';
 
 import './ColorInput.css';
 
@@ -17,7 +19,7 @@ interface Props {
   onAlphaChange: (val: number) => boolean | void;
 }
 
-const ColorInput: React.FC<Props> = ({
+const ColorInput: FC<Props> = ({
   value: valueProp,
   alpha: alphaProp,
   type = 'component',

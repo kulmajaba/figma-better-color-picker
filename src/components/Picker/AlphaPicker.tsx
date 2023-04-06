@@ -1,10 +1,12 @@
-import React, { useCallback } from 'react';
+import { FC, useCallback } from 'react';
 
-import { Color, ColorConverter, Direction, MouseOrTouchEventHandler, XY } from '../../types';
+import { useColorSpace } from '../../hooks/useColorSpace';
+import { createAlphaData, createCheckerData, createOverlay } from '../../util/imageData';
+
 import Picker from './Picker';
 import PickerCanvas from './PickerCanvas';
-import { createAlphaData, createCheckerData, createOverlay } from '../../util/imageData';
-import { useColorSpace } from '../../hooks/useColorSpace';
+
+import { Color, ColorConverter, Direction, MouseOrTouchEventHandler, XY } from '../../types';
 
 import './AlphaPicker.css';
 
@@ -23,7 +25,7 @@ interface Props {
   enabled?: boolean;
 }
 
-const AlphaPicker: React.FC<Props> = ({ color, value, onChange, ...otherProps }) => {
+const AlphaPicker: FC<Props> = ({ color, value, onChange, ...otherProps }) => {
   const { toSRGB } = useColorSpace();
   const pickerValue = { x: value, y: 0.5 };
 

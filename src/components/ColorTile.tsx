@@ -1,9 +1,11 @@
-import React, { useCallback } from 'react';
+import { FC, useCallback } from 'react';
 
 import { useColorSpace } from '../hooks/useColorSpace';
-import { Color } from '../types';
 import { createCheckerData } from '../util/imageData';
+
 import PickerCanvas from './Picker/PickerCanvas';
+
+import { Color } from '../types';
 
 import './ColorTile.css';
 
@@ -28,7 +30,7 @@ interface Props {
   alpha?: number;
 }
 
-const ColorTile: React.FC<Props> = ({ color, alpha }) => {
+const ColorTile: FC<Props> = ({ color, alpha }) => {
   const { toSRGB } = useColorSpace();
 
   const createFill = useCallback(

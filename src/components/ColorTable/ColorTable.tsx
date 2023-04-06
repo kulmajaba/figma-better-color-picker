@@ -1,16 +1,18 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { FC, useCallback, useEffect, useRef, useState } from 'react';
+
+import strings from '../../assets/strings';
+import { rgb_to_hex } from '../../color/general';
+import { useColorSpace } from '../../hooks/useColorSpace';
+import { useContrastChecker } from '../../hooks/useContrastChecker';
+import useMountedEffect from '../../hooks/useMountedEffect';
+import Button from '../Lib/Button';
+import ToolTip from '../Lib/ToolTip';
 
 import ColorRow from './ColorRow';
-import LockButton from './LockButton';
-import { useColorSpace } from '../../hooks/useColorSpace';
-import Button from '../Lib/Button';
-import { useContrastChecker } from '../../hooks/useContrastChecker';
-import strings from '../../assets/strings';
-import ToolTip from '../Lib/ToolTip';
-import { rgb_to_hex } from '../../color/general';
-import { Color, SetEditingColorCallback } from '../../types';
 import ColorTileButton from './ColorTileButton';
-import useMountedEffect from '../../hooks/useMountedEffect';
+import LockButton from './LockButton';
+
+import { Color, SetEditingColorCallback } from '../../types';
 
 import './ColorTable.css';
 
@@ -23,7 +25,7 @@ interface Props {
   onResizeFigmaPlugin: (width: number) => void;
 }
 
-const ColorTable: React.FC<Props> = ({
+const ColorTable: FC<Props> = ({
   firstComponent: firstComponentProp,
   secondComponent: secondComponentProp,
   thirdComponent: thirdComponentProp,
@@ -85,27 +87,32 @@ const ColorTable: React.FC<Props> = ({
 
   const toggleAlphaLocked = useCallback(() => setAlphaLocked((locked) => !locked), []);
 
-  const addRow = useCallback(() => setRows((rows) => rows.concat(rows.length > 0 ? Math.max(...rows) + 1 : 0)), []);
+  const addRow = useCallback(
+    () => setRows((prevRows) => prevRows.concat(prevRows.length > 0 ? Math.max(...prevRows) + 1 : 0)),
+    []
+  );
 
-  const deleteRow = useCallback((key: number) => setRows((rows) => rows.filter((k) => k !== key)), []);
+  const deleteRow = useCallback((key: number) => setRows((prevRows) => prevRows.filter((k) => k !== key)), []);
 
   const onSetEditing: SetEditingColorCallback = useCallback(
-    (colorRow, contrastColumn, color, alpha) => {
+    (colorRow, contrastColumn, newColor, newAlpha) => {
       setEditingRow([colorRow, contrastColumn]);
-      onSetEditingProp(color, alpha ?? 1, colorRow !== undefined);
+      onSetEditingProp(newColor, newAlpha ?? 1, colorRow !== undefined);
     },
     [onSetEditingProp]
   );
 
   const addContrastColor = useCallback(
+    // TODO: what happens after color space change?
     () => setContrastColors((colors) => colors.concat([[firstComponentProp, secondComponentProp, thirdComponentProp]])),
     [firstComponentProp, secondComponentProp, thirdComponentProp]
   );
 
-  const deleteContrastColor = useCallback(
-    (index: number) => setContrastColors((colors) => colors.filter((_, i) => i !== index)),
-    []
-  );
+  const deleteContrastColor = useCallback((index: number) => {
+    setContrastColors((colors) => colors.filter((_, i) => i !== index));
+    // TODO: make sure color changes correctly if this is done
+    // setEditingRow(([rowKey, contrastKey]) => [rowKey, contrastKey === index ? undefined : contrastKey]);
+  }, []);
 
   const colorRows = rows.map((key) => (
     <ColorRow

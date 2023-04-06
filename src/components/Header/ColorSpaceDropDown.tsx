@@ -1,17 +1,17 @@
-import React, { useMemo } from 'react';
+import { FC, useMemo } from 'react';
 
 import strings from '../../assets/strings';
 import { useColorSpace, colorSpaces, ColorSpaceName, ColorSpace } from '../../hooks/useColorSpace';
 import DropDown from '../Lib/DropDown';
 
-const ColorSpaceDropDown: React.FC = () => {
+const ColorSpaceDropDown: FC = () => {
   const { name, setColorSpace } = useColorSpace();
 
   const options = useMemo(
     () =>
-      (Object.entries(colorSpaces) as [ColorSpaceName, ColorSpace][]).map(([name, space]) => ({
+      (Object.entries(colorSpaces) as [ColorSpaceName, ColorSpace][]).map(([spaceName, space]) => ({
         label: space.label,
-        value: name
+        value: spaceName
       })),
     []
   );

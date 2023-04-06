@@ -1,6 +1,7 @@
 import strings from './assets/strings';
-import { PluginMessage, PluginMessageType } from './types';
 import { roundArrayTo1Decimals } from './util/mathUtils';
+
+import { PluginMessage, PluginMessageType } from './types';
 
 declare const BASE_URL: string | undefined;
 const urlParam = '?figma=true';

@@ -1,9 +1,10 @@
 // Copyright (c) 2021 Björn Ottosson
 // Copyright (c) 2022 Mika Kuitunen
 
-import { Color, ColorWithAlpha } from '../types';
 import { InvalidArgumentError } from '../util/errors';
 import { roundTo2Decimals } from '../util/mathUtils';
+
+import { Color, ColorWithAlpha } from '../types';
 
 /**
  * Convert a HSL/HSV value with ranges 0..360, 0..100, 0..100 to range 0..1

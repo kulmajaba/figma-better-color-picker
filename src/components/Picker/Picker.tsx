@@ -1,7 +1,10 @@
-import React, { useEffect, useRef } from 'react';
+import { FC, useEffect, useRef } from 'react';
 
-import PickerCanvas from './PickerCanvas';
+import { clampTo0_1 } from '../../util/mathUtils';
+
 import PickerBall from './PickerBall';
+import PickerCanvas from './PickerCanvas';
+
 import {
   HorizontalChangeDirection,
   ImageDataCreator,
@@ -11,7 +14,6 @@ import {
   XY,
   XYChangeHandler
 } from '../../types';
-import { clampTo0_1 } from '../../util/mathUtils';
 
 interface Props {
   getImageData: ImageDataCreator;
@@ -27,7 +29,7 @@ interface Props {
   verticalChangeDirection?: VerticalChangeDirection;
 }
 
-const Picker: React.FC<Props> = ({
+const Picker: FC<Props> = ({
   getImageData,
   value,
   globalValue,

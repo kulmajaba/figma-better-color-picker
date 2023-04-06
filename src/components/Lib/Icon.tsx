@@ -1,4 +1,4 @@
-import React from 'react';
+import { FC } from 'react';
 
 /* Example
 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -43,7 +43,7 @@ interface Props {
   rotateDeg?: number;
 }
 
-const RecursivePath: React.FC<{ children: PathType | readonly PathType[] }> = ({ children }) =>
+const RecursivePath: FC<{ children: PathType | readonly PathType[] }> = ({ children }) =>
   Array.isArray(children) ? (
     <>
       {children.map((child, index) => (
@@ -56,7 +56,7 @@ const RecursivePath: React.FC<{ children: PathType | readonly PathType[] }> = ({
     <path {...(children as React.SVGProps<SVGPathElement>)} />
   );
 
-const Icon: React.FC<Props> = ({ icon, className, rotateDeg }) => (
+const Icon: FC<Props> = ({ icon, className, rotateDeg }) => (
   <svg
     className={className}
     style={{ rotate: `${rotateDeg}deg` }}

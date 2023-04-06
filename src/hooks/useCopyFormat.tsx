@@ -1,6 +1,8 @@
-import React, { createContext, useCallback, useContext, useMemo, useState } from 'react';
+import { createContext, FC, useCallback, useContext, useMemo, useState } from 'react';
+
 import strings from '../assets/strings';
 import { rgba_to_hex, rgba_to_rgba_string, rgb_to_hex } from '../color/general';
+
 import { ColorWithAlpha } from '../types';
 
 export interface CopyFormat {
@@ -47,7 +49,7 @@ const CopyFormatContext = createContext<FormatContext>({
   setCopyFormat: () => undefined
 });
 
-export const CopyFormatProvider: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
+export const CopyFormatProvider: FC<{ children?: React.ReactNode }> = ({ children }) => {
   const [copyFormat, _setCopyFormat] = useState(hex);
   const [copyFormatName, setCopyFormatName] = useState<CopyFormatName>('hex');
 

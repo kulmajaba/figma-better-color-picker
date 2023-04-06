@@ -1,16 +1,18 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { FC, useCallback, useEffect, useMemo, useState } from 'react';
 
 import classNames from 'classnames';
 
 import { useColorSpace } from '../../hooks/useColorSpace';
-import { Color, SetEditingColorCallback } from '../../types';
-import ColorInput from '../ColorInput';
-import ColorRowAddButton from './ColorRowAddButton';
-import Button from '../Lib/Button';
 import { useContrastChecker } from '../../hooks/useContrastChecker';
-import ContrastCheckerCell from './ContrastCheckerCell';
-import ColorTileButton from './ColorTileButton';
+import ColorInput from '../ColorInput';
+import Button from '../Lib/Button';
+
+import ColorRowAddButton from './ColorRowAddButton';
 import ColorRowCopyButton from './ColorRowCopyButton';
+import ColorTileButton from './ColorTileButton';
+import ContrastCheckerCell from './ContrastCheckerCell';
+
+import { Color, SetEditingColorCallback } from '../../types';
 
 import './ColorRow.css';
 
@@ -31,7 +33,7 @@ interface Props {
   onSetEditing: SetEditingColorCallback;
 }
 
-const ColorRow: React.FC<Props> = ({
+const ColorRow: FC<Props> = ({
   id,
   firstComponent: firstComponentProp,
   secondComponent: secondComponentProp,

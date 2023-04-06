@@ -1,7 +1,8 @@
 import { evaluate } from 'mathjs';
 
-import { InputValue } from '../types';
 import { InvalidArgumentError } from './errors';
+
+import { InputValue } from '../types';
 
 const numberRegex = /^[0-9]*(?:[.,][0-9]+)*$/;
 const arithmeticRegex = /^(?:[0-9]*(?:[.,][0-9]+)*(?: *[+\-*/] *)*)+$/;

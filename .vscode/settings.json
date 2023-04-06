@@ -3,9 +3,9 @@
   "files.eol": "\n",
   "typescript.preferences.quoteStyle": "single",
   "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "editor.formatOnSave": true,
+  "editor.formatOnSave": false,
   "css.validate": false,
   "editor.codeActionsOnSave": {
-    "source.fixAll": true
+    "source.fixAll": false
   }
 }

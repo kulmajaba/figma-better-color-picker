@@ -1,7 +1,8 @@
-import React from 'react';
+import { FC } from 'react';
 
 import strings from '../assets/strings';
 import useIsPlugin from '../hooks/useIsPlugin';
+
 import Icon from './Lib/Icon';
 import Modal, { Props as Modalprops } from './Lib/Modal';
 
@@ -9,7 +10,7 @@ import './InfoModal.css';
 
 type Props = Omit<Modalprops, 'title' | 'children'>;
 
-const InfoModal: React.FC<Props> = (props) => {
+const InfoModal: FC<Props> = (props) => {
   const { isFigma, isPlugin } = useIsPlugin();
 
   let infoMessage = strings.info.info_1;

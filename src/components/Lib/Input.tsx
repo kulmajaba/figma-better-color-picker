@@ -1,4 +1,4 @@
-import React, { forwardRef, useCallback, useEffect, useState } from 'react';
+import { forwardRef, useCallback, useEffect, useState } from 'react';
 
 import classNames from 'classnames';
 
@@ -72,14 +72,14 @@ const Input = forwardRef<HTMLInputElement, Props>(
     }, [onBlurProp, required, value, valueProp]);
 
     const onSubmit = useCallback(
-      (value: InputValue) => {
-        if (required && value === '') {
+      (newValue: InputValue) => {
+        if (required && newValue === '') {
           setValue(valueProp);
           return;
         }
 
         if (onSubmitProp) {
-          const changed = onSubmitProp(value);
+          const changed = onSubmitProp(newValue);
           if (changed !== undefined && !changed) {
             setValue(valueProp);
           }
