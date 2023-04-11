@@ -248,6 +248,7 @@ const get_ST_max = (a_: number, b_: number, cusp?: number[]) => {
   return [C / L, C === 0 ? 0 : C / (1 - L)];
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const get_ST_mid = (a_: number, b_: number) => {
   // prettier-ignore
   const S = 0.11516993 + 1/(

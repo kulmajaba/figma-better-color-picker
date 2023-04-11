@@ -46,7 +46,6 @@
           },
           {
             "pattern": "{.,..,../..}/**/types",
-            "patternOptions": { "nocomment": true, "dot": true },
             "group": "type",
             "position": "after"
           }
