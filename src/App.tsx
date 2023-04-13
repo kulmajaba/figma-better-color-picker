@@ -16,10 +16,19 @@ import HuePicker from './components/Picker/SliderPicker';
 import XYPicker from './components/Picker/XYPicker';
 import { useColorSpace } from './hooks/useColorSpace';
 import useIsPlugin from './hooks/useIsPlugin';
-import { pluginPostMessage } from './pluginApi';
+import { asyncPluginMessage, pluginPostMessage } from './pluginApi';
 import { roundToFixedPrecision } from './util/mathUtils';
 
-import { Color, MouseOrTouchEventHandler, PluginMessageType, Size, XY, XYZero, isMouseEvent } from './types';
+import {
+  Color,
+  MouseOrTouchEventHandler,
+  PluginMessageType,
+  Size,
+  XY,
+  XYZero,
+  isMouseEvent,
+  PluginReturnMessageGetTheme
+} from './types';
 
 import './App.css';
 
@@ -47,8 +56,19 @@ const App: FC = () => {
 
   const containerRef = useRef<HTMLDivElement>(null);
 
+  const getPluginTheme = useCallback(async () => {
+    // TODO: Update this state to a context or as props to pickers so the balls can be updated
+    if (isFigma) {
+      const theme = ((await asyncPluginMessage({ type: PluginMessageType.GetTheme })) as PluginReturnMessageGetTheme)
+        .payload;
+      document.styleSheets[0].insertRule(theme);
+    }
+  }, [isFigma]);
+
   useEffect(() => {
     window.addEventListener('message', (e) => !e.data.source?.includes('react-devtools') && console.log(e));
+    getPluginTheme();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {

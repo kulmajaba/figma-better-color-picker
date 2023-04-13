@@ -1,16 +1,19 @@
 import strings from './assets/strings';
 import { roundArrayTo1Decimals } from './util/mathUtils';
 
-import { PluginMessage, PluginMessageType } from './types';
+import { PluginMessage, PluginMessageType, PluginReturnMessageGetTheme } from './types';
 
 declare const BASE_URL: string | undefined;
 const urlParam = '?figma=true';
 const defaultWidth = 336;
 const defaultHeight = 830;
 
-console.log('Plugin base URL:', BASE_URL);
+let theme = '';
 
-const html = `<script>window.location.href="${BASE_URL}${urlParam}"</script>`;
+const html = `<script>
+  parent.postMessage({ pluginMessage: { type: 'SAVE_THEME', payload: document.getElementById('figma-style').innerHTML } }, '*');
+  window.location.href="${BASE_URL}${urlParam}";
+</script>`;
 
 figma.showUI(html, { themeColors: true, width: defaultWidth, height: defaultHeight });
 
@@ -47,6 +50,19 @@ figma.ui.onmessage = (msg: PluginMessage) => {
     case PluginMessageType.Resize: {
       figma.ui.resize(msg.payload.width, msg.payload.height ?? defaultHeight);
       break;
+    }
+    case PluginMessageType.SaveTheme: {
+      theme = msg.payload;
+      break;
+    }
+    case PluginMessageType.GetTheme: {
+      const pluginMessage: PluginReturnMessageGetTheme = {
+        type: PluginMessageType.GetTheme,
+        payload: theme,
+        fromFigma: true,
+        returnId: msg.returnId
+      };
+      figma.ui.postMessage(pluginMessage);
     }
   }
 };

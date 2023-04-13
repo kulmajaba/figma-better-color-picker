@@ -31,7 +31,8 @@ const PickerBall: FC<Props> = ({ value, horizontalChangeDirection, verticalChang
           : Math.round((1 - value.y) * (height - 2 * r) + r);
 
       ctx.clearRect(0, 0, width, height);
-      ctx.strokeStyle = '#ffffff';
+      // TODO: Fix this to change as soon as the CSS changes, not on render
+      ctx.strokeStyle = (canvasRef.current && getComputedStyle(canvasRef.current).color) ?? '#ffffff';
       ctx.beginPath();
       ctx.arc(x, y, r - strokeWidth, 0, Math.PI * 2);
       ctx.stroke();

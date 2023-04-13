@@ -2,6 +2,11 @@ import { MouseEvent, TouchEvent } from 'react';
 
 import * as colorSpace from './color';
 
+// Better Omit type for Discriminated Union types
+// https://github.com/microsoft/TypeScript/issues/31501
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type OmitStrict<T, K extends keyof T> = T extends any ? Pick<T, Exclude<keyof T, K>> : never;
+
 export type Color = [number, number, number];
 export type ColorWithAlpha = [number, number, number, number];
 
@@ -11,12 +16,15 @@ export type InputValue = string | number | readonly string[] | undefined;
 
 export enum PluginMessageType {
   AddColor = 'ADD_COLOR',
-  Resize = 'RESIZE'
+  Resize = 'RESIZE',
+  SaveTheme = 'SAVE_THEME',
+  GetTheme = 'GET_THEME'
 }
 
 interface PluginMessageBase {
   type: PluginMessageType;
   fromFigma: boolean;
+  returnId?: number;
 }
 
 export interface PluginMessageAddColor extends PluginMessageBase {
@@ -38,9 +46,30 @@ export interface PluginMessageResize extends PluginMessageBase {
   fromFigma: false;
 }
 
-// Union types for all accepted messages
-export type PluginMessage = PluginMessageAddColor | PluginMessageResize;
-export type PluginReturnMessage = unknown;
+interface PluginMessageSaveTheme extends PluginMessageBase {
+  type: PluginMessageType.SaveTheme;
+  payload: string;
+  fromFigma: false;
+}
+
+export interface PluginmessageGetTheme extends PluginMessageBase {
+  type: PluginMessageType.GetTheme;
+  fromFigma: false;
+}
+
+export interface PluginReturnMessageGetTheme extends PluginMessageBase {
+  type: PluginMessageType.GetTheme;
+  payload: string;
+  fromFigma: true;
+}
+
+// Discriminated Union types for all accepted messages
+export type PluginMessage =
+  | PluginMessageAddColor
+  | PluginMessageResize
+  | PluginMessageSaveTheme
+  | PluginmessageGetTheme;
+export type PluginReturnMessage = PluginReturnMessageGetTheme;
 
 export enum Direction {
   Horizontal = 'HORIZONTAL',

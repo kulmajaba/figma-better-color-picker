@@ -14,7 +14,7 @@
   --color-border: var(--figma-color-border, #444444);
   --color-border-selected: rgb(12 140 233 / 0.4); /* #0c8ce9 */
   --color-border-focus: var(--figma-color-border-selected, #0c8ce9);
-  --color-icon: var(--figma-color-ico, rgb(255 255 255 / 1));
+  --color-icon: var(--figma-color-icon, rgb(255 255 255 / 1));
   --color-icon-brand: var(--figma-color-icon-brand, #7cc4f8);
   --color-icon-tertiary: var(--figma-color-icon-tertiary, rgb(255 255 255 / 0.4));
   --color-switch-off: var(--figma-color-icon-tertiary, #ffffff66);
