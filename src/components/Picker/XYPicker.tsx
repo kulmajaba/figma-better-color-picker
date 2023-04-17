@@ -92,7 +92,7 @@ const XYPicker: FC<Props> = ({ firstComponentValues, firstComponent, value, onCh
       />
       {status !== WorkerStatus.Idle && (
         <div className="XYPicker-loadingIndicator">
-          <p>Loading</p>
+          <p className="XYPicker-loadingIndicatorText">Loading</p>
         </div>
       )}
     </div>

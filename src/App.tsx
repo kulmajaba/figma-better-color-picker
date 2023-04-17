@@ -16,6 +16,7 @@ import HuePicker from './components/Picker/SliderPicker';
 import XYPicker from './components/Picker/XYPicker';
 import { useColorSpace } from './hooks/useColorSpace';
 import useIsPlugin from './hooks/useIsPlugin';
+import { useTheme } from './hooks/useTheme';
 import { asyncPluginMessage, pluginPostMessage } from './pluginApi';
 import { roundToFixedPrecision } from './util/mathUtils';
 
@@ -53,20 +54,34 @@ const App: FC = () => {
 
   const { fromSRGB, toSRGB, convertFromPrevious, inputLabelKey } = useColorSpace();
   const { isFigma, isPlugin } = useIsPlugin();
+  const { updateTheme } = useTheme();
 
   const containerRef = useRef<HTMLDivElement>(null);
 
   const getPluginTheme = useCallback(async () => {
-    // TODO: Update this state to a context or as props to pickers so the balls can be updated
     if (isFigma) {
-      const theme = ((await asyncPluginMessage({ type: PluginMessageType.GetTheme })) as PluginReturnMessageGetTheme)
-        .payload;
-      document.styleSheets[0].insertRule(theme);
+      try {
+        const theme = ((await asyncPluginMessage({ type: PluginMessageType.GetTheme })) as PluginReturnMessageGetTheme)
+          .payload;
+        document.styleSheets[0].insertRule(theme);
+        updateTheme();
+      } catch (e) {
+        console.warn(e);
+      }
     }
-  }, [isFigma]);
+  }, [isFigma, updateTheme]);
 
   useEffect(() => {
-    window.addEventListener('message', (e) => !e.data.source?.includes('react-devtools') && console.log(e));
+    window.addEventListener('message', (e) => {
+      if (e.data.source?.includes('react-devtools')) {
+        return;
+      }
+      if (Object.hasOwn(e.data, 'pluginMessage')) {
+        console.log(e.data.pluginMessage);
+      } else {
+        console.log(e);
+      }
+    });
     getPluginTheme();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);

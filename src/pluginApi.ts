@@ -1,6 +1,6 @@
 import manifest from '../manifest.json';
 
-import { OmitStrict, PluginMessage, PluginReturnMessage } from './types';
+import { OmitStrict, PluginMessage, PluginMessageType, PluginReturnMessage } from './types';
 
 /**
  * Post a message to Figma plugin
@@ -16,22 +16,21 @@ export const asyncPluginMessage = async (
   timeoutMs = 5000
 ) => {
   const returnId = Date.now(); // Eh it's unique enough, use the uuid package if you care more than I do
-  console.log(`New message of type ${msg.type} with returnId ${returnId}`);
 
-  const result = new Promise<PluginReturnMessage>((resolve) => {
+  const result = new Promise<PluginReturnMessage>((resolve, reject) => {
     const handleMessage = (e: MessageEvent<{ pluginMessage: PluginReturnMessage; pluginId: string }>) => {
       if (e.data.pluginMessage.fromFigma && e.data.pluginMessage.returnId === returnId) {
-        console.log(`UI message for returnId ${returnId} received`);
-        console.log(e.data.pluginMessage);
         resolve(e.data.pluginMessage);
         window.removeEventListener('message', handleMessage);
       }
     };
 
     window.addEventListener('message', handleMessage);
-  });
-  const timeout = new Promise<PluginReturnMessage>((_, reject) => {
-    setTimeout(() => reject(`asyncMessage timeout for returnId ${returnId}`), timeoutMs);
+
+    setTimeout(() => {
+      window.removeEventListener('message', handleMessage);
+      reject(`asyncMessage timeout for returnId ${returnId}, type ${msg.type}`);
+    }, timeoutMs);
   });
 
   const pluginMessage: PluginMessage = {
@@ -41,5 +40,10 @@ export const asyncPluginMessage = async (
   };
   parent.postMessage({ pluginMessage, pluginId: manifest.id }, '*');
 
-  return Promise.race([result, timeout]);
+  return result;
 };
+
+type ApiEndpoint<T> = (message: PluginMessageType) => Promise<T>;
+
+export const getTheme: ApiEndpoint<string> = async () =>
+  (await asyncPluginMessage({ type: PluginMessageType.GetTheme })).payload;

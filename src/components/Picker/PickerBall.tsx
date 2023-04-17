@@ -1,5 +1,7 @@
 import { FC, useCallback, useEffect, useRef, useState } from 'react';
 
+import { useTheme } from '../../hooks/useTheme';
+
 import { HorizontalChangeDirection, VerticalChangeDirection } from '../../types';
 
 import './PickerBall.css';
@@ -12,6 +14,8 @@ interface Props {
 
 const PickerBall: FC<Props> = ({ value, horizontalChangeDirection, verticalChangeDirection }) => {
   const [canvasSize, setCanvasSize] = useState({ width: 0, height: 0 });
+
+  const { theme } = useTheme();
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -31,13 +35,12 @@ const PickerBall: FC<Props> = ({ value, horizontalChangeDirection, verticalChang
           : Math.round((1 - value.y) * (height - 2 * r) + r);
 
       ctx.clearRect(0, 0, width, height);
-      // TODO: Fix this to change as soon as the CSS changes, not on render
-      ctx.strokeStyle = (canvasRef.current && getComputedStyle(canvasRef.current).color) ?? '#ffffff';
+      ctx.strokeStyle = theme['--color-text'];
       ctx.beginPath();
       ctx.arc(x, y, r - strokeWidth, 0, Math.PI * 2);
       ctx.stroke();
     },
-    [horizontalChangeDirection, value, verticalChangeDirection]
+    [horizontalChangeDirection, theme, value, verticalChangeDirection]
   );
 
   useEffect(() => {
@@ -52,7 +55,7 @@ const PickerBall: FC<Props> = ({ value, horizontalChangeDirection, verticalChang
       const context = canvas.getContext('2d');
       context && draw(context);
     }
-  }, [value, canvasSize, draw]);
+  }, [value, canvasSize, draw, theme]);
 
   return <canvas ref={canvasRef} className="PickerBall" />;
 };
