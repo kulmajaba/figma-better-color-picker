@@ -57,6 +57,8 @@ Things that have been tried:
 - Using figma.clientStorage: aborts after timeout due to large size (apparently window.postMessage does send the data?)
 - Saving the data as static JSON file and bundling it with the plugin: big-json does not work in browser out of the box and it sucks to download that much data that could be calculated and saved locally
 
+Another option is to simply downscale the images to half resolution and interpolate the missing pixels. This lowers color accuracy a bit but is much faster to calculate.
+
 ## Development
 
 The plugin is based on Node.js, ensure you have a modern LTS version on your computer or use nvm to manage your Node versions:
