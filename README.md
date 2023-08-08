@@ -26,6 +26,7 @@ If you encountered a bug you'd like to report, check the [Issues](https://github
 - Moving the entrypoint HTML to separate files
   - Non-trivial, since the entrypoint HTML would need to be bundled to contain the JS, then the bundle needs to be imported as text into `plugin.js`
 - Use RPC notifications when possible to avoid unnecessary messages
+- Add `"componentName": "[A-Z]+",` back to `.stylelintrc` when a new version of `stylelint-selector-bem-pattern` is available
 
 ### Undo history???
 
