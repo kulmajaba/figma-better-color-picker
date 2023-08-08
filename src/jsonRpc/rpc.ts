@@ -29,7 +29,7 @@ const log = (...msg: unknown[]) => logBase('log', ...msg);
 const logWarn = (...msg: unknown[]) => logBase('warn', ...msg);
 const logError = (...msg: unknown[]) => logBase('error', ...msg);
 
-const pending: Record<number, RPCCallBack<typeof methods[MethodName]>> = {};
+const pending: Record<number, RPCCallBack<(typeof methods)[MethodName]>> = {};
 
 let rpcIndex = 0;
 
@@ -112,7 +112,7 @@ const handleRpc = <P extends unknown[], T>(json: RPCNotification<P> | RPCRespons
 const methods: RPCMethodObject<ApiFunctions> = {};
 type MethodName = keyof typeof methods & string;
 
-const onRequest = <K extends MethodName>(method: K, params: Parameters<typeof methods[K]> | undefined) => {
+const onRequest = <K extends MethodName>(method: K, params: Parameters<(typeof methods)[K]> | undefined) => {
   if (!methods[method]) {
     logError(`onRequest: Method ${method} not found in methods: ${Object.keys(methods)}`);
     throw new MethodNotFound(method);
@@ -169,7 +169,7 @@ export const sendRequest = <K extends MethodName, P extends unknown[]>(method: K
     const id = rpcIndex;
     const req: RPCRequest<P> = { jsonrpc: '2.0', method, params, id };
     rpcIndex += 1;
-    const callback: RPCCallBack<typeof methods[K]> = (result, err) => {
+    const callback: RPCCallBack<(typeof methods)[K]> = (result, err) => {
       if (err) {
         const jsError = new RPCError(err.code, err.message, err.data);
         reject(jsError);
