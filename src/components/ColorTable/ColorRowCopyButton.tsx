@@ -1,18 +1,19 @@
-import React, { useCallback } from 'react';
+import { FC, useCallback } from 'react';
 
 import strings from '../../assets/strings';
 import { useColorSpace } from '../../hooks/useColorSpace';
 import { useCopyFormat } from '../../hooks/useCopyFormat';
 import useIsPlugin from '../../hooks/useIsPlugin';
-import { Color } from '../../types';
 import Button from '../Lib/Button';
+
+import { Color } from '../../types';
 
 interface Props {
   color: Color;
   alpha: number;
 }
 
-const ColorRowCopyButton: React.FC<Props> = ({ color, alpha }) => {
+const ColorRowCopyButton: FC<Props> = ({ color, alpha }) => {
   const { isFigma } = useIsPlugin();
 
   const { toSRGB } = useColorSpace();

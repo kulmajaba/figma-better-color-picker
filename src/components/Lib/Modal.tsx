@@ -1,6 +1,8 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions, jsx-a11y/click-events-have-key-events */
+import { FC, useCallback } from 'react';
+
 import classNames from 'classnames';
-import React, { useCallback } from 'react';
+
 import Button from './Button';
 
 import './Modal.css';
@@ -12,7 +14,7 @@ export interface Props {
   children?: React.ReactNode;
 }
 
-const Modal: React.FC<Props> = ({ visible, onClose, title, children }) => {
+const Modal: FC<Props> = ({ visible, onClose, title, children }) => {
   const containerClassNames = classNames('Modal', { 'is-visible': visible });
 
   const onContentClick = useCallback((e: React.MouseEvent<HTMLDivElement, MouseEvent>) => e.stopPropagation(), []);

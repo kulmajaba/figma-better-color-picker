@@ -1,10 +1,10 @@
-import React from 'react';
+import { FC } from 'react';
 
 import strings from '../../assets/strings';
 import { useContrastChecker } from '../../hooks/useContrastChecker';
 import Switch from '../Lib/Switch';
 
-const ContrastCheckerSwitch: React.FC = () => {
+const ContrastCheckerSwitch: FC = () => {
   const { contrastCheckerVisible, toggleContrastCheckerVisible } = useContrastChecker();
 
   return (

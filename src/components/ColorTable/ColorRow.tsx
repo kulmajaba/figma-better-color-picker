@@ -1,18 +1,23 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { FC, useCallback, useEffect, useMemo, useState } from 'react';
+
+import classNames from 'classnames';
 
 import { useColorSpace } from '../../hooks/useColorSpace';
-import { Color } from '../../types';
-import ColorInput from '../ColorInput';
-import ColorRowAddButton from './ColorRowAddButton';
-import Button from '../Lib/Button';
 import { useContrastChecker } from '../../hooks/useContrastChecker';
-import ContrastCheckerCell from './ContrastCheckerCell';
-import ColorTileButton from './ColorTileButton';
+import ColorInput from '../ColorInput';
+import Button from '../Lib/Button';
+
+import ColorRowAddButton from './ColorRowAddButton';
 import ColorRowCopyButton from './ColorRowCopyButton';
+import ColorTileButton from './ColorTileButton';
+import ContrastCheckerCell from './ContrastCheckerCell';
+
+import { Color, SetEditingColorCallback } from '../../types';
 
 import './ColorRow.css';
 
 interface Props {
+  id: number;
   firstComponent: number;
   secondComponent: number;
   thirdComponent: number;
@@ -21,13 +26,15 @@ interface Props {
   secondComponentLocked: boolean;
   thirdComponentLocked: boolean;
   alphaLocked: boolean;
-  editing: boolean;
+  editingColorRow: number | undefined;
+  editingContrastColumn: number | undefined;
   contrastColors: Color[];
   onDelete: () => void;
-  onSetEditing: (color: Color, alpha: number) => void;
+  onSetEditing: SetEditingColorCallback;
 }
 
-const ColorRow: React.FC<Props> = ({
+const ColorRow: FC<Props> = ({
+  id,
   firstComponent: firstComponentProp,
   secondComponent: secondComponentProp,
   thirdComponent: thirdComponentProp,
@@ -36,7 +43,8 @@ const ColorRow: React.FC<Props> = ({
   secondComponentLocked,
   thirdComponentLocked,
   alphaLocked,
-  editing,
+  editingColorRow,
+  editingContrastColumn,
   contrastColors,
   onDelete,
   onSetEditing: onSetEditingProp
@@ -59,6 +67,13 @@ const ColorRow: React.FC<Props> = ({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [convertFromPrevious]);
+
+  const editing = useMemo(() => editingColorRow === id, [editingColorRow, id]);
+
+  const color: Color = useMemo(
+    () => [firstComponent, secondComponent, thirdComponent],
+    [firstComponent, secondComponent, thirdComponent]
+  );
 
   useEffect(() => {
     if (firstComponentLocked || editing) {
@@ -84,45 +99,61 @@ const ColorRow: React.FC<Props> = ({
     }
   }, [alphaProp, alphaLocked, editing]);
 
-  // TODO: call onSetEditing if needed
   const onColorChange = useCallback(
-    (color: Color) => {
-      const shouldChangeFirst = !firstComponentLocked && color[0] !== firstComponent;
-      const shouldChangeSecond = !secondComponentLocked && color[1] !== secondComponent;
-      const shouldChangeThird = !thirdComponentLocked && color[2] !== thirdComponent;
+    (newColor: Color) => {
+      if (editing) {
+        onSetEditingProp(id, undefined, newColor, alpha);
+      }
 
-      shouldChangeFirst && setFirstComponent(color[0]);
-      shouldChangeSecond && setSecondComponent(color[1]);
-      shouldChangeThird && setThirdComponent(color[2]);
+      const shouldChangeFirst = !firstComponentLocked && newColor[0] !== firstComponent;
+      const shouldChangeSecond = !secondComponentLocked && newColor[1] !== secondComponent;
+      const shouldChangeThird = !thirdComponentLocked && newColor[2] !== thirdComponent;
+
+      shouldChangeFirst && setFirstComponent(newColor[0]);
+      shouldChangeSecond && setSecondComponent(newColor[1]);
+      shouldChangeThird && setThirdComponent(newColor[2]);
 
       if (shouldChangeFirst || shouldChangeSecond || shouldChangeThird) {
         return true;
       }
+
       return false;
     },
-    [firstComponentLocked, secondComponentLocked, thirdComponentLocked, firstComponent, secondComponent, thirdComponent]
+    [
+      firstComponentLocked,
+      firstComponent,
+      secondComponentLocked,
+      secondComponent,
+      thirdComponentLocked,
+      thirdComponent,
+      editing,
+      onSetEditingProp,
+      id,
+      alpha
+    ]
   );
 
   const onAlphaChange = useCallback(
     (newAlpha: number) => {
+      if (editing) {
+        onSetEditingProp(id, undefined, color, newAlpha);
+      }
+
       if (!alphaLocked && alpha !== newAlpha) {
         setAlpha(newAlpha);
         return true;
-      } else {
-        return false;
       }
-    },
-    [alpha, alphaLocked]
-  );
 
-  const color: Color = useMemo(
-    () => [firstComponent, secondComponent, thirdComponent],
-    [firstComponent, secondComponent, thirdComponent]
+      return false;
+    },
+    [alpha, alphaLocked, color, editing, id, onSetEditingProp]
   );
 
   const onSetEditing = useCallback(() => {
-    onSetEditingProp(color, alpha);
-  }, [onSetEditingProp, color, alpha]);
+    onSetEditingProp(id, undefined, color, alpha);
+  }, [onSetEditingProp, id, color, alpha]);
+
+  const contrastRowClassNames = classNames('ColorRow-contrastRow', { 'ColorRow-contrastRow--selected': editing });
 
   return (
     <>
@@ -142,9 +173,14 @@ const ColorRow: React.FC<Props> = ({
         </div>
       </div>
       {contrastCheckerVisible && contrastColors.length > 0 && (
-        <div className="ColorRow-contrastRow">
+        <div className={contrastRowClassNames}>
           {contrastColors.map((contrastColor, i) => (
-            <ContrastCheckerCell key={i} color={color} contrastColor={contrastColor} />
+            <ContrastCheckerCell
+              key={i}
+              color={color}
+              contrastColor={contrastColor}
+              editing={editingContrastColumn === i}
+            />
           ))}
         </div>
       )}

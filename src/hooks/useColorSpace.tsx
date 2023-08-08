@@ -1,9 +1,11 @@
-import React, { useState, useContext, createContext, useCallback, useMemo } from 'react';
+import { useState, useContext, createContext, useCallback, useMemo, FC } from 'react';
 
+import strings from '../assets/strings';
 import { hslvfloat_to_hslv, hslv_to_hslvfloat } from '../color/general';
 import { okhsl_to_srgb, okhsv_to_srgb, srgb_to_okhsl, srgb_to_okhsv } from '../color/oklab';
+import { closeEnough } from '../util/mathUtils';
+
 import { Color, ColorConverter } from '../types';
-import strings from '../assets/strings';
 
 /**
  * Color spaces work with arrays of exactly three color components.
@@ -34,6 +36,20 @@ export interface ColorSpace {
    */
   fromComponentRepresentation: ColorConverter;
   /**
+   * Checks whether the first component matters in a color
+   * E.g. Should return true if first component is hue for a color with saturation 0
+   */
+  firstComponentAgnostic: (color: Color) => boolean;
+  /**
+   * Checks whether the second component matters in a color
+   * E.g. should return true if second component is saturation for a color with brightness 0
+   */
+  secondComponentAgnostic: (color: Color) => boolean;
+  /**
+   * Checks whether the third component matters in a color, e.g. brightness
+   */
+  thirdComponentAgnostic: (color: Color) => boolean;
+  /**
    * When generating the slider control for the first color component,
    * the second and third components (e.g. S and V for HSV) are set to these values
    */
@@ -45,7 +61,7 @@ export interface ColorSpace {
   /**
    * Visible on main inputs
    */
-  inputLabel: keyof typeof strings.label;
+  inputLabelKey: keyof typeof strings.label;
 }
 
 const okhsv: ColorSpace = {
@@ -54,9 +70,13 @@ const okhsv: ColorSpace = {
   toSRGB: okhsv_to_srgb,
   toComponentRepresentation: hslvfloat_to_hslv,
   fromComponentRepresentation: hslv_to_hslvfloat,
+  firstComponentAgnostic: (color) =>
+    closeEnough(color[1], 0) || closeEnough(color[2], 0) || (closeEnough(color[1], 0) && closeEnough(color[2], 1)),
+  secondComponentAgnostic: (color) => closeEnough(color[2], 0),
+  thirdComponentAgnostic: () => false,
   firstComponentSliderConstants: [0.9, 0.9],
   componentShortNames: ['H', 'S', 'V'],
-  inputLabel: 'hsv'
+  inputLabelKey: 'hsv'
 };
 
 const okhsl: ColorSpace = {
@@ -65,9 +85,12 @@ const okhsl: ColorSpace = {
   toSRGB: okhsl_to_srgb,
   toComponentRepresentation: hslvfloat_to_hslv,
   fromComponentRepresentation: hslv_to_hslvfloat,
+  firstComponentAgnostic: (color) => closeEnough(color[1], 0) || closeEnough(color[2], 0) || closeEnough(color[2], 1),
+  secondComponentAgnostic: (color) => closeEnough(color[2], 0) || closeEnough(color[2], 1),
+  thirdComponentAgnostic: () => false,
   firstComponentSliderConstants: [1, 0.6],
   componentShortNames: ['H', 'S', 'L'],
-  inputLabel: 'hsl'
+  inputLabelKey: 'hsl'
 };
 
 export const colorSpaces = {
@@ -98,7 +121,7 @@ const ColorSpaceContext = createContext<SpaceContext>({
   convertFromPrevious: undefined
 });
 
-export const ColorSpaceProvider: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
+export const ColorSpaceProvider: FC<{ children?: React.ReactNode }> = ({ children }) => {
   const [colorSpace, _setColorSpace] = useState(okhsv);
   const [colorSpaceName, setColorSpaceName] = useState<ColorSpaceName>('okhsv');
   const [convertFromPrevious, setConvertFromPrevious] = useState<ColorConverter | undefined>(undefined);

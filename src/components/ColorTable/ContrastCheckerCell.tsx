@@ -1,19 +1,27 @@
-import React from 'react';
+import { FC } from 'react';
 
-import { Color } from '../../types';
-import { floorTo2Decimals } from '../../util/mathUtils';
+import classNames from 'classnames';
+
 import { useColorSpace } from '../../hooks/useColorSpace';
 import { getColorContrast } from '../../util/colorContrast';
+import { floorTo2Decimals } from '../../util/mathUtils';
+
+import { Color } from '../../types';
+
+import './ContrastCheckerCell.css';
 
 interface Props {
   color: Color;
   contrastColor: Color;
+  editing: boolean;
 }
 
-const ContrastCheckerCell: React.FC<Props> = ({ color, contrastColor }) => {
+const ContrastCheckerCell: FC<Props> = ({ color, contrastColor, editing }) => {
   const { toSRGB } = useColorSpace();
 
-  return <div>{floorTo2Decimals(getColorContrast(color, contrastColor, toSRGB))} : 1</div>;
+  const cellClassNames = classNames('ContrastCheckerCell', { 'ContrastCheckerCell--selected': editing });
+
+  return <div className={cellClassNames}>{floorTo2Decimals(getColorContrast(color, contrastColor, toSRGB))} : 1</div>;
 };
 
 export default ContrastCheckerCell;

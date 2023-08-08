@@ -12,8 +12,9 @@
   --color-bg-brand-hover: var(--figma-color-bg-brand-hover, #0a6dc2);
   --color-bg-brand-active: var(--figma-color-bg-brand-pressed, #0a6dc2);
   --color-border: var(--figma-color-border, #444444);
+  --color-border-selected: rgb(12 140 233 / 0.4); /* #0c8ce9 */
   --color-border-focus: var(--figma-color-border-selected, #0c8ce9);
-  --color-icon: var(--figma-color-ico, rgb(255 255 255 / 1));
+  --color-icon: var(--figma-color-icon, rgb(255 255 255 / 1));
   --color-icon-brand: var(--figma-color-icon-brand, #7cc4f8);
   --color-icon-tertiary: var(--figma-color-icon-tertiary, rgb(255 255 255 / 0.4));
   --color-switch-off: var(--figma-color-icon-tertiary, #ffffff66);
@@ -49,15 +50,15 @@
   --spacing-l: 1rem;
   --spacing-color-row: 4px;
 
-  --padding-color-row: var(--spacing-m) var(--spacing-m) 0;
-  --padding-contrast-table-row: var(--spacing-m) var(--spacing-m) 0 var(--spacing-l);
+  --padding-color-row: var(--spacing-s) var(--spacing-m);
 
   --border-1px: 1px solid var(--color-border);
+  --border-1px-selected: 1px solid var(--color-border-selected);
 
   --grid-main-columns: fit-content(var(--width-main)) minmax(0, auto);
   --grid-color-input-columns: 1fr 1fr 1fr 1.5fr;
   --grid-color-row-columns: var(--size-color-tile) 4.5fr 1.8fr;
-  --grid-contrast-table-columns: calc(var(--font-size) * 4 + 2px);
+  --grid-contrast-table-columns: calc(var(--font-size) * 4 + 4px + var(--spacing-s) * 2);
 }
 
 .is-plugin {

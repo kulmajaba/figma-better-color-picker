@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { FC, useCallback, useEffect, useRef, useState } from 'react';
 
 import classNames from 'classnames';
 
@@ -56,7 +56,7 @@ const getDelta = (
   return 0;
 };
 
-const ToolTip: React.FC<Props> = ({ tooltip, children, className }) => {
+const ToolTip: FC<Props> = ({ tooltip, children, className }) => {
   const [offset, setOffset] = useState<XY>({ x: 0, y: 0 });
   const [display, setDisplay] = useState(false);
   const [visible, setVisible] = useState(false);

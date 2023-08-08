@@ -1,0 +1,13 @@
+.ContrastCheckerCell {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0 var(--spacing-s) 0 var(--spacing-s);
+  border-right: 1px solid transparent;
+  border-left: 1px solid transparent;
+}
+
+.ContrastCheckerCell--selected {
+  border-right: var(--border-1px-selected);
+  border-left: var(--border-1px-selected);
+}

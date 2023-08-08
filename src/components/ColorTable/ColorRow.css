@@ -16,12 +16,15 @@
 
 .ColorRow-contrastRow {
   display: grid;
-  align-items: center;
   align-self: stretch;
-  padding: var(--padding-contrast-table-row);
+  padding: 0 var(--spacing-m) 0 var(--spacing-l);
   border-left: var(--border-1px);
   margin-left: var(--spacing-m);
   grid-auto-columns: var(--grid-contrast-table-columns);
   grid-auto-flow: column;
-  grid-column-gap: var(--spacing-m);
+}
+
+.ColorRow-contrastRow--selected {
+  border-top: var(--border-1px-selected);
+  border-bottom: var(--border-1px-selected);
 }
