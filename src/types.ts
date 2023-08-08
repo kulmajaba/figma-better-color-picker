@@ -14,63 +14,6 @@ export type ColorConverter = (color: Color) => Color;
 
 export type InputValue = string | number | readonly string[] | undefined;
 
-export enum PluginMessageType {
-  AddColor = 'ADD_COLOR',
-  Resize = 'RESIZE',
-  SaveTheme = 'SAVE_THEME',
-  GetTheme = 'GET_THEME'
-}
-
-interface PluginMessageBase {
-  type: PluginMessageType;
-  fromFigma: boolean;
-  returnId?: number;
-}
-
-export interface PluginMessageAddColor extends PluginMessageBase {
-  type: PluginMessageType.AddColor;
-  payload: {
-    color: Color;
-    alpha: number;
-    colorSpaceName: string;
-    componentRepresentation: Color;
-    colorName: string | undefined;
-    updateExistingStyle: boolean;
-  };
-  fromFigma: false;
-}
-
-export interface PluginMessageResize extends PluginMessageBase {
-  type: PluginMessageType.Resize;
-  payload: { width: number; height?: number };
-  fromFigma: false;
-}
-
-interface PluginMessageSaveTheme extends PluginMessageBase {
-  type: PluginMessageType.SaveTheme;
-  payload: string;
-  fromFigma: false;
-}
-
-export interface PluginmessageGetTheme extends PluginMessageBase {
-  type: PluginMessageType.GetTheme;
-  fromFigma: false;
-}
-
-export interface PluginReturnMessageGetTheme extends PluginMessageBase {
-  type: PluginMessageType.GetTheme;
-  payload: string;
-  fromFigma: true;
-}
-
-// Discriminated Union types for all accepted messages
-export type PluginMessage =
-  | PluginMessageAddColor
-  | PluginMessageResize
-  | PluginMessageSaveTheme
-  | PluginmessageGetTheme;
-export type PluginReturnMessage = PluginReturnMessageGetTheme;
-
 export enum Direction {
   Horizontal = 'HORIZONTAL',
   Vertical = 'VERTICAL'
@@ -134,3 +77,5 @@ export type SetEditingColorCallback = (
 ) => void;
 
 export const isMouseEvent = (e: MouseEvent | TouchEvent): e is MouseEvent => e.type.includes('mouse');
+
+export const strictObjectKeys = Object.keys as <T extends Record<string, unknown>>(obj: T) => Array<keyof T>;

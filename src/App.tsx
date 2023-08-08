@@ -17,19 +17,10 @@ import XYPicker from './components/Picker/XYPicker';
 import { useColorSpace } from './hooks/useColorSpace';
 import useIsPlugin from './hooks/useIsPlugin';
 import { useTheme } from './hooks/useTheme';
-import { asyncPluginMessage, pluginPostMessage } from './pluginApi';
+import { api } from './pluginApi';
 import { roundToFixedPrecision } from './util/mathUtils';
 
-import {
-  Color,
-  MouseOrTouchEventHandler,
-  PluginMessageType,
-  Size,
-  XY,
-  XYZero,
-  isMouseEvent,
-  PluginReturnMessageGetTheme
-} from './types';
+import { Color, MouseOrTouchEventHandler, Size, XY, XYZero, isMouseEvent } from './types';
 
 import './App.css';
 
@@ -61,8 +52,7 @@ const App: FC = () => {
   const getPluginTheme = useCallback(async () => {
     if (isFigma) {
       try {
-        const theme = ((await asyncPluginMessage({ type: PluginMessageType.GetTheme })) as PluginReturnMessageGetTheme)
-          .payload;
+        const theme = await api.getTheme();
         document.styleSheets[0].insertRule(theme);
         updateTheme();
       } catch (e) {
@@ -77,11 +67,12 @@ const App: FC = () => {
         return;
       }
       if (Object.hasOwn(e.data, 'pluginMessage')) {
-        console.log(e.data.pluginMessage);
+        console.log('UI received message:', e.data.pluginMessage);
       } else {
-        console.log(e);
+        console.log('UI received message:', e);
       }
     });
+
     getPluginTheme();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -193,7 +184,8 @@ const App: FC = () => {
           // Pad for scrollbar
           width += 8;
         }
-        pluginPostMessage({ type: PluginMessageType.Resize, payload: { width } });
+        // pluginPostMessage({ type: PluginMessageType.Resize, payload: { width } });
+        api.resizeUi(width);
       }
     },
     [isFigma]

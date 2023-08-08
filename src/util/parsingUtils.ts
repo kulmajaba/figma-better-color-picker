@@ -25,7 +25,7 @@ export const inputValueToNumber = (val: InputValue): number => {
 };
 
 export const inputValueToString = (val: InputValue): string => {
-  if (val) {
+  if (val !== undefined) {
     return val.toString();
   } else {
     throw new InvalidArgumentError(`Could not parse ${val} to string`);
