@@ -44,7 +44,6 @@ export const api = createPluginAPI({
     const description = `${colorSpaceName}: ${roundArrayTo1Decimals(componentRepresentation).join(', ')}`;
 
     if (existingPaintStyle && updateExistingStyle) {
-      console.log('Update style', colorName);
       existingPaintStyle.description = description;
       existingPaintStyle.paints = [{ type: 'SOLID', color: rgb, opacity: alpha }];
       figma.notify(`${strings.figma.updateColorSuccessful} ${colorName}`);
