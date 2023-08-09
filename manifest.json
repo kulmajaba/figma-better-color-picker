@@ -3,5 +3,10 @@
   "id": "1209779625070339366",
   "api": "1.0.0",
   "main": "dist/plugin.js",
-  "editorType": ["figma"]
+  "editorType": ["figma"],
+  "networkAccess": {
+    "allowedDomains": ["https://kulmajaba.com/get"],
+    "reasoning": "The picker is hosted externally to allow the use of the eyedropper. No communication beyond the initial loading of the plugin is done.",
+    "devAllowedDomains": ["http://localhost:5173"]
+  }
 }

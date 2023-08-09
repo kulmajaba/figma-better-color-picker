@@ -4,6 +4,7 @@
 - Added: Highlight rows and columns in the contrast table based on selected color
 - Added: Figma theme support in plugin mode
   - Only updates when the plugin is restarted
+- Added: Network access in Figma's plugin manifest
 - Changed: Use Figma theme for picker ball colours
 - Changed: Selected color's inputs are synced to the main inputs so either can be edited
 - Changed: Improved hue stability when inputting hex colors
