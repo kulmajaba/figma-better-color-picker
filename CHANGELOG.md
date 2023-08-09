@@ -1,4 +1,4 @@
-### Version 4 (unreleased)
+### Version 4 (2023-08-09)
 
 - Added: arithmetic support for number inputs
 - Added: Highlight rows and columns in the contrast table based on selected color
