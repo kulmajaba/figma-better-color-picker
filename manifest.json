@@ -5,7 +5,7 @@
   "main": "dist/plugin.js",
   "editorType": ["figma"],
   "networkAccess": {
-    "allowedDomains": ["https://kulmajaba.com/get"],
+    "allowedDomains": ["https://colorpicker.kulmajaba.com"],
     "reasoning": "The picker is hosted externally to allow the use of the eyedropper. No communication beyond the initial loading of the plugin is done.",
     "devAllowedDomains": ["http://localhost:5173"]
   }
