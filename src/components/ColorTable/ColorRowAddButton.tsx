@@ -37,7 +37,6 @@ const ColorRowAddButton: FC<Props> = ({ color, alpha }) => {
   }, [modalVisible]);
 
   const addColor = useCallback(() => {
-    console.log('Add color', colorName);
     api.addColor(
       toSRGB(color),
       alpha,

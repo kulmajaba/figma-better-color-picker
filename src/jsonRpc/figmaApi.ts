@@ -14,7 +14,6 @@ export const createUIAPI = <T extends ApiFunctions>(
   const timeoutMs = options && options.timeoutMs;
 
   if (typeof parent !== 'undefined') {
-    console.log('Setup UI API', methods);
     setup(methods);
   }
 
@@ -45,7 +44,6 @@ export const createPluginAPI = <T extends ApiFunctions>(
   const timeoutMs = options && options.timeoutMs;
 
   if (typeof figma !== 'undefined') {
-    console.log('Setup plugin API', methods);
     setup(methods);
   }
 

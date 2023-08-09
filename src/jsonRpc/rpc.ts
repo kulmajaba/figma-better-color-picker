@@ -25,6 +25,7 @@ const isUi = typeof parent !== 'undefined';
 type Level = 'log' | 'warn' | 'error';
 const logBase = (level: Level, ...msg: unknown[]) =>
   console[level](`RPC in ${isFigma ? 'logic' : isUi ? 'ui' : 'UNKNOWN'}:`, ...msg);
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const log = (...msg: unknown[]) => logBase('log', ...msg);
 const logWarn = (...msg: unknown[]) => logBase('warn', ...msg);
 const logError = (...msg: unknown[]) => logBase('error', ...msg);
@@ -90,7 +91,6 @@ const handleRaw = <P extends unknown[], T>(data: RPCNotification<P> | RPCRespons
 const handleRpc = <P extends unknown[], T>(json: RPCNotification<P> | RPCResponse<T>) => {
   if (!isRpcNotification(json)) {
     if (isRpcResponse(json)) {
-      log('handle RPC response');
       const callback = pending[json.id];
       if (!callback) {
         sendError(json.id, new InvalidRequest(`Missing callback for ${json.id}`));
@@ -125,7 +125,7 @@ const onRequest = <K extends MethodName>(method: K, params: Parameters<(typeof m
 
 const handleNotification = <P extends unknown[]>(json: RPCNotification<P>) => {
   if (!json.method) {
-    log(`handleNotification: no method specified in message ${json}`);
+    logWarn(`handleNotification: no method specified in message ${json}`);
     return;
   }
 
@@ -134,7 +134,7 @@ const handleNotification = <P extends unknown[]>(json: RPCNotification<P>) => {
 
 const handleRequest = async <P extends unknown[]>(json: RPCRequest<P>) => {
   if (!json.method) {
-    log(`handleRequest: no method specified in message ${json}`);
+    logWarn(`handleRequest: no method specified in message ${json}`);
     sendError(json.id, new InvalidRequest('No method specified in message'));
     return;
   }

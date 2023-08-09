@@ -44,11 +44,9 @@ const XYPicker: FC<Props> = ({ firstComponentValues, firstComponent, value, onCh
 
   const updateXYCache = useCallback(async () => {
     if (firstComponentValues.length === 0) {
-      console.log('No first component values given');
       return;
     }
 
-    console.log('Update XY cache');
     setXyDataCache({});
 
     const message: ImageDataWorkerMessage = {
