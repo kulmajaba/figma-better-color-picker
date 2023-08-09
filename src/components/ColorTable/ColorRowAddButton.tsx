@@ -1,15 +1,16 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { FC, useCallback, useEffect, useRef, useState } from 'react';
 
 import strings from '../../assets/strings';
 import { useColorSpace } from '../../hooks/useColorSpace';
 import useIsPlugin from '../../hooks/useIsPlugin';
-import { pluginPostMessage } from '../../pluginApi';
-import { Color, InputValue, PluginMessageType } from '../../types';
+import { api } from '../../pluginApi';
 import ColorTile from '../ColorTile';
 import Button from '../Lib/Button';
 import Input from '../Lib/Input';
 import Modal from '../Lib/Modal';
 import Switch from '../Lib/Switch';
+
+import { Color, InputValue } from '../../types';
 
 import './ColorRowAddButton.css';
 
@@ -18,7 +19,7 @@ interface Props {
   alpha: number;
 }
 
-const ColorRowAddButton: React.FC<Props> = ({ color, alpha }) => {
+const ColorRowAddButton: FC<Props> = ({ color, alpha }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [colorName, setColorName] = useState('');
   const [updateExistingStyle, setUpdateExistingStyle] = useState(true);
@@ -36,18 +37,14 @@ const ColorRowAddButton: React.FC<Props> = ({ color, alpha }) => {
   }, [modalVisible]);
 
   const addColor = useCallback(() => {
-    console.log('Add color', colorName);
-    pluginPostMessage({
-      type: PluginMessageType.AddColor,
-      payload: {
-        color: toSRGB(color),
-        alpha,
-        colorSpaceName,
-        componentRepresentation: toComponentRepresentation(color),
-        colorName: colorName !== '' ? colorName : undefined,
-        updateExistingStyle
-      }
-    });
+    api.addColor(
+      toSRGB(color),
+      alpha,
+      colorSpaceName,
+      toComponentRepresentation(color),
+      colorName !== '' ? colorName : undefined,
+      updateExistingStyle
+    );
     setModalVisible(false);
   }, [color, alpha, toSRGB, toComponentRepresentation, colorSpaceName, colorName, updateExistingStyle]);
 

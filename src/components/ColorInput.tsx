@@ -1,11 +1,13 @@
-import React, { useCallback } from 'react';
+import { FC, useCallback } from 'react';
 
-import { useColorSpace } from '../hooks/useColorSpace';
-import { Color, InputValue } from '../types';
-import { clampTo0_1, roundArrayTo1Decimals, roundTo1Decimals } from '../util/mathUtils';
-import { inputValueToNumber, inputValueToString } from '../util/parsingUtils';
 import { hex_to_rgb, rgb_to_hex } from '../color/general';
+import { useColorSpace } from '../hooks/useColorSpace';
+import { arraysCloseEnough, clampTo0_1, roundArrayTo1Decimals, roundTo1Decimals } from '../util/mathUtils';
+import { inputValueToNumber, inputValueToString } from '../util/parsingUtils';
+
 import Input from './Lib/Input';
+
+import { Color, InputValue } from '../types';
 
 import './ColorInput.css';
 
@@ -17,14 +19,22 @@ interface Props {
   onAlphaChange: (val: number) => boolean | void;
 }
 
-const ColorInput: React.FC<Props> = ({
+const ColorInput: FC<Props> = ({
   value: valueProp,
   alpha: alphaProp,
   type = 'component',
   onColorChange,
   onAlphaChange
 }) => {
-  const { fromSRGB, toSRGB, fromComponentRepresentation, toComponentRepresentation } = useColorSpace();
+  const {
+    fromSRGB,
+    toSRGB,
+    fromComponentRepresentation,
+    toComponentRepresentation,
+    firstComponentAgnostic,
+    secondComponentAgnostic,
+    thirdComponentAgnostic
+  } = useColorSpace();
 
   const alpha = roundTo1Decimals(alphaProp * 100);
 
@@ -68,14 +78,23 @@ const ColorInput: React.FC<Props> = ({
   const handleHexChange = useCallback(
     (value: InputValue) => {
       try {
-        const newValue = inputValueToString(value);
-        return onColorChange(fromSRGB(hex_to_rgb(newValue))) ?? true;
+        const newValue = fromSRGB(hex_to_rgb(inputValueToString(value)));
+        const aggregateValue = newValue;
+        firstComponentAgnostic(newValue) && (aggregateValue[0] = valueProp[0]);
+        secondComponentAgnostic(newValue) && (aggregateValue[1] = valueProp[1]);
+        thirdComponentAgnostic(newValue) && (aggregateValue[2] = valueProp[2]);
+
+        if (arraysCloseEnough(aggregateValue, valueProp)) {
+          return false;
+        }
+
+        return onColorChange(aggregateValue) ?? true;
       } catch (e) {
         console.error(e);
         return false;
       }
     },
-    [onColorChange, fromSRGB]
+    [fromSRGB, firstComponentAgnostic, valueProp, secondComponentAgnostic, thirdComponentAgnostic, onColorChange]
   );
 
   const handleAlphaChange = useCallback(
@@ -98,21 +117,21 @@ const ColorInput: React.FC<Props> = ({
       <div className="ColorInput">
         <Input
           className="ColorInput-input"
-          type="number"
+          type="text"
           required
           value={componentRepr[0]}
           onBlur={handleFirstComponentChange}
         />
         <Input
           className="ColorInput-input"
-          type="number"
+          type="text"
           required
           value={componentRepr[1]}
           onBlur={handleSecondComponentChange}
         />
         <Input
           className="ColorInput-input"
-          type="number"
+          type="text"
           required
           value={componentRepr[2]}
           onBlur={handleThirdComponentChange}

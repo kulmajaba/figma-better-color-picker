@@ -1,4 +1,4 @@
-import React, { createContext, useCallback, useContext, useMemo, useState } from 'react';
+import { createContext, FC, useCallback, useContext, useMemo, useState } from 'react';
 
 import useIsPlugin from './useIsPlugin';
 
@@ -12,7 +12,7 @@ const ContrastCheckerContext = createContext<CheckerContext>({
   toggleContrastCheckerVisible: () => undefined
 });
 
-export const ContrastCheckerProvider: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
+export const ContrastCheckerProvider: FC<{ children?: React.ReactNode }> = ({ children }) => {
   const { isPlugin } = useIsPlugin();
   const [contrastCheckerVisible, setContrastCheckerVisible] = useState(!isPlugin);
 

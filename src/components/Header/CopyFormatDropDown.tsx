@@ -1,19 +1,19 @@
-import React, { useMemo } from 'react';
+import { FC, useMemo } from 'react';
 
 import strings from '../../assets/strings';
 import { CopyFormat, CopyFormatName, copyFormats, useCopyFormat } from '../../hooks/useCopyFormat';
 import useIsPlugin from '../../hooks/useIsPlugin';
 import DropDown from '../Lib/DropDown';
 
-const CopyFormatDropDown: React.FC = () => {
+const CopyFormatDropDown: FC = () => {
   const { name, setCopyFormat } = useCopyFormat();
   const { isFigma } = useIsPlugin();
 
   const options = useMemo(
     () =>
-      (Object.entries(copyFormats) as [CopyFormatName, CopyFormat][]).map(([name, format]) => ({
+      (Object.entries(copyFormats) as [CopyFormatName, CopyFormat][]).map(([formatName, format]) => ({
         label: format.label,
-        value: name
+        value: formatName
       })),
     []
   );

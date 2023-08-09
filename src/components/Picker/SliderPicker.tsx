@@ -1,8 +1,10 @@
-import React, { useCallback } from 'react';
+import { FC, useCallback } from 'react';
 
 import { useColorSpace } from '../../hooks/useColorSpace';
-import { Color, Direction, MouseOrTouchEventHandler, Size, XY } from '../../types';
+
 import Picker from './Picker';
+
+import { Color, Direction, MouseOrTouchEventHandler, Size, XY } from '../../types';
 
 import './SliderPicker.css';
 
@@ -42,7 +44,7 @@ interface Props {
   onSizeChange: (size: Size) => void;
 }
 
-const SliderPicker: React.FC<Props> = ({ value, onChange, ...otherProps }) => {
+const SliderPicker: FC<Props> = ({ value, onChange, ...otherProps }) => {
   const { toSRGB, firstComponentSliderConstants } = useColorSpace();
 
   const createHorizontalSliderData = useCallback(

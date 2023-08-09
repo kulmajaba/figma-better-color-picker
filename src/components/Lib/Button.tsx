@@ -1,9 +1,10 @@
-import React from 'react';
+import { FC } from 'react';
 
 import classNames from 'classnames';
 
 import Icon, { IconKey } from './Icon';
 import ToolTip from './ToolTip';
+
 import { HMTLButtonProps } from '../../types';
 
 import './Button.css';
@@ -14,7 +15,7 @@ interface Props extends HMTLButtonProps {
   tooltip?: string;
 }
 
-const Button: React.FC<Props> = ({ className, children, icon, rotateIconDeg, tooltip, ...buttonProps }) => {
+const Button: FC<Props> = ({ className, children, icon, rotateIconDeg, tooltip, ...buttonProps }) => {
   const buttonClassNames = classNames('Button', 'u-focusBorder', className);
   const button = (
     <button className={buttonClassNames} type="button" {...buttonProps}>

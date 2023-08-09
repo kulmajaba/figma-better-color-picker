@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "ESNext",
     "lib": ["ESNext", "DOM", "DOM.Iterable"],
-    "jsx": "react",
+    "jsx": "react-jsx",
     "strict": true,
     "types": ["vite/client", "@figma/plugin-typings"],
     "outDir": "dist",

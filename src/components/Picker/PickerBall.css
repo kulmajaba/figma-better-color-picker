@@ -4,6 +4,7 @@
   left: calc(var(--radius-picker) * -1);
   width: calc(100% + var(--radius-picker) * 2);
   height: calc(100% + var(--radius-picker) * 2);
+  color: var(--color-text);
   pointer-events: none;
   touch-action: none;
 }

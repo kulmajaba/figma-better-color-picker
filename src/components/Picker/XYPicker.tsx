@@ -1,7 +1,12 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import { FC, memo, useCallback, useEffect, useState } from 'react';
 
 import { useColorSpace } from '../../hooks/useColorSpace';
 import useWebWorker from '../../hooks/useWebWorker';
+import { createXYData } from '../../util/imageData';
+import imageDataWorkerUrl from '../../util/imageDataWorker?worker&url';
+
+import Picker from './Picker';
+
 import {
   ImageDataCache,
   ImageDataWorkerMessage,
@@ -13,10 +18,6 @@ import {
   WorkerStatus,
   XY
 } from '../../types';
-import { createXYData } from '../../util/imageData';
-import Picker from './Picker';
-
-import imageDataWorkerUrl from '../../util/imageDataWorker?worker&url';
 
 import './XYPicker.css';
 
@@ -30,7 +31,7 @@ interface Props {
   onMouseDownOrTouchStart: MouseOrTouchEventHandler;
 }
 
-const XYPicker: React.FC<Props> = ({ firstComponentValues, firstComponent, value, onChange, ...otherProps }) => {
+const XYPicker: FC<Props> = ({ firstComponentValues, firstComponent, value, onChange, ...otherProps }) => {
   const [canvasSize, setCanvasSize] = useState<Size>(SizeZero);
   const [xyDataCache, setXyDataCache] = useState<ImageDataCache>({});
 
@@ -43,11 +44,9 @@ const XYPicker: React.FC<Props> = ({ firstComponentValues, firstComponent, value
 
   const updateXYCache = useCallback(async () => {
     if (firstComponentValues.length === 0) {
-      console.log('No first component values given');
       return;
     }
 
-    console.log('Update XY cache');
     setXyDataCache({});
 
     const message: ImageDataWorkerMessage = {
@@ -91,7 +90,7 @@ const XYPicker: React.FC<Props> = ({ firstComponentValues, firstComponent, value
       />
       {status !== WorkerStatus.Idle && (
         <div className="XYPicker-loadingIndicator">
-          <p>Loading</p>
+          <p className="XYPicker-loadingIndicatorText">Loading</p>
         </div>
       )}
     </div>
@@ -107,4 +106,4 @@ const areEqual = (prevProps: Props, nextProps: Props) =>
   prevProps.onChange === nextProps.onChange &&
   prevProps.onMouseDownOrTouchStart === nextProps.onMouseDownOrTouchStart;
 
-export default React.memo(XYPicker, areEqual);
+export default memo(XYPicker, areEqual);
