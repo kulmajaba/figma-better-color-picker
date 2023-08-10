@@ -1,15 +1,15 @@
-import manifest from '../../manifest.json';
-
 import { InvalidRequest, MethodNotFound, RPCError } from './errors';
 
 import {
   ApiFunctions,
+  LogLevel,
   RPCCallBack,
   RPCMessage,
   RPCMethodObject,
   RPCNotification,
   RPCRequest,
   RPCResponse,
+  RPCSendRaw,
   isRpcNotification,
   isRpcResponse,
   isRpcResponseError,
@@ -17,41 +17,31 @@ import {
 } from './types';
 
 const DEFAULT_TIMEOUT_MS = 3000;
-const PLUGIN_ID: string | undefined = manifest.id ?? undefined;
 
 // Debugging setup
-const isFigma = typeof figma !== 'undefined';
-const isUi = typeof parent !== 'undefined';
-type Level = 'log' | 'warn' | 'error';
-const logBase = (level: Level, ...msg: unknown[]) =>
-  console[level](`RPC in ${isFigma ? 'logic' : isUi ? 'ui' : 'UNKNOWN'}:`, ...msg);
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+/* eslint-disable @typescript-eslint/no-unused-vars */
+// Generic logger that is overridden with a more specific one by setup
+type Logger = (level: LogLevel, ...msg: unknown[]) => void;
+let logBase: Logger = (level, ...msg) => console[level](...msg);
+
 const log = (...msg: unknown[]) => logBase('log', ...msg);
 const logWarn = (...msg: unknown[]) => logBase('warn', ...msg);
 const logError = (...msg: unknown[]) => logBase('error', ...msg);
+/* eslint-enable @typescript-eslint/no-unused-vars */
 
+// Methods for processing remote API calls (set up on-host)
+const methods: RPCMethodObject<ApiFunctions> = {};
+type MethodName = keyof typeof methods & string;
+
+// Pending API calls (used off-host)
 const pending: Record<number, RPCCallBack<(typeof methods)[MethodName]>> = {};
-
 let rpcIndex = 0;
 
-let sendRaw: <P extends unknown[], T>(message: RPCMessage<P, T>) => void;
+let sendRaw: RPCSendRaw;
 
-if (typeof figma !== 'undefined') {
-  figma.ui.on('message', (message) => handleRaw(message));
-  sendRaw = (message) => figma.ui.postMessage(message);
-} else if (typeof parent !== 'undefined') {
-  onmessage = (event) => handleRaw(event.data.pluginMessage);
-
-  if (PLUGIN_ID !== undefined) {
-    sendRaw = (pluginMessage) => parent.postMessage({ pluginMessage, pluginId: PLUGIN_ID }, '*');
-  } else {
-    sendRaw = (pluginMessage) => parent.postMessage({ pluginMessage }, '*');
-  }
-}
-
-const sendJson = <P extends unknown[], T>(req: RPCMessage<P, T>) => {
+const sendJson = <P extends unknown[], T>(msg: RPCMessage<P, T>) => {
   try {
-    sendRaw(req);
+    sendRaw(msg);
   } catch (err) {
     logError(err);
   }
@@ -77,17 +67,6 @@ const sendError = (id: number, error: RPCError) => {
   });
 };
 
-const handleRaw = <P extends unknown[], T>(data: RPCNotification<P> | RPCResponse<T>) => {
-  try {
-    if (!data) {
-      return;
-    }
-    handleRpc(data);
-  } catch (err) {
-    logError('handleRaw error', err, data);
-  }
-};
-
 const handleRpc = <P extends unknown[], T>(json: RPCNotification<P> | RPCResponse<T>) => {
   if (!isRpcNotification(json)) {
     if (isRpcResponse(json)) {
@@ -109,8 +88,16 @@ const handleRpc = <P extends unknown[], T>(json: RPCNotification<P> | RPCRespons
   }
 };
 
-const methods: RPCMethodObject<ApiFunctions> = {};
-type MethodName = keyof typeof methods & string;
+export const handleRaw = <P extends unknown[], T>(data: RPCNotification<P> | RPCResponse<T>) => {
+  try {
+    if (!data) {
+      return;
+    }
+    handleRpc(data);
+  } catch (err) {
+    logError('handleRaw error', err, data);
+  }
+};
 
 const onRequest = <K extends MethodName>(method: K, params: Parameters<(typeof methods)[K]> | undefined) => {
   if (!methods[method]) {
@@ -156,8 +143,20 @@ const handleRequest = async <P extends unknown[]>(json: RPCRequest<P>) => {
   }
 };
 
-export const setup = <T extends RPCMethodObject<ApiFunctions>>(_methods: T) => {
+/**
+ *
+ * @param _methods Remote API call handlers
+ * @param _sendRaw Function for sending the raw JSON, e.g. `parent.postMessage`
+ * @param _logBase Logger function for context-aware logging
+ */
+export const setup = <T extends RPCMethodObject<ApiFunctions>>(
+  _methods: T,
+  _sendRaw: RPCSendRaw,
+  _logBase?: Logger
+) => {
   Object.assign(methods, _methods);
+  sendRaw = _sendRaw;
+  _logBase !== undefined && (logBase = _logBase);
 };
 
 export const sendNotification = <P extends unknown[]>(method: string, params: P) => {

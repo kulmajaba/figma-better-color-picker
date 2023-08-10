@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+export type LogLevel = 'log' | 'warn' | 'error';
+
 export type AwaitedReturn<T extends (...params: any) => any> = ReturnType<T> extends Promise<any>
   ? Awaited<ReturnType<T>>
   : ReturnType<T>;
@@ -60,8 +62,11 @@ export type RPCCallBack<T extends (...args: any[]) => any> = {
 };
 
 export type RPCOptions = {
-  timeoutMs: number;
+  timeoutMs?: number;
+  pluginId?: string;
 };
+
+export type RPCSendRaw = <P extends unknown[], T>(message: RPCMessage<P, T>) => void;
 
 export const isRpcOutGoing = <P extends unknown[], T>(
   req: RPCNotification<P> | RPCResponse<T>

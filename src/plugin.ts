@@ -1,5 +1,5 @@
 import { defaultHeight, defaultWidth } from './constants';
-import { uiApi } from './pluginApi';
+import './pluginApi';
 
 // Defined in package.json build scripts
 declare const BASE_URL: string | undefined;
@@ -17,10 +17,6 @@ const html = `<script>
 </script>`;
 
 figma.showUI(html, { themeColors: true, width: defaultWidth, height: defaultHeight });
-
-figma.on('selectionchange', () => {
-  uiApi.selectionChange(figma.currentPage.selection);
-});
 
 figma.ui.onmessage = (msg) => {
   // Actual handling of messages happens in pluginApi.ts
