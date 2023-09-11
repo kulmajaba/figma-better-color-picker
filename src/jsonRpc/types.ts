@@ -61,9 +61,35 @@ export type RPCCallBack<T extends (...args: any[]) => any> = {
   timeout: number;
 };
 
+// TODO: ordering
+// TODO: pull defaults from somewhere
 export type RPCOptions = {
+  /**
+   * Timeout in milliseconds
+   *
+   * Default: `3000`
+   */
   timeoutMs?: number;
+  /**
+   * If your plugin UI is hosted (non-null origin), the pluginId must be defined to allow messages to be sent
+   */
   pluginId?: string;
+  /**
+   * Specifies what the origin of the plugin UI must be for a message to be dispatched from logic to the UI
+   *
+   * If defined, add `http://localhost:<port>` to this field in your local environment to allow messaging while running on a dev server
+   *
+   * Default: `'*'`
+   */
+  logicTargetOrigin?: string;
+  /**
+   * Specifies what the origin of the plugin logic must be for a message to be dispatched from UI to the logic
+   *
+   * Usually `'https://www.figma.com'`
+   *
+   * Default: `'*'`
+   */
+  uiTargetOrigin?: string;
 };
 
 export type RPCSendRaw = <P extends unknown[], T>(message: RPCMessage<P, T>) => void;

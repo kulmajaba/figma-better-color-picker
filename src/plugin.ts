@@ -1,8 +1,7 @@
 import { defaultHeight, defaultWidth } from './constants';
 import './pluginApi';
 
-// Defined in package.json build scripts
-declare const BASE_URL: string | undefined;
+const BASE_URL: string = import.meta.env.VITE_BASE_URL;
 const urlParam = '?figma=true';
 
 const html = `<script>

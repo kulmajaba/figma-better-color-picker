@@ -1,39 +1,43 @@
 import { handleRaw, sendRequest, setup } from './rpc';
+import { logBase } from './utils';
 
-import {
-  ApiFunctions,
-  AwaitedReturn,
-  LogLevel,
-  RPCAPIReturnType,
-  RPCOptions,
-  RPCSendRaw,
-  StrictParameters
-} from './types';
+import { ApiFunctions, AwaitedReturn, RPCAPIReturnType, RPCOptions, RPCSendRaw, StrictParameters } from './types';
 import { strictObjectKeys } from '../types';
-
-// Debugging setup for RPC
-const isFigma = typeof figma !== 'undefined';
-const isUi = typeof parent !== 'undefined';
-const logBase = (level: LogLevel, ...msg: unknown[]) =>
-  console[level](`RPC in ${isFigma ? 'logic' : isUi ? 'ui' : 'UNKNOWN'}:`, ...msg);
 
 let sendRaw: RPCSendRaw;
 /**
  * Set up sending and receiving of messages for Figma plugin logic and UI
  */
-const setupMessaging = (pluginId: string | undefined) => {
+const setupMessaging = (
+  pluginId: string | undefined,
+  uiTargetOrigin: string | undefined,
+  logicTargetOrigin: string | undefined
+) => {
   if (typeof figma !== 'undefined') {
     figma.ui.on('message', (message) => handleRaw(message));
-    sendRaw = (message) => figma.ui.postMessage(message);
+
+    if (logicTargetOrigin !== undefined) {
+      sendRaw = (message) => figma.ui.postMessage(message, { origin: logicTargetOrigin });
+    } else {
+      sendRaw = (message) => figma.ui.postMessage(message);
+    }
   } else if (typeof parent !== 'undefined') {
     onmessage = (event) => handleRaw(event.data.pluginMessage);
-    sendRaw = (pluginMessage) => {
-      if (pluginId !== undefined) {
-        parent.postMessage({ pluginMessage, pluginId }, '*');
+
+    if (pluginId !== undefined) {
+      if (uiTargetOrigin !== undefined) {
+        sendRaw = (pluginMessage) => parent.postMessage({ pluginMessage, pluginId }, uiTargetOrigin);
       } else {
-        parent.postMessage({ pluginMessage }, '*');
+        sendRaw = (pluginMessage) => parent.postMessage({ pluginMessage, pluginId }, '*');
       }
-    };
+    } else {
+      if (uiTargetOrigin !== undefined) {
+        // TODO: Warn here?
+        sendRaw = (pluginMessage) => parent.postMessage({ pluginMessage }, uiTargetOrigin);
+      } else {
+        sendRaw = (pluginMessage) => parent.postMessage({ pluginMessage }, '*');
+      }
+    }
   }
 };
 
@@ -49,10 +53,11 @@ const createAPI = <T extends ApiFunctions>(
   hostType: string,
   options?: RPCOptions
 ): Readonly<RPCAPIReturnType<T>> => {
-  const { timeoutMs, pluginId } = options ?? {};
+  // TODO: ordering
+  const { timeoutMs, pluginId, logicTargetOrigin, uiTargetOrigin } = options ?? {};
 
   if (sendRaw === undefined) {
-    setupMessaging(pluginId);
+    setupMessaging(pluginId, uiTargetOrigin, logicTargetOrigin);
   }
 
   if (hostType !== 'undefined') {

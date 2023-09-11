@@ -6,12 +6,11 @@
   "scripts": {
     "start": "npm run dev",
     "build": "rm -rf dist/* && npm run build:ui && npm run build:main:prod",
-    "build:main": "esbuild src/plugin.ts --target=es2017 --bundle --minify --outfile=dist/plugin.js",
-    "build:main:prod": "npm run build:main -- --define:BASE_URL=\\\"https://colorpicker.kulmajaba.com/\\\"",
-    "build:main:dev": "npm run build:main -- --define:BASE_URL=\\\"http://localhost:5173/\\\"",
-    "build:ui": "vite build --emptyOutDir=false --minify=false",
-    "build:watch": "npm run build:main:dev -- --watch",
-    "dev": "concurrently -n build,vite 'npm:build:watch' 'vite'",
+    "build:main": "./node_modules/.bin/vite build --config=vite-main.config.js --emptyOutDir=false --minify=false",
+    "build:main:prod": "npm run build:main",
+    "build:main:dev": "npm run build:main -- --mode development --watch",
+    "build:ui": "vite build --config=vite-ui.config.js --emptyOutDir=false --minify=false",
+    "dev": "concurrently -n plugin,ui 'npm:build:main:dev' 'vite --config=vite-ui.config.js'",
     "tsc": "tsc --noEmit -p .",
     "lint": "eslint ."
   },
@@ -42,7 +41,6 @@
   "dependencies": {
     "@vitejs/plugin-react": "^4.0.4",
     "classnames": "^2.3.2",
-    "esbuild": "^0.18.20",
     "mathjs": "^11.9.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

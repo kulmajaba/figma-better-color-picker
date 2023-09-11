@@ -13,7 +13,9 @@ let uiTheme = '';
 const PLUGIN_ID: string | undefined = manifest.id ?? undefined;
 
 const pluginOptions: RPCOptions = {
-  pluginId: PLUGIN_ID
+  pluginId: PLUGIN_ID,
+  logicTargetOrigin: import.meta.env.VITE_BASE_URL,
+  uiTargetOrigin: 'https://www.figma.com'
 };
 
 /**
