@@ -17,7 +17,9 @@ const html = `<script>
 
 figma.showUI(html, { themeColors: true, width: defaultWidth, height: defaultHeight });
 
-figma.ui.onmessage = (msg) => {
-  // Actual handling of messages happens in pluginApi.ts
-  console.log('Plugin received message:', msg);
-};
+if (import.meta.env.DEV) {
+  figma.ui.onmessage = (msg) => {
+    // Actual handling of messages happens in pluginApi.ts
+    console.log('Plugin received message:', msg);
+  };
+}

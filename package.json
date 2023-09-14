@@ -6,9 +6,9 @@
   "scripts": {
     "start": "npm run dev",
     "build": "rm -rf dist/* && npm run build:ui && npm run build:main:prod",
-    "build:main": "./node_modules/.bin/vite build --config=vite-main.config.js --emptyOutDir=false --minify=false",
+    "build:main": "./node_modules/.bin/vite build --config=vite-main.config.js --emptyOutDir=false",
     "build:main:prod": "npm run build:main",
-    "build:main:dev": "npm run build:main -- --mode development --watch",
+    "build:main:dev": "npm run build:main -- --mode development --minify=false --watch",
     "build:ui": "vite build --config=vite-ui.config.js --emptyOutDir=false --minify=false",
     "dev": "concurrently -n plugin,ui 'npm:build:main:dev' 'vite --config=vite-ui.config.js'",
     "tsc": "tsc --noEmit -p .",
@@ -41,6 +41,7 @@
   "dependencies": {
     "@vitejs/plugin-react": "^4.0.4",
     "classnames": "^2.3.2",
+    "figma-plugin-api": "^1.0.1",
     "mathjs": "^11.9.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

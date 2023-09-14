@@ -1,3 +1,12 @@
+### Version 6 (unreleased)
+
+- Changed: Migrated to Vite for plugin logic builds
+- Changed: Separated JSON-RPC API to the `figma-plugin-api` npm package
+
+### Version 5 (2023-08-09)
+
+- Changed: Adjusted network access declaration in manifest
+
 ### Version 4 (2023-08-09)
 
 - Added: arithmetic support for number inputs

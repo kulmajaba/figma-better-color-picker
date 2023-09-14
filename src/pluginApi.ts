@@ -1,11 +1,11 @@
+import { createPluginAPI, createUIAPI, RPCOptions } from 'figma-plugin-api';
+
 import manifest from '../manifest.json';
 
 import strings from './assets/strings';
 import { defaultHeight } from './constants';
-import { createPluginAPI, createUIAPI } from './jsonRpc/figmaApi';
 import { roundArrayTo1Decimals } from './util/mathUtils';
 
-import { RPCOptions } from './jsonRpc/types';
 import { Color } from './types';
 
 let uiTheme = '';
