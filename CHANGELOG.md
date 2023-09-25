@@ -2,6 +2,7 @@
 
 - Changed: Migrated to Vite for plugin logic builds
 - Changed: Separated JSON-RPC API to the `figma-plugin-api` npm package
+- Fixed: Hex inputs no longer change the component values on blur if the resulting hex value remains the same
 
 ### Version 5 (2023-08-09)
 
