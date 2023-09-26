@@ -1,4 +1,4 @@
-import { FC, useCallback, useEffect, useMemo, useState } from 'react';
+import { FC, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import classNames from 'classnames';
 
@@ -12,7 +12,7 @@ import ColorRowCopyButton from './ColorRowCopyButton';
 import ColorTileButton from './ColorTileButton';
 import ContrastCheckerCell from './ContrastCheckerCell';
 
-import { Color, SetEditingColorCallback } from '../../types';
+import { Color, DropTargetSide, SetEditingColorCallback } from '../../types';
 
 import './ColorRow.css';
 
@@ -31,6 +31,8 @@ interface Props {
   contrastColors: Color[];
   onDelete: () => void;
   onSetEditing: SetEditingColorCallback;
+  onDrag: () => void;
+  onDropRow: (dropTargetSide: DropTargetSide) => void;
 }
 
 const ColorRow: FC<Props> = ({
@@ -47,15 +49,23 @@ const ColorRow: FC<Props> = ({
   editingContrastColumn,
   contrastColors,
   onDelete,
-  onSetEditing: onSetEditingProp
+  onSetEditing: onSetEditingProp,
+  onDrag,
+  onDropRow
 }) => {
   const [firstComponent, setFirstComponent] = useState(firstComponentProp);
   const [secondComponent, setSecondComponent] = useState(secondComponentProp);
   const [thirdComponent, setThirdComponent] = useState(thirdComponentProp);
   const [alpha, setAlpha] = useState(alphaProp);
 
+  const [draggable, setDraggable] = useState(false);
+  const [dragging, setDragging] = useState(false);
+  const [dropTargetSide, setDropTargetSide] = useState<DropTargetSide | undefined>(undefined);
+
   const { convertFromPrevious } = useColorSpace();
   const { contrastCheckerVisible } = useContrastChecker();
+
+  const rowRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (convertFromPrevious) {
@@ -153,12 +163,101 @@ const ColorRow: FC<Props> = ({
     onSetEditingProp(id, undefined, color, alpha);
   }, [onSetEditingProp, id, color, alpha]);
 
-  const contrastRowClassNames = classNames('ColorRow-contrastRow', { 'ColorRow-contrastRow--selected': editing });
+  const onTileMouseDown = useCallback(() => {
+    setDraggable(true);
+  }, []);
+
+  const onTileMouseUp = useCallback(() => {
+    setDraggable(false);
+  }, []);
+
+  const onDragStart = useCallback(() => {
+    setDragging(true);
+    onDrag();
+  }, [onDrag]);
+
+  const onDragOver = useCallback(
+    (e: React.DragEvent<HTMLDivElement>) => {
+      if (dragging) {
+        return;
+      }
+
+      const rect = rowRef.current?.getBoundingClientRect();
+      if (!rect) {
+        return;
+      }
+
+      e.preventDefault();
+      const y = e.clientY - rect.top;
+      const isOverBottomHalf = y > rect.height / 2;
+      const newDropTargetSide = isOverBottomHalf ? DropTargetSide.Bottom : DropTargetSide.Top;
+      setDropTargetSide(newDropTargetSide);
+    },
+    [dragging]
+  );
+
+  const onDragLeave = useCallback(() => {
+    setDropTargetSide(undefined);
+  }, []);
+
+  const onDrop = useCallback(
+    (e: React.DragEvent<HTMLDivElement>) => {
+      setDropTargetSide(undefined);
+
+      if (dragging) {
+        return;
+      }
+
+      const rect = rowRef.current?.getBoundingClientRect();
+      if (!rect) {
+        return;
+      }
+
+      e.preventDefault();
+      const y = e.clientY - rect.top;
+      const isOverBottomHalf = y > rect.height / 2;
+      const newDropTargetSide = isOverBottomHalf ? DropTargetSide.Bottom : DropTargetSide.Top;
+
+      onDropRow(newDropTargetSide);
+    },
+    [dragging, onDropRow]
+  );
+
+  const onDragEnd = useCallback(() => {
+    setDragging(false);
+    setDraggable(false);
+    setDropTargetSide(undefined);
+  }, []);
+
+  const colorRowClassnames = classNames('ColorRow', {
+    'ColorRow--dropTargetTop': dropTargetSide === DropTargetSide.Top,
+    'ColorRow--dropTargetBottom': dropTargetSide === DropTargetSide.Bottom
+  });
+
+  const contrastRowClassNames = classNames('ColorRow-contrastRow', {
+    'ColorRow-contrastRow--selected': editing
+  });
 
   return (
     <>
-      <div className="ColorRow">
-        <ColorTileButton color={color} alpha={alpha} selected={editing} onClick={onSetEditing} />
+      <div
+        className={colorRowClassnames}
+        draggable={draggable}
+        onDragStart={onDragStart}
+        onDragOver={onDragOver}
+        onDragLeave={onDragLeave}
+        onDrop={onDrop}
+        onDragEnd={onDragEnd}
+        ref={rowRef}
+      >
+        <ColorTileButton
+          color={color}
+          alpha={alpha}
+          selected={editing}
+          onMouseDown={onTileMouseDown}
+          onMouseUp={onTileMouseUp}
+          onClick={onSetEditing}
+        />
         <ColorInput
           type="component"
           value={color}

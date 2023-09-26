@@ -12,7 +12,7 @@ import ColorRow from './ColorRow';
 import ColorTileButton from './ColorTileButton';
 import LockButton from './LockButton';
 
-import { Color, SetEditingColorCallback } from '../../types';
+import { Color, DropTargetSide, SetEditingColorCallback } from '../../types';
 
 import './ColorTable.css';
 
@@ -48,6 +48,7 @@ const ColorTable: FC<Props> = ({
     0,
     undefined
   ]);
+  const [draggingRowIndex, setDraggingRowIndex] = useState<number | undefined>(undefined);
 
   const { componentShortNames, toSRGB, convertFromPrevious } = useColorSpace();
   const { contrastCheckerVisible } = useContrastChecker();
@@ -92,6 +93,7 @@ const ColorTable: FC<Props> = ({
     []
   );
 
+  // TODO: Pick the next available row and set as editingRow
   const deleteRow = useCallback((key: number) => setRows((prevRows) => prevRows.filter((k) => k !== key)), []);
 
   const onSetEditing: SetEditingColorCallback = useCallback(
@@ -114,7 +116,36 @@ const ColorTable: FC<Props> = ({
     // setEditingRow(([rowKey, contrastKey]) => [rowKey, contrastKey === index ? undefined : contrastKey]);
   }, []);
 
-  const colorRows = rows.map((key) => (
+  const onDragRow = useCallback((index: number) => {
+    setDraggingRowIndex(index);
+  }, []);
+
+  const onDropRow = useCallback(
+    (dropIndex: number, dropTargetSide: DropTargetSide) => {
+      if (draggingRowIndex === undefined) {
+        return;
+      }
+
+      setRows((prevRows) => {
+        const newRows = prevRows.slice();
+        const draggedRow = newRows.splice(draggingRowIndex, 1)[0];
+
+        // Adjust new index for both the desired new position (above or below the drop target)
+        // and the fact that the row is removed from the array before being inserted again
+        const dropIndexOffset =
+          (dropTargetSide === DropTargetSide.Top ? 0 : 1) + (draggingRowIndex < dropIndex ? -1 : 0);
+
+        newRows.splice(dropIndex + dropIndexOffset, 0, draggedRow);
+        return newRows;
+      });
+
+      setDraggingRowIndex(undefined);
+    },
+    [draggingRowIndex]
+  );
+
+  //console.log('render table rows');
+  const colorRows = rows.map((key, i) => (
     <ColorRow
       key={key}
       id={key}
@@ -131,6 +162,8 @@ const ColorTable: FC<Props> = ({
       contrastColors={contrastColors}
       onDelete={() => deleteRow(key)}
       onSetEditing={onSetEditing}
+      onDrag={() => onDragRow(i)}
+      onDropRow={(dropTargetSide) => onDropRow(i, dropTargetSide)}
     />
   ));
 
