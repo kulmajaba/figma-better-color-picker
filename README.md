@@ -1,5 +1,9 @@
 # Better Color Picker
 
+Figma Plugin: https://www.figma.com/community/plugin/1209779625070339366/better-color-picker
+
+Standalone web app: https://colorpicker.kulmajaba.com/
+
 The same thing, just a bit better.
 
 This is a Figma plugin and a standalone website for color picking with some added features:
