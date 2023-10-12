@@ -230,12 +230,12 @@ const ColorRow: FC<Props> = ({
   }, []);
 
   const colorRowClassnames = classNames('ColorRow', {
-    'ColorRow--dropTargetTop': dropTargetSide === DropTargetSide.Top,
-    'ColorRow--dropTargetBottom': dropTargetSide === DropTargetSide.Bottom
+    'is-dropTargetTop': dropTargetSide === DropTargetSide.Top,
+    'is-dropTargetBottom': dropTargetSide === DropTargetSide.Bottom
   });
 
   const contrastRowClassNames = classNames('ColorRow-contrastRow', {
-    'ColorRow-contrastRow--selected': editing
+    'is-selected': editing
   });
 
   return (

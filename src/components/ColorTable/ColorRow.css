@@ -7,8 +7,8 @@
   grid-template-columns: var(--grid-color-row-columns);
 }
 
-.ColorRow--dropTargetTop::before,
-.ColorRow--dropTargetBottom::after {
+.ColorRow.is-dropTargetTop::before,
+.ColorRow.is-dropTargetBottom::after {
   display: grid;
   width: var(--size-color-tile);
   height: 4px;
@@ -17,20 +17,12 @@
   grid-column: 1 / 4;
 }
 
-.ColorRow--dropTargetTop::before {
+.ColorRow.is-dropTargetTop::before {
   margin-bottom: var(--margin-color-row-droptarget);
 }
 
-.ColorRow--dropTargetBottom::after {
+.ColorRow.is-dropTargetBottom::after {
   margin-top: var(--margin-color-row-droptarget);
-}
-
-.ColorRow-dropTarget {
-  width: var(--size-color-tile);
-  height: 4px;
-  margin-left: var(--margin-color-row-droptarget);
-  background-color: var(--color-bg-brand);
-  grid-column: 1 / 3;
 }
 
 .ColorRow-buttons {
@@ -50,7 +42,7 @@
   grid-auto-flow: column;
 }
 
-.ColorRow-contrastRow--selected {
+.ColorRow-contrastRow.is-selected {
   border-top: var(--border-1px-selected);
   border-bottom: var(--border-1px-selected);
 }
