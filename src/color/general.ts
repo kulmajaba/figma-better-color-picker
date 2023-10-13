@@ -196,6 +196,8 @@ export const rgb_to_hex = (rgb: Color | ColorWithAlpha): string => {
   return '#' + componentToHex(r) + componentToHex(g) + componentToHex(b);
 };
 
+export const fillHex = (hex: string): string => rgb_to_hex(hex_to_rgb(hex));
+
 export const rgba_to_hex = (rgba: ColorWithAlpha): string => {
   const [r, g, b, a] = rgba;
 

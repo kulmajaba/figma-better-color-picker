@@ -24,7 +24,7 @@
   grid-auto-flow: column;
 }
 
-.ColorRow-contrastRow--selected {
+.ColorRow-contrastRow.is-selected {
   border-top: var(--border-1px-selected);
   border-bottom: var(--border-1px-selected);
 }

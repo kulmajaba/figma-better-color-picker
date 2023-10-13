@@ -1,7 +1,8 @@
 @import url('utils.css');
 
 :root {
-  /* As a hosted plugin, the Figma colors will always be undefined and fallback colors are used */
+  /* Because the plugin is hosted the Figma variables are undefined by default.
+     We try to get the theme from Figma in JS, but fallback colors are used in case that fails */
   --color-bg: var(--figma-color-bg, #2c2c2c);
   --color-bg-transparent: rgb(0 0 0 / 0.6);
   --color-bg-hover: var(--figma-color-bg-hover, #383838);
@@ -51,6 +52,7 @@
   --spacing-color-row: 4px;
 
   --padding-color-row: var(--spacing-s) var(--spacing-m);
+  --margin-color-row-droptarget: var(--spacing-m);
 
   --border-1px: 1px solid var(--color-border);
   --border-1px-selected: 1px solid var(--color-border-selected);

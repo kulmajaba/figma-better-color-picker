@@ -62,16 +62,18 @@ const App: FC = () => {
   }, [isFigma, updateTheme]);
 
   useEffect(() => {
-    window.addEventListener('message', (e) => {
-      if (e.data.source?.includes('react-devtools')) {
-        return;
-      }
-      if (Object.hasOwn(e.data, 'pluginMessage')) {
-        console.log('UI received message:', e.data.pluginMessage);
-      } else {
-        console.log('UI received message:', e);
-      }
-    });
+    if (import.meta.env.DEV) {
+      window.addEventListener('message', (e) => {
+        if (e.data.source?.includes('react-devtools')) {
+          return;
+        }
+        if (Object.hasOwn(e.data, 'pluginMessage')) {
+          console.log('UI received message:', e.data.pluginMessage);
+        } else {
+          console.log('UI received message:', e);
+        }
+      });
+    }
 
     getPluginTheme();
     // eslint-disable-next-line react-hooks/exhaustive-deps
