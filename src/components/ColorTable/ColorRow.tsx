@@ -1,5 +1,7 @@
 import { FC, useCallback, useEffect, useMemo, useState } from 'react';
 
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 import classNames from 'classnames';
 
 import { useColorSpace } from '../../hooks/useColorSpace';
@@ -56,6 +58,7 @@ const ColorRow: FC<Props> = ({
 
   const { convertFromPrevious } = useColorSpace();
   const { contrastCheckerVisible } = useContrastChecker();
+  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id });
 
   useEffect(() => {
     if (convertFromPrevious) {
@@ -153,12 +156,19 @@ const ColorRow: FC<Props> = ({
     onSetEditingProp(id, undefined, color, alpha);
   }, [onSetEditingProp, id, color, alpha]);
 
-  const contrastRowClassNames = classNames('ColorRow-contrastRow', { 'ColorRow-contrastRow--selected': editing });
+  const contrastRowClassNames = classNames('ColorRow-contrastRow', {
+    'is-selected': editing
+  });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition
+  };
 
   return (
     <>
-      <div className="ColorRow">
-        <ColorTileButton color={color} alpha={alpha} selected={editing} onClick={onSetEditing} />
+      <div className="ColorRow" style={style} {...attributes} ref={setNodeRef}>
+        <ColorTileButton color={color} alpha={alpha} selected={editing} onClick={onSetEditing} {...listeners} />
         <ColorInput
           type="component"
           value={color}
