@@ -7,24 +7,6 @@
   grid-template-columns: var(--grid-color-row-columns);
 }
 
-.ColorRow.is-dropTargetTop::before,
-.ColorRow.is-dropTargetBottom::after {
-  display: grid;
-  width: var(--size-color-tile);
-  height: 4px;
-  background-color: var(--color-bg-brand);
-  content: '';
-  grid-column: 1 / 4;
-}
-
-.ColorRow.is-dropTargetTop::before {
-  margin-bottom: var(--margin-color-row-droptarget);
-}
-
-.ColorRow.is-dropTargetBottom::after {
-  margin-top: var(--margin-color-row-droptarget);
-}
-
 .ColorRow-buttons {
   display: grid;
   column-gap: 4px;

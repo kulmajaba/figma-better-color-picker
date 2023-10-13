@@ -1,5 +1,21 @@
 import { FC, useCallback, useEffect, useRef, useState } from 'react';
 
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+  DragEndEvent
+} from '@dnd-kit/core';
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy
+} from '@dnd-kit/sortable';
+
 import strings from '../../assets/strings';
 import { rgb_to_hex } from '../../color/general';
 import { useColorSpace } from '../../hooks/useColorSpace';
@@ -12,7 +28,7 @@ import ColorRow from './ColorRow';
 import ColorTileButton from './ColorTileButton';
 import LockButton from './LockButton';
 
-import { Color, DropTargetSide, SetEditingColorCallback } from '../../types';
+import { Color, SetEditingColorCallback } from '../../types';
 
 import './ColorTable.css';
 
@@ -48,10 +64,19 @@ const ColorTable: FC<Props> = ({
     0,
     undefined
   ]);
-  const [draggingRowIndex, setDraggingRowIndex] = useState<number | undefined>(undefined);
 
   const { componentShortNames, toSRGB, convertFromPrevious } = useColorSpace();
   const { contrastCheckerVisible } = useContrastChecker();
+  const sensors = useSensors(
+    useSensor(PointerSensor, {
+      activationConstraint: {
+        distance: 8
+      }
+    }),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates
+    })
+  );
 
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -116,36 +141,24 @@ const ColorTable: FC<Props> = ({
     // setEditingRow(([rowKey, contrastKey]) => [rowKey, contrastKey === index ? undefined : contrastKey]);
   }, []);
 
-  const onDragRow = useCallback((index: number) => {
-    setDraggingRowIndex(index);
+  const onDragEnd = useCallback((event: DragEndEvent) => {
+    const { active, over } = event;
+
+    if (!over) {
+      return;
+    }
+
+    if (active.id !== over.id) {
+      setRows((oldRows) => {
+        const oldIndex = oldRows.indexOf(active.id as number);
+        const newIndex = oldRows.indexOf(over.id as number);
+
+        return arrayMove(oldRows, oldIndex, newIndex);
+      });
+    }
   }, []);
 
-  const onDropRow = useCallback(
-    (dropIndex: number, dropTargetSide: DropTargetSide) => {
-      if (draggingRowIndex === undefined) {
-        return;
-      }
-
-      setRows((prevRows) => {
-        const newRows = prevRows.slice();
-        const draggedRow = newRows.splice(draggingRowIndex, 1)[0];
-
-        // Adjust new index for both the desired new position (above or below the drop target)
-        // and the fact that the row is removed from the array before being inserted again
-        const dropIndexOffset =
-          (dropTargetSide === DropTargetSide.Top ? 0 : 1) + (draggingRowIndex < dropIndex ? -1 : 0);
-
-        newRows.splice(dropIndex + dropIndexOffset, 0, draggedRow);
-        return newRows;
-      });
-
-      setDraggingRowIndex(undefined);
-    },
-    [draggingRowIndex]
-  );
-
-  //console.log('render table rows');
-  const colorRows = rows.map((key, i) => (
+  const colorRows = rows.map((key) => (
     <ColorRow
       key={key}
       id={key}
@@ -162,8 +175,6 @@ const ColorTable: FC<Props> = ({
       contrastColors={contrastColors}
       onDelete={() => deleteRow(key)}
       onSetEditing={onSetEditing}
-      onDrag={() => onDragRow(i)}
-      onDropRow={(dropTargetSide) => onDropRow(i, dropTargetSide)}
     />
   ));
 
@@ -212,7 +223,11 @@ const ColorTable: FC<Props> = ({
           ))}
         </div>
       )}
-      {colorRows}
+      <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={onDragEnd}>
+        <SortableContext items={rows} strategy={verticalListSortingStrategy}>
+          {colorRows}
+        </SortableContext>
+      </DndContext>
     </section>
   );
 };

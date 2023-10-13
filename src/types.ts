@@ -76,11 +76,6 @@ export type SetEditingColorCallback = (
   alpha?: number
 ) => void;
 
-export enum DropTargetSide {
-  Top = 'TOP',
-  Bottom = 'BOTTOM'
-}
-
 export const isMouseEvent = (e: MouseEvent | TouchEvent): e is MouseEvent => e.type.includes('mouse');
 
 export const strictObjectKeys = Object.keys as <T extends Record<string, unknown>>(obj: T) => Array<keyof T>;
