@@ -58,10 +58,11 @@ const ColorTable: FC<Props> = ({
   const [thirdComponent, setThirdComponent] = useState(thirdComponentProp);
   const [alpha, setAlpha] = useState(alphaProp);
 
-  const [rows, setRows] = useState([0]);
+  // dndkit will not work for an item whose id is 0
+  const [rows, setRows] = useState([1]);
   const [contrastColors, setContrastColors] = useState<Color[]>([[0, 0, 0]]);
   const [[editingRowKey, editingContrastKey], setEditingRow] = useState<[number | undefined, number | undefined]>([
-    0,
+    1,
     undefined
   ]);
 
@@ -144,7 +145,7 @@ const ColorTable: FC<Props> = ({
   const onDragEnd = useCallback((event: DragEndEvent) => {
     const { active, over } = event;
 
-    if (!over) {
+    if (over === null) {
       return;
     }
 
