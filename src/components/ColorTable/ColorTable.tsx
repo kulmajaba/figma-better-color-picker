@@ -174,7 +174,7 @@ const ColorTable: FC<Props> = ({
       editingColorRow={editingRowKey}
       editingContrastColumn={editingContrastKey}
       contrastColors={contrastColors}
-      onDelete={() => deleteRow(key)}
+      onDelete={deleteRow}
       onSetEditing={onSetEditing}
     />
   ));
