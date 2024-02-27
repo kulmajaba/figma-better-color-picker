@@ -18,19 +18,19 @@ If you encountered a bug you'd like to report, check the [Issues](https://github
 
 ## Roadmap
 
-- ToolTip hover behavior when alt-tabbing back to the window with a modal open
-- Delete ToolTips prevent proper resizing in plugin mode due to them becoming visible during contrast color deletion
 - Heading for contrast table
   - Mention WCAG somewhere in there (build support for other contrast calculations)
 - Label color input components when there is enough space?
 - Local storage for current state
   - Save as palette, with autosave and manually saved state
-- When a color row is deleted and is currently selected for editing, switch selection to the next available row
+- When a color row/column is deleted and is currently selected for editing, switch selection to the next available row/column
 - Moving the entrypoint HTML to separate files
   - Non-trivial, since the entrypoint HTML would need to be bundled to contain the JS, then the bundle needs to be imported as text into `plugin.js`
 - Use RPC notifications when possible to avoid unnecessary messages
 - Add `"componentName": "[A-Z]+",` back to `.stylelintrc` when a new version of `stylelint-selector-bem-pattern` is available
-- Contrast color column selection moves to next column when one is deleted but the pickers do not update
+- Shift-dragging to lock a value in the XY picker
+  - Or click and drag on the number inputs
+- Variable support
 
 ### Undo history???
 
