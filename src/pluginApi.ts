@@ -38,7 +38,7 @@ export const api = createPluginAPI(
      * @param alpha Float number in range 0..1
      * @param componentRepresentation The color's human-readable representation, e.g. HSV should return values in ranges: [0..360, 0..100, 0..100]
      */
-    addColor(
+    async addColor(
       color: Color,
       alpha: number,
       colorSpaceName: string,
@@ -46,7 +46,7 @@ export const api = createPluginAPI(
       colorName: string | undefined,
       updateExistingStyle: boolean
     ) {
-      const existingPaintStyle = figma.getLocalPaintStyles().find((s) => s.name === colorName);
+      const existingPaintStyle = (await figma.getLocalPaintStylesAsync()).find((s) => s.name === colorName);
 
       const rgb: RGB = {
         r: color[0] / 255,
