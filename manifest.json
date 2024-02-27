@@ -3,7 +3,9 @@
   "id": "1209779625070339366",
   "api": "1.0.0",
   "main": "dist/plugin.js",
+  "ui": "dist/index.html",
   "editorType": ["figma"],
+  "documentAccess": "dynamic-page",
   "networkAccess": {
     "allowedDomains": ["https://colorpicker.kulmajaba.com"],
     "reasoning": "The picker is hosted externally to allow the use of the eyedropper. No communication beyond the initial loading of the plugin is done.",
