@@ -31,7 +31,7 @@ interface Props {
   editingColorRow: number | undefined;
   editingContrastColumn: number | undefined;
   contrastColors: Color[];
-  onDelete: () => void;
+  onDelete: (id: number) => void;
   onSetEditing: SetEditingColorCallback;
 }
 
@@ -48,7 +48,7 @@ const ColorRow: FC<Props> = ({
   editingColorRow,
   editingContrastColumn,
   contrastColors,
-  onDelete,
+  onDelete: onDeleteProp,
   onSetEditing: onSetEditingProp
 }) => {
   const [firstComponent, setFirstComponent] = useState(firstComponentProp);
@@ -155,6 +155,10 @@ const ColorRow: FC<Props> = ({
   const onSetEditing = useCallback(() => {
     onSetEditingProp(id, undefined, color, alpha);
   }, [onSetEditingProp, id, color, alpha]);
+
+  const onDelete = useCallback(() => {
+    onDeleteProp(id);
+  }, [onDeleteProp, id]);
 
   const contrastRowClassNames = classNames('ColorRow-contrastRow', {
     'is-selected': editing
