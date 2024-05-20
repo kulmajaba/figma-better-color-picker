@@ -31,6 +31,7 @@ If you encountered a bug you'd like to report, check the [Issues](https://github
 - Shift-dragging to lock a value in the XY picker
   - Or click and drag on the number inputs
 - Variable support
+- See if the package could be minified, previously this caused errors but mathjs is also very large
 
 ### Undo history???
 
