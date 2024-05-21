@@ -17,6 +17,7 @@ const strings = {
     contrastChecker: 'Contrast checker',
     hsv: 'HSV',
     hsl: 'HSL',
+    hct: 'HCT',
     hex: 'Hex'
   },
   info: {

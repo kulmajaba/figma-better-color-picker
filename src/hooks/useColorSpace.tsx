@@ -2,6 +2,7 @@ import { useState, useContext, createContext, useCallback, useMemo, FC } from 'r
 
 import strings from '../assets/strings';
 import { hslvfloat_to_hslv, hslv_to_hslvfloat } from '../color/general';
+import { hct_to_srgb, srgb_to_hct } from '../color/hct';
 import { okhsl_to_srgb, okhsv_to_srgb, srgb_to_okhsl, srgb_to_okhsv } from '../color/oklab';
 import { closeEnough } from '../util/mathUtils';
 
@@ -93,9 +94,24 @@ const okhsl: ColorSpace = {
   inputLabelKey: 'hsl'
 };
 
+const hct: ColorSpace = {
+  label: 'HCT',
+  fromSRGB: srgb_to_hct,
+  toSRGB: hct_to_srgb,
+  toComponentRepresentation: hslvfloat_to_hslv,
+  fromComponentRepresentation: hslv_to_hslvfloat,
+  firstComponentAgnostic: () => false,
+  secondComponentAgnostic: () => false,
+  thirdComponentAgnostic: () => false,
+  firstComponentSliderConstants: [0.6, 0.6],
+  componentShortNames: ['H', 'C', 'T'],
+  inputLabelKey: 'hct'
+};
+
 export const colorSpaces = {
   okhsv,
-  okhsl
+  okhsl,
+  hct
 };
 
 export type ColorSpaceName = keyof typeof colorSpaces;

@@ -2,3 +2,4 @@
 
 export { hsl_to_rgb, hsv_to_rgb } from './general';
 export { okhsl_to_srgb, okhsv_to_srgb } from './oklab';
+export { hct_to_srgb, srgb_to_hct } from './hct';
