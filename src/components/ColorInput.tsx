@@ -1,31 +1,23 @@
 import { FC, useCallback } from 'react';
 
-import { fillHex, hex_to_rgb, rgb_to_hex } from '../color/general';
+import { fillHex, hex_to_rgb, rgb_to_hex, rgb_to_rgba, rgba_to_rgb } from '../color/general';
 import { useColorSpace } from '../hooks/useColorSpace';
 import { arraysCloseEnough, clampTo0_1, roundArrayTo1Decimals, roundTo1Decimals } from '../util/mathUtils';
 import { inputValueToNumber, inputValueToString } from '../util/parsingUtils';
 
 import Input from './Lib/Input';
 
-import { Color, InputValue } from '../types';
+import { Color, ColorWithAlpha, InputValue } from '../types';
 
 import './ColorInput.css';
 
 interface Props {
-  value: Color;
-  alpha: number;
+  value: ColorWithAlpha;
   type?: 'hex' | 'component';
-  onColorChange: (val: Color) => boolean | void;
-  onAlphaChange: (val: number) => boolean | void;
+  onColorChange: (val: ColorWithAlpha) => boolean | void;
 }
 
-const ColorInput: FC<Props> = ({
-  value: valueProp,
-  alpha: alphaProp,
-  type = 'component',
-  onColorChange,
-  onAlphaChange
-}) => {
+const ColorInput: FC<Props> = ({ value: valueProp, type = 'component', onColorChange }) => {
   const {
     fromSRGB,
     toSRGB,
@@ -36,7 +28,7 @@ const ColorInput: FC<Props> = ({
     thirdComponentAgnostic
   } = useColorSpace();
 
-  const alpha = roundTo1Decimals(alphaProp * 100);
+  const alpha = roundTo1Decimals(valueProp[3] * 100);
 
   const handleComponentChange = useCallback(
     (componentIndex: number, value: InputValue) => {
@@ -81,7 +73,7 @@ const ColorInput: FC<Props> = ({
         const newValueString = inputValueToString(value);
         const newValue = fromSRGB(hex_to_rgb(newValueString));
 
-        if (fillHex(newValueString) === rgb_to_hex(toSRGB(valueProp))) {
+        if (fillHex(newValueString) === rgb_to_hex(toSRGB(rgba_to_rgb(valueProp)))) {
           return false;
         }
 
@@ -94,7 +86,7 @@ const ColorInput: FC<Props> = ({
           return false;
         }
 
-        return onColorChange(aggregateValue) ?? true;
+        return onColorChange(rgb_to_rgba(aggregateValue, valueProp[3])) ?? true;
       } catch (e) {
         console.error(e);
         return false;
@@ -115,17 +107,17 @@ const ColorInput: FC<Props> = ({
     (value: InputValue) => {
       try {
         const newValue = inputValueToNumber(value);
-        return onAlphaChange(clampTo0_1(newValue / 100)) ?? true;
+        return onColorChange(rgb_to_rgba(rgba_to_rgb(valueProp), clampTo0_1(newValue / 100))) ?? true;
       } catch (e) {
         console.error(e);
         return false;
       }
     },
-    [onAlphaChange]
+    [onColorChange, valueProp]
   );
 
   if (type === 'component') {
-    const componentRepr = roundArrayTo1Decimals(toComponentRepresentation(valueProp));
+    const componentRepr = roundArrayTo1Decimals(toComponentRepresentation(rgba_to_rgb(valueProp)));
 
     return (
       <div className="ColorInput">
@@ -155,7 +147,7 @@ const ColorInput: FC<Props> = ({
     );
   } else {
     // Hex input
-    const hex = rgb_to_hex(toSRGB(valueProp));
+    const hex = rgb_to_hex(toSRGB(rgba_to_rgb(valueProp)));
 
     return (
       <div className="ColorInput">

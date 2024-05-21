@@ -1,6 +1,7 @@
 import { FC, useCallback, useEffect, useRef, useState } from 'react';
 
 import strings from '../../assets/strings';
+import { rgba_to_rgb } from '../../color/general';
 import { useColorSpace } from '../../hooks/useColorSpace';
 import useIsPlugin from '../../hooks/useIsPlugin';
 import { api } from '../../pluginApi';
@@ -10,16 +11,15 @@ import Input from '../Lib/Input';
 import Modal from '../Lib/Modal';
 import Switch from '../Lib/Switch';
 
-import { Color, InputValue } from '../../types';
+import { ColorWithAlpha, InputValue } from '../../types';
 
 import './ColorRowAddButton.css';
 
 interface Props {
-  color: Color;
-  alpha: number;
+  color: ColorWithAlpha;
 }
 
-const ColorRowAddButton: FC<Props> = ({ color, alpha }) => {
+const ColorRowAddButton: FC<Props> = ({ color }) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [colorName, setColorName] = useState('');
   const [updateExistingStyle, setUpdateExistingStyle] = useState(true);
@@ -38,15 +38,15 @@ const ColorRowAddButton: FC<Props> = ({ color, alpha }) => {
 
   const addColor = useCallback(() => {
     api.addColor(
-      toSRGB(color),
-      alpha,
+      toSRGB(rgba_to_rgb(color)),
+      color[3],
       colorSpaceName,
-      toComponentRepresentation(color),
+      toComponentRepresentation(rgba_to_rgb(color)),
       colorName !== '' ? colorName : undefined,
       updateExistingStyle
     );
     setModalVisible(false);
-  }, [color, alpha, toSRGB, toComponentRepresentation, colorSpaceName, colorName, updateExistingStyle]);
+  }, [color, toSRGB, toComponentRepresentation, colorSpaceName, colorName, updateExistingStyle]);
 
   const onModalOpen = useCallback(() => setModalVisible(true), []);
   const onModalClose = useCallback(() => setModalVisible(false), []);
@@ -72,7 +72,7 @@ const ColorRowAddButton: FC<Props> = ({ color, alpha }) => {
       <Modal title={strings.figma.addColorModalTitle} visible={modalVisible} onClose={onModalClose}>
         <div className="ColorRowAddButton-modal">
           <div className="ColorRowAddButton-inputRow">
-            <ColorTile color={color} alpha={alpha} />
+            <ColorTile color={color} />
             <Input
               ref={inputRef}
               className="u-textAlignStart"

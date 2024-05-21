@@ -5,22 +5,21 @@ import classNames from 'classnames';
 import ColorTile from '../ColorTile';
 import Button from '../Lib/Button';
 
-import { Color, HMTLButtonProps } from '../../types';
+import { Color, ColorWithAlpha, HMTLButtonProps } from '../../types';
 
 import './ColorTileButton.css';
 
 interface Props extends Omit<HMTLButtonProps, 'color'> {
-  color: Color;
-  alpha?: number;
+  color: Color | ColorWithAlpha;
   selected: boolean;
 }
 
-const ColorTileButton: FC<Props> = ({ color, alpha, selected, className, ...buttonProps }) => {
+const ColorTileButton: FC<Props> = ({ color, selected, className, ...buttonProps }) => {
   const buttonClassNames = classNames('ColorTileButton u-focusBorder', className, { 'is-active': selected });
 
   return (
     <Button className={buttonClassNames} {...buttonProps}>
-      <ColorTile color={color} alpha={alpha} />
+      <ColorTile color={color} />
     </Button>
   );
 };

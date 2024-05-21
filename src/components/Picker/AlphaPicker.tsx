@@ -6,17 +6,17 @@ import { createAlphaData, createCheckerData, createOverlay } from '../../util/im
 import Picker from './Picker';
 import PickerCanvas from './PickerCanvas';
 
-import { Color, ColorConverter, Direction, MouseOrTouchEventHandler, XY } from '../../types';
+import { ColorConverter, ColorWithAlpha, Direction, MouseOrTouchEventHandler, XY } from '../../types';
 
 import './AlphaPicker.css';
 
-const createHorizontalAlphaData = (width: number, height: number, toSRGB: ColorConverter, color: Color) =>
+const createHorizontalAlphaData = (width: number, height: number, toSRGB: ColorConverter, color: ColorWithAlpha) =>
   createAlphaData(width, height, toSRGB, color, Direction.Horizontal);
 
 const getDisabledOverlayData = (width: number, height: number) => createOverlay(width, height, [128, 128, 128], 0.5);
 
 interface Props {
-  color: Color;
+  color: ColorWithAlpha;
   value: number;
   globalValue: XY;
   dragging: boolean;

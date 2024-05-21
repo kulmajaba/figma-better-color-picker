@@ -1,4 +1,6 @@
-import { Color, ColorConverter, Direction } from '../types';
+import { rgba_to_rgb } from '../color/general';
+
+import { Color, ColorConverter, ColorWithAlpha, Direction } from '../types';
 
 export const createXYData = (width: number, height: number, firstComponent: number, toSRGB: ColorConverter) => {
   const data = new Uint8ClampedArray(width * height * 4);
@@ -21,11 +23,11 @@ export const createAlphaData = (
   width: number,
   height: number,
   toSRGB: ColorConverter,
-  color: Color,
+  color: ColorWithAlpha,
   direction: Direction
 ) => {
   const [sliderLength, sliderWidth] = direction === Direction.Horizontal ? [width, height] : [height, width];
-  const [r, g, b] = toSRGB(color);
+  const [r, g, b] = toSRGB(rgba_to_rgb(color));
 
   const data = new Uint8ClampedArray(sliderLength * sliderWidth * 4);
 

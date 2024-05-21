@@ -5,13 +5,18 @@ import { createCheckerData } from '../util/imageData';
 
 import PickerCanvas from './Picker/PickerCanvas';
 
-import { Color } from '../types';
+import { Color, ColorWithAlpha, isColorWithAlpha } from '../types';
 
 import './ColorTile.css';
 
-const createColorFill = (width: number, height: number, color: Color, alpha: number, toSRGB: (val: Color) => Color) => {
-  const [r, g, b] = toSRGB(color);
-  alpha = Math.round(alpha * 255);
+const createColorFill = (
+  width: number,
+  height: number,
+  color: Color | ColorWithAlpha,
+  toSRGB: (val: Color) => Color
+) => {
+  const [r, g, b] = toSRGB([color[0], color[1], color[2]]);
+  const alpha = isColorWithAlpha(color) ? Math.round(color[3] * 255) : 1;
   const data = new Uint8ClampedArray(width * height * 4);
 
   for (let i = 0; i < width * height; i++) {
@@ -26,21 +31,20 @@ const createColorFill = (width: number, height: number, color: Color, alpha: num
 };
 
 interface Props {
-  color: Color;
-  alpha?: number;
+  color: Color | ColorWithAlpha;
 }
 
-const ColorTile: FC<Props> = ({ color, alpha }) => {
+const ColorTile: FC<Props> = ({ color }) => {
   const { toSRGB } = useColorSpace();
 
   const createFill = useCallback(
-    (width: number, height: number) => createColorFill(width, height, color, alpha ?? 1, toSRGB),
-    [color, alpha, toSRGB]
+    (width: number, height: number) => createColorFill(width, height, color, toSRGB),
+    [color, toSRGB]
   );
 
   return (
     <div className="ColorTile">
-      {alpha !== undefined && <PickerCanvas getImageData={createCheckerData} />}
+      {isColorWithAlpha(color) && <PickerCanvas getImageData={createCheckerData} />}
       <PickerCanvas getImageData={createFill} />
     </div>
   );

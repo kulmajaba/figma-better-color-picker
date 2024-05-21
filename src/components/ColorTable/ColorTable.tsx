@@ -10,14 +10,14 @@ import {
   DragEndEvent
 } from '@dnd-kit/core';
 import {
-  arrayMove,
   SortableContext,
+  arrayMove,
   sortableKeyboardCoordinates,
   verticalListSortingStrategy
 } from '@dnd-kit/sortable';
 
 import strings from '../../assets/strings';
-import { rgb_to_hex } from '../../color/general';
+import { rgb_to_hex, rgb_to_rgba, rgba_to_rgb } from '../../color/general';
 import { useColorSpace } from '../../hooks/useColorSpace';
 import { useContrastChecker } from '../../hooks/useContrastChecker';
 import useMountedEffect from '../../hooks/useMountedEffect';
@@ -28,7 +28,7 @@ import ColorRow from './ColorRow';
 import ColorTileButton from './ColorTileButton';
 import LockButton from './LockButton';
 
-import { Color, SetEditingColorCallback } from '../../types';
+import { Color, ColorWithAlpha, SetEditingColorCallback } from '../../types';
 
 import './ColorTable.css';
 
@@ -37,15 +37,78 @@ interface Props {
   secondComponent: number;
   thirdComponent: number;
   alpha: number;
-  onSetEditing: (color: Color, alpha: number, enableAlpha: boolean) => void;
+  onSetEditing: (color: ColorWithAlpha, enableAlpha: boolean) => void;
   onResizeFigmaPlugin: (width: number) => void;
 }
 
+type RowColors = { id: number; color: ColorWithAlpha }[];
+
+const updateColor = (
+  color: ColorWithAlpha,
+  updateTo: ColorWithAlpha,
+  firstComponentLocked: boolean,
+  secondComponentLocked: boolean,
+  thirdComponentLocked: boolean,
+  alphaLocked: boolean
+): ColorWithAlpha => {
+  const newColor = color.slice() as ColorWithAlpha;
+  if (firstComponentLocked) {
+    newColor[0] = updateTo[0];
+  }
+  if (secondComponentLocked) {
+    newColor[1] = updateTo[1];
+  }
+  if (thirdComponentLocked) {
+    newColor[2] = updateTo[2];
+  }
+  if (alphaLocked) {
+    newColor[3] = updateTo[3];
+  }
+  return newColor;
+};
+
+const updateRowColors = (
+  rowColors: RowColors,
+  editingKey: number | undefined,
+  color: ColorWithAlpha,
+  firstComponentLocked: boolean,
+  secondComponentLocked: boolean,
+  thirdComponentLocked: boolean,
+  alphaLocked: boolean
+): RowColors => {
+  if (firstComponentLocked || secondComponentLocked || thirdComponentLocked || alphaLocked) {
+    // Update all colors in rowColors according to locks
+    const newColors = rowColors.map((row) => {
+      const newColor = updateColor(
+        row.color,
+        color,
+        firstComponentLocked,
+        secondComponentLocked,
+        thirdComponentLocked,
+        alphaLocked
+      );
+      return { id: row.id, color: newColor };
+    });
+    // Update entire color for the selected row
+    editingKey !== undefined &&
+      (newColors[newColors.findIndex((row) => row.id === editingKey)].color = color.slice() as ColorWithAlpha);
+
+    return newColors;
+  } else if (editingKey !== undefined) {
+    // Update single row in rowColors
+    const newColors = rowColors.slice();
+    newColors[newColors.findIndex((row) => row.id === editingKey)].color = color.slice() as ColorWithAlpha;
+    return newColors;
+  } else {
+    return rowColors;
+  }
+};
+
 const ColorTable: FC<Props> = ({
-  firstComponent: firstComponentProp,
-  secondComponent: secondComponentProp,
-  thirdComponent: thirdComponentProp,
-  alpha: alphaProp,
+  firstComponent,
+  secondComponent,
+  thirdComponent,
+  alpha,
   onSetEditing: onSetEditingProp,
   onResizeFigmaPlugin
 }) => {
@@ -53,13 +116,9 @@ const ColorTable: FC<Props> = ({
   const [secondComponentLocked, setSecondComponentLocked] = useState(true);
   const [thirdComponentLocked, setThirdComponentLocked] = useState(true);
   const [alphaLocked, setAlphaLocked] = useState(true);
-  const [firstComponent, setFirstComponent] = useState(firstComponentProp);
-  const [secondComponent, setSecondComponent] = useState(secondComponentProp);
-  const [thirdComponent, setThirdComponent] = useState(thirdComponentProp);
-  const [alpha, setAlpha] = useState(alphaProp);
 
   // dndkit will not work for an item whose id is 0
-  const [rows, setRows] = useState([1]);
+  const [rowColors, setRowColors] = useState<RowColors>([{ id: 1, color: [0, 0, 0, 1] }]);
   const [contrastColors, setContrastColors] = useState<Color[]>([[0, 0, 0]]);
   const [[editingRowKey, editingContrastKey], setEditingRow] = useState<[number | undefined, number | undefined]>([
     1,
@@ -85,26 +144,46 @@ const ColorTable: FC<Props> = ({
     if (editingContrastKey !== undefined) {
       setContrastColors((colors) => {
         const newColors = colors.slice();
-        newColors[editingContrastKey] = [firstComponentProp, secondComponentProp, thirdComponentProp];
+        newColors[editingContrastKey] = [firstComponent, secondComponent, thirdComponent];
         return newColors;
       });
     } else {
-      setFirstComponent(firstComponentProp);
-      setSecondComponent(secondComponentProp);
-      setThirdComponent(thirdComponentProp);
-      setAlpha(alphaProp);
+      setRowColors((prevRowColors) =>
+        updateRowColors(
+          prevRowColors,
+          editingRowKey,
+          [firstComponent, secondComponent, thirdComponent, alpha],
+          firstComponentLocked,
+          secondComponentLocked,
+          thirdComponentLocked,
+          alphaLocked
+        )
+      );
     }
-  }, [firstComponentProp, secondComponentProp, thirdComponentProp, alphaProp, editingContrastKey]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [
+    firstComponent,
+    secondComponent,
+    thirdComponent,
+    alpha,
+    firstComponentLocked,
+    secondComponentLocked,
+    thirdComponentLocked,
+    alphaLocked
+  ]);
 
   useEffect(() => {
     if (convertFromPrevious) {
+      setRowColors((colors) =>
+        colors.map((row) => ({ id: row.id, color: [...convertFromPrevious(rgba_to_rgb(row.color)), row.color[3]] }))
+      );
       setContrastColors((colors) => colors.map(convertFromPrevious));
     }
   }, [convertFromPrevious]);
 
   useMountedEffect(() => {
     containerRef.current && onResizeFigmaPlugin(containerRef.current.scrollWidth);
-  }, [contrastColors.length, contrastCheckerVisible, rows.length]);
+  }, [contrastColors.length, contrastCheckerVisible, rowColors.length]);
 
   const toggleFirstComponentLocked = useCallback(() => setFirstComponentLocked((locked) => !locked), []);
 
@@ -115,25 +194,34 @@ const ColorTable: FC<Props> = ({
   const toggleAlphaLocked = useCallback(() => setAlphaLocked((locked) => !locked), []);
 
   const addRow = useCallback(
-    () => setRows((prevRows) => prevRows.concat(prevRows.length > 0 ? Math.max(...prevRows) + 1 : 0)),
-    []
+    () =>
+      setRowColors((prevRowColors) =>
+        prevRowColors.concat({
+          id: prevRowColors.length > 0 ? Math.max(...prevRowColors.map((row) => row.id)) + 1 : 0,
+          color: [firstComponent, secondComponent, thirdComponent, alpha]
+        })
+      ),
+    [alpha, firstComponent, secondComponent, thirdComponent]
   );
 
   // TODO: Pick the next available row and set as editingRow
-  const deleteRow = useCallback((key: number) => setRows((prevRows) => prevRows.filter((k) => k !== key)), []);
+  const deleteRow = useCallback(
+    (id: number) => setRowColors((prevRowColors) => prevRowColors.filter((k) => k.id !== id)),
+    []
+  );
 
   const onSetEditing: SetEditingColorCallback = useCallback(
-    (colorRow, contrastColumn, newColor, newAlpha) => {
+    (colorRow, contrastColumn, newColor) => {
       setEditingRow([colorRow, contrastColumn]);
-      onSetEditingProp(newColor, newAlpha ?? 1, colorRow !== undefined);
+      onSetEditingProp(newColor, colorRow !== undefined);
     },
     [onSetEditingProp]
   );
 
   const addContrastColor = useCallback(
     // TODO: what happens after color space change?
-    () => setContrastColors((colors) => colors.concat([[firstComponentProp, secondComponentProp, thirdComponentProp]])),
-    [firstComponentProp, secondComponentProp, thirdComponentProp]
+    () => setContrastColors((colors) => colors.concat([[firstComponent, secondComponent, thirdComponent]])),
+    [firstComponent, secondComponent, thirdComponent]
   );
 
   const deleteContrastColor = useCallback((index: number) => {
@@ -150,30 +238,32 @@ const ColorTable: FC<Props> = ({
     }
 
     if (active.id !== over.id) {
-      setRows((oldRows) => {
-        const oldIndex = oldRows.indexOf(active.id as number);
-        const newIndex = oldRows.indexOf(over.id as number);
+      setRowColors((prevRowColors) => {
+        const oldIndex = prevRowColors.findIndex((row) => row.id === active.id);
+        const newIndex = prevRowColors.findIndex((row) => row.id === over.id);
 
-        return arrayMove(oldRows, oldIndex, newIndex);
+        return arrayMove(prevRowColors, oldIndex, newIndex);
       });
     }
   }, []);
 
-  const colorRows = rows.map((key) => (
+  const onColorChange = (id: number, color: ColorWithAlpha) => {
+    setRowColors((prevRowColors) => {
+      const newColors = prevRowColors.slice();
+      newColors[newColors.findIndex((row) => row.id === id)].color = color;
+      return newColors;
+    });
+  };
+
+  const colorRows = rowColors.map((row) => (
     <ColorRow
-      key={key}
-      id={key}
-      firstComponent={firstComponent}
-      secondComponent={secondComponent}
-      thirdComponent={thirdComponent}
-      alpha={alpha}
-      firstComponentLocked={firstComponentLocked}
-      secondComponentLocked={secondComponentLocked}
-      thirdComponentLocked={thirdComponentLocked}
-      alphaLocked={alphaLocked}
+      key={row.id}
+      id={row.id}
+      color={row.color}
       editingColorRow={editingRowKey}
       editingContrastColumn={editingContrastKey}
       contrastColors={contrastColors}
+      onColorChange={onColorChange}
       onDelete={deleteRow}
       onSetEditing={onSetEditing}
     />
@@ -217,7 +307,7 @@ const ColorTable: FC<Props> = ({
                 <ColorTileButton
                   color={contrastColor}
                   selected={i === editingContrastKey}
-                  onClick={() => onSetEditing(undefined, i, contrastColor, 1)}
+                  onClick={() => onSetEditing(undefined, i, rgb_to_rgba(contrastColor, 1))}
                 />
               </ToolTip>
             </div>
@@ -225,7 +315,7 @@ const ColorTable: FC<Props> = ({
         </div>
       )}
       <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={onDragEnd}>
-        <SortableContext items={rows} strategy={verticalListSortingStrategy}>
+        <SortableContext items={[]} strategy={verticalListSortingStrategy}>
           {colorRows}
         </SortableContext>
       </DndContext>

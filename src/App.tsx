@@ -3,7 +3,7 @@ import { FC, MouseEvent, TouchEvent, useCallback, useEffect, useRef, useState } 
 import classNames from 'classnames';
 
 import strings from './assets/strings';
-import { hex_to_rgb } from './color/general';
+import { hex_to_rgb, rgba_to_rgb } from './color/general';
 import ColorInput from './components/ColorInput';
 import ColorTable from './components/ColorTable/ColorTable';
 import ContrastCheckerSwitch from './components/Header/ColorCheckerSwitch';
@@ -20,7 +20,7 @@ import { useTheme } from './hooks/useTheme';
 import { api } from './pluginApi';
 import { roundToFixedPrecision } from './util/mathUtils';
 
-import { Color, MouseOrTouchEventHandler, Size, XY, XYZero, isMouseEvent } from './types';
+import { Color, ColorWithAlpha, MouseOrTouchEventHandler, Size, XY, XYZero, isMouseEvent } from './types';
 
 import './App.css';
 
@@ -151,9 +151,10 @@ const App: FC = () => {
     [onMouseDownOrTouchStart]
   );
 
-  const onColorInputChange = useCallback((color: Color) => {
+  const onColorInputChange = useCallback((color: ColorWithAlpha) => {
     setFirstComponent(color[0]);
     setXyComponent({ x: color[1], y: color[2] });
+    setAlpha(color[3]);
   }, []);
 
   const onEyeDropper = useCallback(async () => {
@@ -169,10 +170,10 @@ const App: FC = () => {
     }
   }, [fromSRGB]);
 
-  const onSetEditing = useCallback((newColor: Color, newAlpha: number, enableAlpha: boolean) => {
+  const onSetEditing = useCallback((newColor: ColorWithAlpha, enableAlpha: boolean) => {
     setFirstComponent(newColor[0]);
     setXyComponent({ x: newColor[1], y: newColor[2] });
-    setAlpha(newAlpha);
+    setAlpha(newColor[3]);
     setAlphaEnabled(enableAlpha);
   }, []);
 
@@ -193,8 +194,8 @@ const App: FC = () => {
     [isFigma]
   );
 
-  const color: Color = [firstComponent, xyComponent.x, xyComponent.y];
-  const rgb = toSRGB(color);
+  const color: ColorWithAlpha = [firstComponent, xyComponent.x, xyComponent.y, alpha];
+  const rgb = toSRGB(rgba_to_rgb(color));
 
   const dev = import.meta.env.DEV;
   // prettier-ignore
@@ -259,21 +260,9 @@ RGB: ${roundToFixedPrecision(rgb[0], 3)}, ${roundToFixedPrecision(rgb[1], 3)}, $
             <Button icon="eyedropper" onClick={onEyeDropper} />
             <div className="App-textInputs">
               <label>{strings.label[inputLabelKey]}</label>
-              <ColorInput
-                type="component"
-                value={color}
-                alpha={alpha}
-                onColorChange={onColorInputChange}
-                onAlphaChange={onAlphaChange}
-              />
+              <ColorInput type="component" value={color} onColorChange={onColorInputChange} />
               <label>{strings.label.hex}</label>
-              <ColorInput
-                type="hex"
-                value={color}
-                alpha={alpha}
-                onColorChange={onColorInputChange}
-                onAlphaChange={onAlphaChange}
-              />
+              <ColorInput type="hex" value={color} onColorChange={onColorInputChange} />
             </div>
           </div>
         </section>

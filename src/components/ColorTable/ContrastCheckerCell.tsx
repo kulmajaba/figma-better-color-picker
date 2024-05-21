@@ -2,16 +2,17 @@ import { FC } from 'react';
 
 import classNames from 'classnames';
 
+import { rgba_to_rgb } from '../../color/general';
 import { useColorSpace } from '../../hooks/useColorSpace';
 import { getColorContrast } from '../../util/colorContrast';
 import { floorTo2Decimals } from '../../util/mathUtils';
 
-import { Color } from '../../types';
+import { Color, ColorWithAlpha } from '../../types';
 
 import './ContrastCheckerCell.css';
 
 interface Props {
-  color: Color;
+  color: ColorWithAlpha;
   contrastColor: Color;
   editing: boolean;
 }
@@ -21,7 +22,11 @@ const ContrastCheckerCell: FC<Props> = ({ color, contrastColor, editing }) => {
 
   const cellClassNames = classNames('ContrastCheckerCell', { 'ContrastCheckerCell--selected': editing });
 
-  return <div className={cellClassNames}>{floorTo2Decimals(getColorContrast(color, contrastColor, toSRGB))} : 1</div>;
+  return (
+    <div className={cellClassNames}>
+      {floorTo2Decimals(getColorContrast(rgba_to_rgb(color), contrastColor, toSRGB))} : 1
+    </div>
+  );
 };
 
 export default ContrastCheckerCell;

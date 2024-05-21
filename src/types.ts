@@ -72,8 +72,7 @@ export type MouseOrTouchEventHandler = (e: MouseEvent | TouchEvent) => void;
 export type SetEditingColorCallback = (
   colorRow: number | undefined,
   contrastColumn: number | undefined,
-  color: Color,
-  alpha?: number
+  color: ColorWithAlpha
 ) => void;
 
 export const isMouseEvent = (e: MouseEvent | TouchEvent): e is MouseEvent => e.type.includes('mouse');
@@ -83,3 +82,5 @@ type ArrayType<T> = Extract<true extends T & false ? unknown[] : T extends reado
 export const isArray = Array.isArray as <T>(arg: T) => arg is ArrayType<T>;
 
 export const strictObjectKeys = Object.keys as <T extends Record<string, unknown>>(obj: T) => Array<keyof T>;
+
+export const isColorWithAlpha = (color: Color | ColorWithAlpha): color is ColorWithAlpha => color.length === 4;

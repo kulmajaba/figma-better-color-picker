@@ -1,19 +1,19 @@
 import { FC, useCallback } from 'react';
 
 import strings from '../../assets/strings';
+import { rgba_to_rgb } from '../../color/general';
 import { useColorSpace } from '../../hooks/useColorSpace';
 import { useCopyFormat } from '../../hooks/useCopyFormat';
 import useIsPlugin from '../../hooks/useIsPlugin';
 import Button from '../Lib/Button';
 
-import { Color } from '../../types';
+import { ColorWithAlpha } from '../../types';
 
 interface Props {
-  color: Color;
-  alpha: number;
+  color: ColorWithAlpha;
 }
 
-const ColorRowCopyButton: FC<Props> = ({ color, alpha }) => {
+const ColorRowCopyButton: FC<Props> = ({ color }) => {
   const { isFigma } = useIsPlugin();
 
   const { toSRGB } = useColorSpace();
@@ -22,14 +22,14 @@ const ColorRowCopyButton: FC<Props> = ({ color, alpha }) => {
   const onCopy = useCallback(async () => {
     if (navigator.clipboard) {
       try {
-        await navigator.clipboard.writeText(toCopyFormat([...toSRGB(color), alpha]));
+        await navigator.clipboard.writeText(toCopyFormat([...toSRGB(rgba_to_rgb(color)), color[3]]));
       } catch (e) {
         console.error(e);
       }
     } else {
       console.warn('Clipboard API not available');
     }
-  }, [color, alpha, toSRGB, toCopyFormat]);
+  }, [color, toSRGB, toCopyFormat]);
 
   // Figma does not allow clipboard write currently
   if (isFigma) {

@@ -208,3 +208,7 @@ export const rgba_to_rgba_string = (rgba: ColorWithAlpha): string => {
   const [r, g, b, a] = rgba;
   return `rgb(${Math.round(r)} ${Math.round(g)} ${Math.round(b)} / ${roundTo2Decimals(a)})`;
 };
+
+export const rgba_to_rgb = (rgba: ColorWithAlpha): Color => [rgba[0], rgba[1], rgba[2]];
+
+export const rgb_to_rgba = (rgb: Color, a: number): ColorWithAlpha => [rgb[0], rgb[1], rgb[2], a];
