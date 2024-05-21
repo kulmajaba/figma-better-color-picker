@@ -14,6 +14,11 @@ export type ColorConverter = (color: Color) => Color;
 
 export type InputValue = string | number | readonly string[] | undefined;
 
+export interface RowColor {
+  id: number;
+  color: ColorWithAlpha;
+}
+
 export enum Direction {
   Horizontal = 'HORIZONTAL',
   Vertical = 'VERTICAL'

@@ -18,6 +18,7 @@ import {
 
 import strings from '../../assets/strings';
 import { rgb_to_hex, rgb_to_rgba, rgba_to_rgb } from '../../color/general';
+import { useUndoHistory } from '../../hooks/undoHistory';
 import { useColorSpace } from '../../hooks/useColorSpace';
 import { useContrastChecker } from '../../hooks/useContrastChecker';
 import useMountedEffect from '../../hooks/useMountedEffect';
@@ -28,7 +29,7 @@ import ColorRow from './ColorRow';
 import ColorTileButton from './ColorTileButton';
 import LockButton from './LockButton';
 
-import { Color, ColorWithAlpha, SetEditingColorCallback } from '../../types';
+import { Color, ColorWithAlpha, RowColor, SetEditingColorCallback } from '../../types';
 
 import './ColorTable.css';
 
@@ -37,11 +38,10 @@ interface Props {
   secondComponent: number;
   thirdComponent: number;
   alpha: number;
+  dragging: boolean;
   onSetEditing: (color: ColorWithAlpha, enableAlpha: boolean) => void;
   onResizeFigmaPlugin: (width: number) => void;
 }
-
-type RowColors = { id: number; color: ColorWithAlpha }[];
 
 const updateColor = (
   color: ColorWithAlpha,
@@ -68,14 +68,14 @@ const updateColor = (
 };
 
 const updateRowColors = (
-  rowColors: RowColors,
+  rowColors: RowColor[],
   editingKey: number | undefined,
   color: ColorWithAlpha,
   firstComponentLocked: boolean,
   secondComponentLocked: boolean,
   thirdComponentLocked: boolean,
   alphaLocked: boolean
-): RowColors => {
+): RowColor[] => {
   if (firstComponentLocked || secondComponentLocked || thirdComponentLocked || alphaLocked) {
     // Update all colors in rowColors according to locks
     const newColors = rowColors.map((row) => {
@@ -109,6 +109,7 @@ const ColorTable: FC<Props> = ({
   secondComponent,
   thirdComponent,
   alpha,
+  dragging,
   onSetEditing: onSetEditingProp,
   onResizeFigmaPlugin
 }) => {
@@ -118,15 +119,17 @@ const ColorTable: FC<Props> = ({
   const [alphaLocked, setAlphaLocked] = useState(true);
 
   // dndkit will not work for an item whose id is 0
-  const [rowColors, setRowColors] = useState<RowColors>([{ id: 1, color: [0, 0, 0, 1] }]);
+  const [rowColors, setRowColors] = useState<RowColor[]>([{ id: 1, color: [0, 0, 0, 1] }]);
   const [contrastColors, setContrastColors] = useState<Color[]>([[0, 0, 0]]);
   const [[editingRowKey, editingContrastKey], setEditingRow] = useState<[number | undefined, number | undefined]>([
     1,
     undefined
   ]);
+  const [awaitingHistoryCommit, setAwaitingHistoryCommit] = useState(false);
 
-  const { componentShortNames, toSRGB, convertFromPrevious } = useColorSpace();
+  const { name: colorSpaceName, componentShortNames, toSRGB, convertFromPrevious } = useColorSpace();
   const { contrastCheckerVisible } = useContrastChecker();
+  const { commitHistory } = useUndoHistory();
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
@@ -173,11 +176,27 @@ const ColorTable: FC<Props> = ({
   ]);
 
   useEffect(() => {
+    console.log('dragging', dragging);
+    if (!dragging) {
+      setAwaitingHistoryCommit(true);
+    }
+  }, [dragging]);
+
+  useEffect(() => {
+    if (awaitingHistoryCommit) {
+      commitHistory(rowColors, contrastColors, colorSpaceName);
+      setAwaitingHistoryCommit(false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [awaitingHistoryCommit]);
+
+  useEffect(() => {
     if (convertFromPrevious) {
       setRowColors((colors) =>
         colors.map((row) => ({ id: row.id, color: [...convertFromPrevious(rgba_to_rgb(row.color)), row.color[3]] }))
       );
       setContrastColors((colors) => colors.map(convertFromPrevious));
+      setAwaitingHistoryCommit(true);
     }
   }, [convertFromPrevious]);
 
@@ -193,22 +212,21 @@ const ColorTable: FC<Props> = ({
 
   const toggleAlphaLocked = useCallback(() => setAlphaLocked((locked) => !locked), []);
 
-  const addRow = useCallback(
-    () =>
-      setRowColors((prevRowColors) =>
-        prevRowColors.concat({
-          id: prevRowColors.length > 0 ? Math.max(...prevRowColors.map((row) => row.id)) + 1 : 0,
-          color: [firstComponent, secondComponent, thirdComponent, alpha]
-        })
-      ),
-    [alpha, firstComponent, secondComponent, thirdComponent]
-  );
+  const addRow = useCallback(() => {
+    setRowColors((prevRowColors) =>
+      prevRowColors.concat({
+        id: prevRowColors.length > 0 ? Math.max(...prevRowColors.map((row) => row.id)) + 1 : 0,
+        color: [firstComponent, secondComponent, thirdComponent, alpha]
+      })
+    );
+    setAwaitingHistoryCommit(true);
+  }, [alpha, firstComponent, secondComponent, thirdComponent]);
 
   // TODO: Pick the next available row and set as editingRow
-  const deleteRow = useCallback(
-    (id: number) => setRowColors((prevRowColors) => prevRowColors.filter((k) => k.id !== id)),
-    []
-  );
+  const deleteRow = useCallback((id: number) => {
+    setRowColors((prevRowColors) => prevRowColors.filter((k) => k.id !== id));
+    setAwaitingHistoryCommit(true);
+  }, []);
 
   const onSetEditing: SetEditingColorCallback = useCallback(
     (colorRow, contrastColumn, newColor) => {
@@ -218,16 +236,17 @@ const ColorTable: FC<Props> = ({
     [onSetEditingProp]
   );
 
-  const addContrastColor = useCallback(
+  const addContrastColor = useCallback(() => {
     // TODO: what happens after color space change?
-    () => setContrastColors((colors) => colors.concat([[firstComponent, secondComponent, thirdComponent]])),
-    [firstComponent, secondComponent, thirdComponent]
-  );
+    setContrastColors((colors) => colors.concat([[firstComponent, secondComponent, thirdComponent]]));
+    setAwaitingHistoryCommit(true);
+  }, [firstComponent, secondComponent, thirdComponent]);
 
   const deleteContrastColor = useCallback((index: number) => {
     setContrastColors((colors) => colors.filter((_, i) => i !== index));
     // TODO: make sure color changes correctly if this is done
     // setEditingRow(([rowKey, contrastKey]) => [rowKey, contrastKey === index ? undefined : contrastKey]);
+    setAwaitingHistoryCommit(true);
   }, []);
 
   const onDragEnd = useCallback((event: DragEndEvent) => {
@@ -244,6 +263,7 @@ const ColorTable: FC<Props> = ({
 
         return arrayMove(prevRowColors, oldIndex, newIndex);
       });
+      setAwaitingHistoryCommit(true);
     }
   }, []);
 
@@ -253,6 +273,7 @@ const ColorTable: FC<Props> = ({
       newColors[newColors.findIndex((row) => row.id === id)].color = color;
       return newColors;
     });
+    setAwaitingHistoryCommit(true);
   };
 
   const colorRows = rowColors.map((row) => (

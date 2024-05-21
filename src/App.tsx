@@ -272,6 +272,7 @@ RGB: ${roundToFixedPrecision(rgb[0], 3)}, ${roundToFixedPrecision(rgb[1], 3)}, $
         secondComponent={xyComponent.x}
         thirdComponent={xyComponent.y}
         alpha={alpha}
+        dragging={dragging}
         onSetEditing={onSetEditing}
         onResizeFigmaPlugin={onResizeFigmaPlugin}
       />
