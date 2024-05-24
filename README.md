@@ -66,6 +66,12 @@ npm install
 npm start
 ```
 
+Chrome console filter
+
+```
+-/^The resource|\[MultiplayerSession\]|afterJoinEnd/
+```
+
 ### CSS
 
 CSS follows the SUIT naming convention (https://github.com/suitcss/suit/blob/master/doc/naming-conventions.md) except for variables which are kebab-cased, use Stylelint (standalone or VS Code plugin) to lint. Quick explanation of the class selector pattern (Double-escaped for JS string):

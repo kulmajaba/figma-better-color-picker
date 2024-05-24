@@ -126,10 +126,11 @@ const ColorTable: FC<Props> = ({
     undefined
   ]);
   const [awaitingHistoryCommit, setAwaitingHistoryCommit] = useState(false);
+  const [justCommittedHistory, setJustCommittedHistory] = useState(false);
 
-  const { name: colorSpaceName, componentShortNames, toSRGB, convertFromPrevious } = useColorSpace();
+  const { name: colorSpaceName, componentShortNames, toSRGB, convertFromPrevious, setColorSpace } = useColorSpace();
   const { contrastCheckerVisible } = useContrastChecker();
-  const { commitHistory } = useUndoHistory();
+  const { commitHistory, historyState } = useUndoHistory();
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
@@ -142,6 +143,19 @@ const ColorTable: FC<Props> = ({
   );
 
   const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (historyState !== undefined && !justCommittedHistory) {
+      const newState = structuredClone(historyState);
+      //console.log(newState.colors[0].color);
+      setRowColors(newState.colors);
+      setContrastColors(newState.contrastColors);
+      setColorSpace(newState.colorSpaceName);
+    } else if (justCommittedHistory) {
+      setJustCommittedHistory(false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [historyState]);
 
   useEffect(() => {
     if (editingContrastKey !== undefined) {
@@ -176,21 +190,25 @@ const ColorTable: FC<Props> = ({
   ]);
 
   useEffect(() => {
-    console.log('dragging', dragging);
     if (!dragging) {
       setAwaitingHistoryCommit(true);
     }
   }, [dragging]);
 
+  /* useEffect(() => {
+    setAwaitingHistoryCommit(true);
+  }, [firstComponentLocked, secondComponentLocked, thirdComponentLocked, alphaLocked]); */
+
   useEffect(() => {
     if (awaitingHistoryCommit) {
       commitHistory(rowColors, contrastColors, colorSpaceName);
       setAwaitingHistoryCommit(false);
+      setJustCommittedHistory(true);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [awaitingHistoryCommit]);
 
-  useEffect(() => {
+  /* useEffect(() => {
     if (convertFromPrevious) {
       setRowColors((colors) =>
         colors.map((row) => ({ id: row.id, color: [...convertFromPrevious(rgba_to_rgb(row.color)), row.color[3]] }))
@@ -198,7 +216,7 @@ const ColorTable: FC<Props> = ({
       setContrastColors((colors) => colors.map(convertFromPrevious));
       setAwaitingHistoryCommit(true);
     }
-  }, [convertFromPrevious]);
+  }, [convertFromPrevious]); */
 
   useMountedEffect(() => {
     containerRef.current && onResizeFigmaPlugin(containerRef.current.scrollWidth);
@@ -274,6 +292,7 @@ const ColorTable: FC<Props> = ({
       return newColors;
     });
     setAwaitingHistoryCommit(true);
+    onSetEditingProp(color, true);
   };
 
   const colorRows = rowColors.map((row) => (

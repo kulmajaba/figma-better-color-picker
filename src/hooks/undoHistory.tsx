@@ -12,6 +12,17 @@ type HistoryEntry = {
   colorSpaceName: ColorSpaceName;
 };
 
+const logHistoryEntry = (entry: HistoryEntry) => {
+  entry.colors.forEach((color) => {
+    console.log(`${color.id}: ${color.color}`);
+  });
+};
+
+const logHistory = (history: HistoryEntry[], index: number, message: string) => {
+  console.log(`${message}, index: ${index}`);
+  history.forEach(logHistoryEntry);
+};
+
 export interface UndoHistory {
   history: HistoryEntry[];
   historyIndex: number;
@@ -37,19 +48,20 @@ export const HistoryProvider: FC<{ children?: React.ReactNode }> = ({ children }
 
   const undo = useCallback(() => {
     if (historyIndex > 0) {
+      logHistory(history, historyIndex - 1, 'undo');
       setHistoryIndex(historyIndex - 1);
     }
-  }, [historyIndex]);
+  }, [historyIndex, history]);
 
   const redo = useCallback(() => {
     if (historyIndex < history.length - 1) {
+      logHistory(history, historyIndex + 1, 'redo');
       setHistoryIndex(historyIndex + 1);
     }
   }, [historyIndex, history]);
 
   const onKeyDown = useCallback(
     (e: KeyboardEvent) => {
-      console.log('keydown', e.code);
       switch (e.key) {
         case 'Meta':
           setUndoModifierDown(true);
@@ -74,7 +86,6 @@ export const HistoryProvider: FC<{ children?: React.ReactNode }> = ({ children }
   );
 
   const onKeyUp = useCallback((e: KeyboardEvent) => {
-    console.log('keyup', e.code);
     switch (e.key) {
       case 'Meta':
         setUndoModifierDown(false);
@@ -111,10 +122,16 @@ export const HistoryProvider: FC<{ children?: React.ReactNode }> = ({ children }
       // Clamp history size
       const startIndex = Math.max(0, historyIndex - historySize + 2);
       const newHistory = history.slice(startIndex, historyIndex + 1);
-      newHistory.push({ colors, contrastColors, colorSpaceName });
+      newHistory.push({
+        colors: structuredClone(colors),
+        contrastColors: structuredClone(contrastColors),
+        colorSpaceName
+      });
 
       setHistory(newHistory);
       setHistoryIndex(newHistory.length - 1);
+
+      logHistory(newHistory, newHistory.length - 1, 'commit');
     },
     [history, historyIndex]
   );
