@@ -1,7 +1,7 @@
 import { createRoot } from 'react-dom/client';
 
 import App from './App';
-import { HistoryProvider } from './hooks/undoHistory';
+import { AppStateProvider } from './hooks/useAppState';
 import { ColorSpaceProvider } from './hooks/useColorSpace';
 import { ContrastCheckerProvider } from './hooks/useContrastChecker';
 import { CopyFormatProvider } from './hooks/useCopyFormat';
@@ -14,14 +14,14 @@ const container = document.getElementById('app');
 const root = createRoot(container!);
 root.render(
   <ThemeProvider>
-    <HistoryProvider>
-      <ColorSpaceProvider>
+    <ColorSpaceProvider>
+      <AppStateProvider>
         <ContrastCheckerProvider>
           <CopyFormatProvider>
             <App />
           </CopyFormatProvider>
         </ContrastCheckerProvider>
-      </ColorSpaceProvider>
-    </HistoryProvider>
+      </AppStateProvider>
+    </ColorSpaceProvider>
   </ThemeProvider>
 );

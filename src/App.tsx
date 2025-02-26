@@ -16,6 +16,7 @@ import HuePicker from './components/Picker/SliderPicker';
 import XYPicker from './components/Picker/XYPicker';
 import { useColorSpace } from './hooks/useColorSpace';
 import useIsPlugin from './hooks/useIsPlugin';
+import useShortcuts from './hooks/useShortcuts';
 import { useTheme } from './hooks/useTheme';
 import { api } from './pluginApi';
 import { roundToFixedPrecision } from './util/mathUtils';
@@ -46,6 +47,7 @@ const App: FC = () => {
   const { fromSRGB, toSRGB, convertFromPrevious, inputLabelKey } = useColorSpace();
   const { isFigma, isPlugin } = useIsPlugin();
   const { updateTheme } = useTheme();
+  useShortcuts();
 
   const containerRef = useRef<HTMLDivElement>(null);
 

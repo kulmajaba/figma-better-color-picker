@@ -17,8 +17,8 @@ import {
 } from '@dnd-kit/sortable';
 
 import strings from '../../assets/strings';
-import { rgb_to_hex, rgb_to_rgba, rgba_to_rgb } from '../../color/general';
-import { useUndoHistory } from '../../hooks/undoHistory';
+import { rgb_to_hex, rgb_to_rgba } from '../../color/general';
+import { useAppState } from '../../hooks/useAppState';
 import { useColorSpace } from '../../hooks/useColorSpace';
 import { useContrastChecker } from '../../hooks/useContrastChecker';
 import useMountedEffect from '../../hooks/useMountedEffect';
@@ -109,7 +109,6 @@ const ColorTable: FC<Props> = ({
   secondComponent,
   thirdComponent,
   alpha,
-  dragging,
   onSetEditing: onSetEditingProp,
   onResizeFigmaPlugin
 }) => {
@@ -125,12 +124,10 @@ const ColorTable: FC<Props> = ({
     1,
     undefined
   ]);
-  const [awaitingHistoryCommit, setAwaitingHistoryCommit] = useState(false);
-  const [justCommittedHistory, setJustCommittedHistory] = useState(false);
 
-  const { name: colorSpaceName, componentShortNames, toSRGB, convertFromPrevious, setColorSpace } = useColorSpace();
+  const { componentShortNames, toSRGB } = useColorSpace();
   const { contrastCheckerVisible } = useContrastChecker();
-  const { commitHistory, historyState } = useUndoHistory();
+  const { commitHistory, currentState, setCurrentState } = useAppState();
   const sensors = useSensors(
     useSensor(PointerSensor, {
       activationConstraint: {
@@ -143,19 +140,6 @@ const ColorTable: FC<Props> = ({
   );
 
   const containerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (historyState !== undefined && !justCommittedHistory) {
-      const newState = structuredClone(historyState);
-      //console.log(newState.colors[0].color);
-      setRowColors(newState.colors);
-      setContrastColors(newState.contrastColors);
-      setColorSpace(newState.colorSpaceName);
-    } else if (justCommittedHistory) {
-      setJustCommittedHistory(false);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [historyState]);
 
   useEffect(() => {
     if (editingContrastKey !== undefined) {
@@ -189,35 +173,6 @@ const ColorTable: FC<Props> = ({
     alphaLocked
   ]);
 
-  useEffect(() => {
-    if (!dragging) {
-      setAwaitingHistoryCommit(true);
-    }
-  }, [dragging]);
-
-  /* useEffect(() => {
-    setAwaitingHistoryCommit(true);
-  }, [firstComponentLocked, secondComponentLocked, thirdComponentLocked, alphaLocked]); */
-
-  useEffect(() => {
-    if (awaitingHistoryCommit) {
-      commitHistory(rowColors, contrastColors, colorSpaceName);
-      setAwaitingHistoryCommit(false);
-      setJustCommittedHistory(true);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [awaitingHistoryCommit]);
-
-  /* useEffect(() => {
-    if (convertFromPrevious) {
-      setRowColors((colors) =>
-        colors.map((row) => ({ id: row.id, color: [...convertFromPrevious(rgba_to_rgb(row.color)), row.color[3]] }))
-      );
-      setContrastColors((colors) => colors.map(convertFromPrevious));
-      setAwaitingHistoryCommit(true);
-    }
-  }, [convertFromPrevious]); */
-
   useMountedEffect(() => {
     containerRef.current && onResizeFigmaPlugin(containerRef.current.scrollWidth);
   }, [contrastColors.length, contrastCheckerVisible, rowColors.length]);
@@ -230,22 +185,6 @@ const ColorTable: FC<Props> = ({
 
   const toggleAlphaLocked = useCallback(() => setAlphaLocked((locked) => !locked), []);
 
-  const addRow = useCallback(() => {
-    setRowColors((prevRowColors) =>
-      prevRowColors.concat({
-        id: prevRowColors.length > 0 ? Math.max(...prevRowColors.map((row) => row.id)) + 1 : 0,
-        color: [firstComponent, secondComponent, thirdComponent, alpha]
-      })
-    );
-    setAwaitingHistoryCommit(true);
-  }, [alpha, firstComponent, secondComponent, thirdComponent]);
-
-  // TODO: Pick the next available row and set as editingRow
-  const deleteRow = useCallback((id: number) => {
-    setRowColors((prevRowColors) => prevRowColors.filter((k) => k.id !== id));
-    setAwaitingHistoryCommit(true);
-  }, []);
-
   const onSetEditing: SetEditingColorCallback = useCallback(
     (colorRow, contrastColumn, newColor) => {
       setEditingRow([colorRow, contrastColumn]);
@@ -253,19 +192,6 @@ const ColorTable: FC<Props> = ({
     },
     [onSetEditingProp]
   );
-
-  const addContrastColor = useCallback(() => {
-    // TODO: what happens after color space change?
-    setContrastColors((colors) => colors.concat([[firstComponent, secondComponent, thirdComponent]]));
-    setAwaitingHistoryCommit(true);
-  }, [firstComponent, secondComponent, thirdComponent]);
-
-  const deleteContrastColor = useCallback((index: number) => {
-    setContrastColors((colors) => colors.filter((_, i) => i !== index));
-    // TODO: make sure color changes correctly if this is done
-    // setEditingRow(([rowKey, contrastKey]) => [rowKey, contrastKey === index ? undefined : contrastKey]);
-    setAwaitingHistoryCommit(true);
-  }, []);
 
   const onDragEnd = useCallback((event: DragEndEvent) => {
     const { active, over } = event;
@@ -281,7 +207,6 @@ const ColorTable: FC<Props> = ({
 
         return arrayMove(prevRowColors, oldIndex, newIndex);
       });
-      setAwaitingHistoryCommit(true);
     }
   }, []);
 
@@ -291,7 +216,6 @@ const ColorTable: FC<Props> = ({
       newColors[newColors.findIndex((row) => row.id === id)].color = color;
       return newColors;
     });
-    setAwaitingHistoryCommit(true);
     onSetEditingProp(color, true);
   };
 
